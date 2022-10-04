@@ -2,53 +2,46 @@
     <form @submit.prevent="submitForm">
         <Modal title=" تعديل الصلاحية " ref="thisModal" maxWidth="lg">
             <template #body>
-                <v-text v-model="entry.title" type="text" title=" اسم الصلاحية" :error="errors.title" />
+                <v-text v-model="single.entry.title" type="text" title=" اسم الصلاحية" :error="single.errors.title" />
                 <h4>الصلاحيات</h4>
-                <Multiselect v-model="entry.permissions" :options="lists.permissions" mode="tags"
+                <Multiselect v-model="single.entry.permissions" :options="single.lists.permissions" mode="tags"
                     :close-on-select="false" :searchable="true" />
             </template>
             <template #footer>
-                <btn-create icon="fa-save" type="submit" :disabled="loading" title="تعديل" />
+                <btn-create icon="fa-save" type="submit" :disabled="single.loading" title="تعديل" />
             </template>
         </Modal>
     </form>
 </template>
 
-<script setup>
+<script>
 import { ref, computed, watch } from "vue";
 import VText from "../../components/inputs/VInput.vue";
 import Multiselect from '@vueform/multiselect'
-import Modal from "../../components/modals/ModalDiloge.vue";
+import Modal from "../../components/modals/ModalDialog.vue";
+import { useSingleRoles } from '../../stores/roles/single';
 
-import { useStore } from "vuex";
+export default {
+    name: "EditRole",
+    components: { VText, Modal, Multiselect },
+    setup() {
+        let thisModal = ref(null);
+        const single = useSingleRoles();
+        const submitForm = () => single.updateData().then(() => thisModal.value.hide())
+        const showModal = computed(() => single.showModalEdit);
 
-const store = useStore();
-let thisModal = ref(null);
-
-const entry = computed(() => store.getters["RolesSingle/entry"]);
-const errors = computed(() => store.getters["RolesSingle/errors"]);
-const loading = computed(() => store.getters["RolesSingle/loading"]);
-const lists = computed(() => store.getters["RolesSingle/lists"]);
-const showModal = computed(() => store.getters["RolesIndex/showEdit"]);
-
-const submitForm = () => {
-    store.dispatch('RolesSingle/updateData')
-        .then(() => {
-            thisModal.value.hide();
-            store.dispatch('RolesIndex/fetchIndexData')
-            store.dispatch('RolesSingle/resetState')
-        })
-        .catch(error => {
-            _.delay(() => {
-                store.dispatch('RolesSingle/stop')
-            }, 2000)
-        })
+        watch(showModal, (q) => {
+            thisModal.value.show();
+        }, { deep: true });
+        return {
+            thisModal,
+            single,
+            submitForm,
+        }
+    },
 }
-
-watch(showModal, (q) => {
-    thisModal.value.show();
-}, { deep: true });
 </script>
 <style src="@vueform/multiselect/themes/default.css">
+
 </style>
 

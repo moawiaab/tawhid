@@ -23,7 +23,7 @@ class UsersApiController extends Controller
             )
                 ->with(['role', 'account'])
                 ->advancedFilter()
-                ->paginate(request('limit', 10))
+                ->paginate(request('rowsPerPage', 20))
         );
     }
 

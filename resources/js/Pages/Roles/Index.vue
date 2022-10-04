@@ -1,5 +1,5 @@
 <template>
-    <Loader v-if="loading" />
+    <Loader v-if="role.loading" />
     <Content title="الصلاحيات">
         <template #header>
             <li class="breadcrumb-item">
@@ -8,73 +8,59 @@
         </template>
         <template #content>
             <div class="new-item">
-                <Create />
+                <create-role />
             </div>
-            <data-table :data="data.data" :columns="columns" :query="query" :xprops="xprops" :total="total" />
-            <Edit />
-            <Show />
+
+            <EasyDataTable :server-items-length="role.total" buttons-pagination v-model:server-options="query"
+                :headers="headers" :items="role.roles" body-text-direction="right" table-class-name="customize-table"
+                theme-color="#0dcaf0" :table-height="500" :loading="role.loading" alternating border-cell>
+                <template #item-permissions="item">
+                    {{item.permissions.length}}
+                </template>
+                <template #expand="item">
+                    <div style="padding: 5px">
+                        <span class="badge bg-info font-16 mb-1 p-1 pb-2" v-for="p in item.permissions"
+                            :key="p.id">{{p.details}}</span>
+                    </div>
+                </template>
+                <template #item-operation="item">
+                    <div class="operation-wrapper text-right">
+                        <table-icon @click="role.showTable(item)" icon="eye" color="info" title="عرض المستخدم" />
+                        <table-icon @click="role.editTable(item)" />
+                        <table-icon @click="role.editTable(item)" icon="trash" color="danger" title="حذف المستخدم" />
+                    </div>
+                </template>
+            </EasyDataTable>
+
+            <edit-role />
+            <show-role />
         </template>
     </Content>
 
 </template>
-<script setup>
+<script setup lang="ts">
 
-import { computed, onMounted, ref, watch } from "vue";
-import { useStore } from "vuex";
-import Create from "./Create.vue";
-import Edit from "./Edit.vue";
-import Show from "./Show.vue";
+import { ref, computed, watch, reactive } from '@vue/runtime-core';
+import { useRoles } from '../../stores/roles/roles';
+import type { Header, ServerOptions, Item } from "vue3-easy-data-table";
+import EditRole from "./Edit.vue";
+import ShowRole from "./Show.vue";
+import CreateRole from "./Create.vue";
 
-const store = useStore();
-onMounted(() => {
-    store.dispatch('RolesIndex/fetchIndexData')
-})
-const data = computed(() => store.getters["RolesIndex/data"]);
-const total = computed(() => store.getters["RolesIndex/total"]);
-const loading = computed(() => store.getters["RolesIndex/loading"]);
 
-const query = ref({ sort: 'id', order: 'desc', limit: 10, s: '', offset: 0, type: 'default' })
-const xprops = {
-    module: 'RolesIndex',
-    route: 'roles',
-    permission_prefix: 'role_',
-    deletable: true,
-    editable: true,
-    viewable: true,
-}
+const headers: Header[] = [
+    { text: "اسم الصلاحية", value: "title", width: 200, sortable: true },
+    { text: 'عدد الصلاحيات', value: "permissions", width: 200 },
+    { text: "تاريخ الإنشاء", value: "created_at", sortable: true },//
+    { text: "", value: "operation", width: 100 },
+];
+const role = useRoles()
+const query = ref<ServerOptions>({ sortBy: 'id', sortType: 'desc', rowsPerPage: 20, page: 1 })
+role.fetchIndexData();
 
-const columns = [
-    {
-        title: 'الرقم',
-        field: 'id',
-        slot: true
-    },
-    {
-        title: 'الاسم',
-        field: 'title',
-        slot: true
-    },
-    {
-        title: 'الصلاحيات',
-        field: 'permissions',
-        type: 'listCol',
-        color: 'success'
-    },
-    {
-        title: 'عدد الصلاحيات',
-        field: 'permissions.length',
-        type: 'item',
-    },
-    {
-        title: 'الإنشاء',
-        field: 'created_at',
-    }
-
-]
 
 watch(query, (q) => {
-    store.dispatch('RolesIndex/setQuery', q)
-    store.dispatch('RolesIndex/fetchIndexData')
+    role.setQuery(q);
+    role.fetchIndexData();
 }, { deep: true });
 </script>
-

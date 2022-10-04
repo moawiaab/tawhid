@@ -17,6 +17,10 @@ class PermissionSeeder extends Seeder
     {
         $permissions = [
             [
+                'details' => 'الرئيسية',
+                'title' => 'dashboard_access',
+            ],
+            [
                 'details' => 'عرض الفروع',
                 'title' => 'account_access',
             ],

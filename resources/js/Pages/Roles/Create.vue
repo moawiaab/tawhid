@@ -3,56 +3,49 @@
     <form @submit.prevent="submitForm">
         <Modal title="إضافة صلاحية جديدة" ref="thisModal" maxWidth="lg">
             <template #body>
-                <v-text v-model="entry.title" type="text" title=" اسم الصلاحية" :error="errors.title" />
+                <v-text v-model="single.entry.title" title=" اسم الصلاحية" :error="single.errors.title" :required="false"
+                    col="col-12" />
                 <h4>الصلاحيات</h4>
-                <Multiselect v-model="entry.permissions" :options="lists.permissions" mode="tags"
+                <Multiselect v-model="single.entry.permissions" :options="single.lists.permissions" mode="tags"
                     :close-on-select="false" :searchable="true" />
 
             </template>
             <template #footer>
-                <btn-create icon="fa-save" type="submit" :disabled="loading" />
+                <btn-create icon="fa-save" type="submit" :disabled="single.loading" />
             </template>
         </Modal>
     </form>
 </template>
 
-<script setup>
-import Multiselect from '@vueform/multiselect'
+<script>
 import { ref, computed } from "vue";
+import Multiselect from '@vueform/multiselect'
 import VText from "../../components/inputs/Input.vue";
-import Modal from "../../components/modals/ModalDiloge.vue";
+import Modal from "../../components/modals/ModalDialog.vue";
+import { useSingleRoles } from '../../stores/roles/single';
 
-import { useStore } from "vuex";
+export default {
+    name: "CreateRole",
+    components: { VText, Multiselect, Modal },
+    setup() {
+        let thisModal = ref(null);
+        const single = useSingleRoles();
+        const showModal = () => {
+            single.$reset();
+            single.fetchCreateData()
+            thisModal.value.show();
+        }
+        const submitForm = () => single.storeData().then(() => thisModal.value.hide())
+        return {
+            thisModal,
+            single,
+            showModal,
+            submitForm,
+        }
+    },
 
-const options = ['list', 'of', 'options']
-const store = useStore();
-let thisModal = ref(null);
-
-function showModal() {
-    store.dispatch('RolesSingle/resetState')
-    store.dispatch('RolesSingle/fetchCreateData')
-    thisModal.value.show();
-}
-
-const entry = computed(() => store.getters["RolesSingle/entry"]);
-const errors = computed(() => store.getters["RolesSingle/errors"]);
-const loading = computed(() => store.getters["RolesSingle/loading"]);
-const lists = computed(() => store.getters["RolesSingle/lists"]);
-
-
-const submitForm = () => {
-    store.dispatch('RolesSingle/storeData')
-        .then(() => {
-            thisModal.value.hide();
-            store.dispatch('RolesIndex/fetchIndexData')
-            store.dispatch('RolesSingle/resetState')
-        })
-        .catch(error => {
-            _.delay(() => {
-                store.dispatch('RolesSingle/stop')
-            }, 2000)
-        })
 }
 </script>
 <style src="@vueform/multiselect/themes/default.css">
+
 </style>

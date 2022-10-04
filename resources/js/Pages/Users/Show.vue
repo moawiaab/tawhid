@@ -1,17 +1,19 @@
 <template>
-    <Modal title="عرض بيانات المستخدم" ref="thisModal" maxWidth="fxl" backdrop="true">
+    <Modal title="عرض بيانات المستخدم" ref="thisModal" maxWidth="xl" backdrop="true">
         <template #body>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <ul class="list-group">
-                        <li class="list-group-item"> كود المستخدم : {{ entry.id }}</li>
-                        <li class="list-group-item"> اسم المستخدم : {{ entry.name }}</li>
-                        <li class="list-group-item"> البريد الالكتروني : {{ entry.email }}</li>
-                        <li class="list-group-item"> رقم الهاتف : {{ entry.phone }}</li>
-                        <li class="list-group-item" v-if="entry.role"> صلاحية الدخول : {{ entry.role.title }}</li>
-                        <li class="list-group-item" v-if="entry.account"> اسم المتجر : {{ entry.account.name }}</li>
-                        <li class="list-group-item"> تاريخ الإنشاء : {{ entry.created_at }}</li>
-                        <li class="list-group-item"> تاريخ التحديث : {{ entry.updated_at }}</li>
+                        <li class="list-group-item"> كود المستخدم : {{ single.entry.id }}</li>
+                        <li class="list-group-item"> اسم المستخدم : {{ single.entry.name }}</li>
+                        <li class="list-group-item"> البريد الالكتروني : {{ single.entry.email }}</li>
+                        <li class="list-group-item"> رقم الهاتف : {{ single.entry.phone }}</li>
+                        <li class="list-group-item" v-if="single.entry.role"> صلاحية الدخول : {{ single.entry.role.title
+                        }}</li>
+                        <li class="list-group-item" v-if="single.entry.account"> اسم المتجر : {{
+                        single.entry.account.name }}</li>
+                        <li class="list-group-item"> تاريخ الإنشاء : {{ single.entry.created_at }}</li>
+                        <li class="list-group-item"> تاريخ التحديث : {{ single.entry.updated_at }}</li>
                     </ul>
                 </div>
 
@@ -23,23 +25,28 @@
     </Modal>
 </template>
 
-<script setup>
+<script>
 import { ref, computed, watch } from "vue";
-import Modal from "../../components/modals/ModalDiloge.vue";
+import Modal from "../../components/modals/ModalDialog.vue";
+import { useSingleUsers } from '../../stores/users/single';
 
-import { useStore } from "vuex";
-import ShowCard from "../../components/widgets/ShowCard.vue";
+export default {
+    name: "ShowUser",
+    components: {  Modal },
+    setup() {
+        let thisModal = ref(null);
+        const single = useSingleUsers();
+        const showModal = computed(() => single.showModalShow);
 
-const store = useStore();
-let thisModal = ref(null);
+        watch(showModal, (q) => {
+            thisModal.value.show();
+        }, { deep: true });
+        return {
+            thisModal,
+            single,
+        }
+    },
 
-const entry = computed(() => store.getters["UsersSingle/entry"]);
-const lists = computed(() => store.getters["UsersSingle/lists"]);
-const showModal = computed(() => store.getters["UsersIndex/showModal"]);
-
-
-watch(showModal, (q) => {
-    thisModal.value.show();
-}, { deep: true });
+}
 </script>
 

@@ -43,7 +43,7 @@ class User extends Authenticatable
         'email',
         'email_verified_at',
         'phone',
-        'account.name',
+        'role',
         'profile_photo_path',
     ];
 

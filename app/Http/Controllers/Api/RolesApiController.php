@@ -64,7 +64,7 @@ class RolesApiController extends Controller
     public function update(UpdateRoleRequest $request, Role $role)
     {
         $role->update($request->validated());
-        $role->permissions()->sync($request->permissions);
+        // $role->permissions()->sync($request->permissions);
 
         return (new RoleResource($role))
             ->response()

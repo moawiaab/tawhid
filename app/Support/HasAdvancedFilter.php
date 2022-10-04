@@ -9,8 +9,8 @@ trait HasAdvancedFilter
     public function scopeAdvancedFilter($query)
     {
         return $this->processQuery($query, [
-            'order_column'    => request('sort', 'id'),
-            'order_direction' => request('order', 'desc'),
+            'order_column'    => request('sortBy', 'id'),
+            'order_direction' => request('sortType', 'desc'),
             'limit'           => request('limit', 10),
             's'               => request('s', null),
         ]);

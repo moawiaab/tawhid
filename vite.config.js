@@ -21,7 +21,7 @@ export default defineConfig({
     resolve: {
         alias: {
             vue: "vue/dist/vue.esm-bundler.js",
-            "@": resolve(__dirname, "resources/"),
+            "@": resolve(__dirname, "resources/js/"),
         },
     },
 });

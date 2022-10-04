@@ -38,7 +38,7 @@
 <script setup>
 import { onMounted } from "@vue/runtime-core";
 const sidebarItems = [
-    { url: '/dashboard', title: 'الرئيسية', icon: ' icon-speedometer', access: 'client_access' },
+    { url: '/dashboard', title: 'الرئيسية', icon: ' icon-speedometer', access: 'dashboard_access' },
     { url: '/users', title: 'المستخدمين',  icon: ' icon-user', access: 'user_access' },
     { url: '/roles', title: 'الصلاحيات',  icon: 'icon-lock-open ', access: 'role_access' },
 ];

@@ -6,6 +6,7 @@
     },
     "devDependencies": {
         "@popperjs/core": "^2.10.2",
+        "@types/uuid": "^8.3.4",
         "@vitejs/plugin-vue": "^3.0.1",
         "@vueform/multiselect": "^2.5.2",
         "axios": "^0.27",
@@ -29,7 +30,9 @@
         "@casl/vue": "^2.2.0",
         "@suadelabs/vue3-multiselect": "^1.0.2",
         "chart.js": "^3.9.1",
+        "pinia": "^2.0.22",
         "vue-chartjs": "^4.1.1",
-        "vue-toastification": "^2.0.0-rc.5"
+        "vue-toastification": "^2.0.0-rc.5",
+        "vue3-easy-data-table": "^1.4.20"
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <theme-setting />
+    <!-- <theme-setting /> -->
     <div id="wrapper">
 
         <Nav />

@@ -45,14 +45,14 @@
         <div id="particles-js"></div>
     </div>
     <!-- Javascript -->
-    <script src="assets/bundles/libscripts.bundle.js"></script>
+    {{-- <script src="assets/bundles/libscripts.bundle.js"></script>
     <script src="assets/bundles/vendorscripts.bundle.js"></script>
 
 
     <script src="assets/vendor/dropify/js/dropify.js"></script>
 
     <script src="assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-    <script src="assets/bundles/mainscripts.bundle.js"></script>
+    <script src="assets/bundles/mainscripts.bundle.js"></script> --}}
     {{-- <script src="assets/js/pages/forms/dropify.js"></script> --}}
 
 </body>

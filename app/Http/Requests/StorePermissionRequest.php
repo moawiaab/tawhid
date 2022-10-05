@@ -21,6 +21,10 @@ class StorePermissionRequest extends FormRequest
                 'string',
                 'required',
             ],
+            'details' => [
+                'string',
+                'required',
+            ],
         ];
     }
 }

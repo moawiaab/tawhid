@@ -1,11 +1,7 @@
 <template>
     <Loader v-if="role.loading" />
     <Content title="الصلاحيات">
-        <template #header>
-            <li class="breadcrumb-item">
-                <router-link to="/dashboard">الرئيسية</router-link>
-            </li>
-        </template>
+
         <template #content>
             <div class="new-item">
                 <create-role />
@@ -25,9 +21,9 @@
                 </template>
                 <template #item-operation="item">
                     <div class="operation-wrapper text-right">
-                        <table-icon @click="role.showTable(item)" icon="eye" color="info" title="عرض المستخدم" />
-                        <table-icon @click="role.editTable(item)" />
-                        <table-icon @click="role.editTable(item)" icon="trash" color="danger" title="حذف المستخدم" />
+                        <table-icon @click="role.showItem(item)" icon="eye" color="info" title="عرض المستخدم" />
+                        <table-icon @click="role.editItem(item)" />
+                        <table-icon @click="role.deleteItem(item)" icon="trash" color="danger" title="حذف الصلاحية" />
                     </div>
                 </template>
             </EasyDataTable>

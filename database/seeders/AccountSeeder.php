@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Account;
+use App\Models\GroupAccount;
 use App\Models\PublicTreasury;
 use App\Models\Role;
 use App\Models\User;
@@ -22,11 +23,13 @@ class AccountSeeder extends Seeder
             [
                 'id'             => 1,
                 'title'          => 'المدير العام',
+                'account_id'     => 1,
                 'created_at'     => now(),
             ],
             [
                 'id'             => 2,
                 'title'          => 'مدير فرع',
+                'account_id'     => 1,
                 'created_at'     => now(),
             ],
         ];
@@ -35,9 +38,18 @@ class AccountSeeder extends Seeder
         $account = [
             [
                 'id'             => 1,
-                'name'           => 'الفرع الرئيسي',
-                'details'       => 'تفاصيل الفرع',
+                'name'           => 'الحساب العامة',
+                'details'        => 'تفاصيل الحساب العامة',
                 'status'         => 1,
+                'phone'          => 25985222,
+                'created_at'     => now(),
+            ],
+            [
+                'id'             => 2,
+                'name'           => 'الفرع الرئيسي',
+                'details'        => 'تفاصيل الفرع',
+                'status'         => 1,
+                'phone'          => 25985222,
                 'created_at'     => now(),
             ],
         ];
@@ -54,9 +66,18 @@ class AccountSeeder extends Seeder
                 'account_id'     => 1,
                 'created_at'     => now(),
             ],
+            [
+                'id'             => 2,
+                'name'           => 'User Admin',
+                'email'          => 'user@admin.com',
+                'password'       => bcrypt('password'),
+                'remember_token' => null,
+                'role_id'        => 2,
+                'account_id'     => 2,
+                'created_at'     => now(),
+            ],
         ];
 
         User::insert($users);
-
     }
 }

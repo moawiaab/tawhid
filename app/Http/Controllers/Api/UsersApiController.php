@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\Admin\UserResource;
 use App\Models\Role;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Request as FacadesRequest;
@@ -18,9 +19,10 @@ class UsersApiController extends Controller
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return UserResource::collection(
-            User::filter(
-                FacadesRequest::only('type')
-            )
+            auth()
+                ->user()
+                ->account
+                ->users()
                 ->with(['role', 'account'])
                 ->advancedFilter()
                 ->paginate(request('rowsPerPage', 20))
@@ -43,7 +45,11 @@ class UsersApiController extends Controller
 
         return response([
             'meta' => [
-                'roles' => Role::get(['id', 'title']),
+                'roles' =>
+                auth()
+                    ->user()
+                    ->account
+                    ->roles()->get(['id', 'title']),
             ],
         ]);
     }
@@ -72,7 +78,10 @@ class UsersApiController extends Controller
         return response([
             'data' => new UserResource($user->load(['role', 'account'])),
             'meta' => [
-                'roles' => Role::get(['id', 'title']),
+                'roles' => auth()
+                    ->user()
+                    ->account
+                    ->roles()->get(['id', 'title']),
             ],
         ]);
     }
@@ -83,6 +92,19 @@ class UsersApiController extends Controller
 
         $user->delete();
 
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function toggle(User $user)
+    {
+        abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $user->status = !$user->status;
+        if (auth()->id() == $user->id)
+            throw new Exception('لا يمكنك قفل حسابك');
+        elseif (auth()->user()->role->id > 2)
+            throw new Exception('هذا الحاسب مدير لفرع لا يمكنك قفله');
+        else
+            $user->save();
         return response(null, Response::HTTP_NO_CONTENT);
     }
 }

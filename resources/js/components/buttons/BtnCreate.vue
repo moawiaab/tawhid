@@ -1,5 +1,5 @@
 <template>
-    <button :type="type" :class="`btn ${color}  mb-2`" :disabled="disabled">
+    <button :type="type" :class="`btn ${color}  mb-1`" :disabled="disabled">
         <span v-if="disabled">
             <i class="fa fa-spinner fa-spin"></i>
             <span class="mx-1"> انتظر من فضلك ... </span>

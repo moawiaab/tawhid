@@ -10,12 +10,14 @@ class AbilitiesController extends Controller
 {
     public function index()
     {
-        $permissions = auth()->user()->role->with('permissions')->get()
-            ->pluck('permissions')
-            ->flatten()
-            ->pluck('title')
-            ->toArray();
-
+        $permissions = auth()->user()->role->permissions
+            ->pluck('title')->toArray();
+        if (auth()->user()->status == 0) {
+            $permissions = ['user_locked', 'dashboard_access'];
+        }
+        if (auth()->user()->account->status == 0) {
+            $permissions = ['account_locked', 'dashboard_access'];
+        }
         return new AbilityResource($permissions);
     }
 }

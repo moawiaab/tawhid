@@ -1,14 +1,14 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import { useToast } from "vue-toastification";
-import { useSingleUsers } from "./single";
+import { useSinglePermissions } from "./single";
 import Swal from "sweetalert2";
 
-const route = "users";
+const route = "permissions";
 const toast = useToast();
-export const useUsers = defineStore("index-users", {
+export const usePermissions = defineStore("index-permissions", {
     state: () => ({
-        users: [],
+        permissions: [],
         total: 0,
         page: 1,
         query: {
@@ -20,7 +20,7 @@ export const useUsers = defineStore("index-users", {
         loading: false,
     }),
     getters: {
-        // items: (state) => state.users,
+        // items: (state) => state.permissions,
         // totalItem: (state) => state.total,
     },
     actions: {
@@ -30,7 +30,7 @@ export const useUsers = defineStore("index-users", {
                 await axios
                     .get(route, { params: this.query })
                     .then((response) => {
-                        this.users = response.data.data;
+                        this.permissions = response.data.data;
                         this.total = response.data.meta.total;
                         this.page = response.data.meta.current_page;
                     })
@@ -44,14 +44,14 @@ export const useUsers = defineStore("index-users", {
             this.query = q;
         },
         editItem(item: any) {
-            const users = useSingleUsers();
-            users.showModalEdit = true;
-            users.fetchEditData(item.id);
+            const permissions = useSinglePermissions();
+            permissions.showModalEdit = true;
+            permissions.fetchEditData(item.id);
         },
         showItem(item: any) {
-            const users = useSingleUsers();
-            users.showModalShow = true;
-            users.fetchShowData(item.id);
+            const permissions = useSinglePermissions();
+            permissions.showModalShow = true;
+            permissions.fetchShowData(item.id);
         },
 
         deleteItem(item: any) {
@@ -73,37 +73,6 @@ export const useUsers = defineStore("index-users", {
                             this.fetchIndexData();
                         })
                         .catch((error) => {});
-                }
-            });
-        },
-
-        lockItem(item: any) {
-            Swal.fire({
-                confirmButtonText: ` تغيرالحالة`,
-                cancelButtonText: ` إلغاء الأمر`,
-                title: "هل تريد تغيير الحالة بالفعل",
-                text: "يتم تغير الحالة من الفتح الى الإغلاق والعكس",
-                icon: "question",
-                position: "center",
-                showCancelButton: true,
-                confirmButtonColor: "rgb(21, 99, 221)",
-                showConfirmButton: true,
-                toast: false,
-            }).then((result) => {
-                if (result.value) {
-                    axios
-                        .put(`${route}/${item.id}/toggle`)
-                        .then((response) => {
-                            this.fetchIndexData();
-                        })
-                        .catch((error) => {
-                            this.errors =
-                                error.response.data.errors || this.errors;
-                            toast.error(error.response.data.message, {
-                                timeout: 5000,
-                            });
-                            // reject(error);
-                        });
                 }
             });
         },

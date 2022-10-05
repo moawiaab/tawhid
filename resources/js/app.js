@@ -18,25 +18,16 @@ import GlobalMixins from "./mixins/global";
 import EventHub from "./components/EventHubPlugin/EventHub.vue";
 import * as bootstrap from "./bootstrap";
 import BtnCreate from "./components/buttons/BtnCreate.vue";
-// import Modal from "./components/modals/ModalDiloge.vue";
 import VueHtmlToPaper from "./vueHtmlToPaper"
 
 import { createPinia } from 'pinia'
 const pinia = createPinia()
-import VueSweetalert2 from "vue-sweetalert2";
-import "sweetalert2/dist/sweetalert2.min.css";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
 import { abilitiesPlugin } from "@casl/vue";
 import ability from "./services/ability";
-const options = {
-    toast: true,
-    position: "top-end",
-    showCancelButton: false,
-    showConfirmButton: false,
-    timerProgressBar: true,
-};
+
 const options2 = {
     position: "top-right",
     timeout: 2000,
@@ -72,14 +63,12 @@ app.use(abilitiesPlugin, ability, {
     useGlobalProperties: true,
 });
 app.use(GlobalMixins);
-app.use(VueSweetalert2, options);
 app.use(VueHtmlToPaper, options3);
 app.component('EasyDataTable', Vue3EasyDataTable);
 app.component("event-hub", EventHub);
 app.component("Content", Content);
 app.component("DataTable", DataTable);
 app.component("Loader", Loader);
-// app.component("Modal", Modal);
 app.component("btn-create", BtnCreate);
 app.component("table-icon", TableIcon);
 app.mount("#app");

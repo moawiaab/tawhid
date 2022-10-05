@@ -19,11 +19,13 @@ class Permission extends Model
     protected $orderable = [
         'id',
         'title',
+        'details'
     ];
 
     protected $filterable = [
         'id',
         'title',
+        'details'
     ];
 
     protected $dates = [
@@ -34,6 +36,7 @@ class Permission extends Model
 
     protected $fillable = [
         'title',
+        'details',
         'created_at',
         'updated_at',
         'deleted_at',

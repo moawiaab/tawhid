@@ -23,8 +23,8 @@ return new class extends Migration
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->integer('role_id')->index();
+            $table->tinyInteger('status')->default(1);
             $table->integer('account_id')->index();
-            $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

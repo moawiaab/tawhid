@@ -1,14 +1,14 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import { useToast } from "vue-toastification";
-import { useSingleUsers } from "./single";
+import { useSingleAccounts } from "./single";
 import Swal from "sweetalert2";
 
-const route = "users";
+const route = "accounts";
 const toast = useToast();
-export const useUsers = defineStore("index-users", {
+export const useAccounts = defineStore("index-accounts", {
     state: () => ({
-        users: [],
+        accounts: [],
         total: 0,
         page: 1,
         query: {
@@ -20,7 +20,7 @@ export const useUsers = defineStore("index-users", {
         loading: false,
     }),
     getters: {
-        // items: (state) => state.users,
+        // items: (state) => state.accounts,
         // totalItem: (state) => state.total,
     },
     actions: {
@@ -30,7 +30,7 @@ export const useUsers = defineStore("index-users", {
                 await axios
                     .get(route, { params: this.query })
                     .then((response) => {
-                        this.users = response.data.data;
+                        this.accounts = response.data.data;
                         this.total = response.data.meta.total;
                         this.page = response.data.meta.current_page;
                     })
@@ -44,39 +44,15 @@ export const useUsers = defineStore("index-users", {
             this.query = q;
         },
         editItem(item: any) {
-            const users = useSingleUsers();
-            users.showModalEdit = true;
-            users.fetchEditData(item.id);
+            const accounts = useSingleAccounts();
+            accounts.showModalEdit = true;
+            accounts.fetchEditData(item.id);
         },
         showItem(item: any) {
-            const users = useSingleUsers();
-            users.showModalShow = true;
-            users.fetchShowData(item.id);
+            const accounts = useSingleAccounts();
+            accounts.showModalShow = true;
+            accounts.fetchShowData(item.id);
         },
-
-        deleteItem(item: any) {
-            Swal.fire({
-                title: "هل تريد الحذف بالفعل",
-                icon: "error",
-                position: "center",
-                showCancelButton: true,
-                cancelButtonText: ` إلغاء الأمر`,
-                confirmButtonText: `تأكيد الحذف`,
-                confirmButtonColor: "#dd4b39",
-                showConfirmButton: true,
-                toast: false,
-            }).then((result) => {
-                if (result.value) {
-                    axios
-                        .delete(`${route}/${item.id}`)
-                        .then((response) => {
-                            this.fetchIndexData();
-                        })
-                        .catch((error) => {});
-                }
-            });
-        },
-
         lockItem(item: any) {
             Swal.fire({
                 confirmButtonText: ` تغيرالحالة`,
@@ -96,14 +72,29 @@ export const useUsers = defineStore("index-users", {
                         .then((response) => {
                             this.fetchIndexData();
                         })
-                        .catch((error) => {
-                            this.errors =
-                                error.response.data.errors || this.errors;
-                            toast.error(error.response.data.message, {
-                                timeout: 5000,
-                            });
-                            // reject(error);
-                        });
+                        .catch((error) => {});
+                }
+            });
+        },
+        deleteItem(item: any) {
+            Swal.fire({
+                title: "هل تريد الحذف بالفعل",
+                icon: "error",
+                position: "center",
+                showCancelButton: true,
+                cancelButtonText: ` إلغاء الأمر`,
+                confirmButtonText: `تأكيد الحذف`,
+                confirmButtonColor: "#dd4b39",
+                showConfirmButton: true,
+                toast: false,
+            }).then((result) => {
+                if (result.value) {
+                    axios
+                        .delete(`${route}/${item.id}`)
+                        .then((response) => {
+                            this.fetchIndexData();
+                        })
+                        .catch((error) => {});
                 }
             });
         },

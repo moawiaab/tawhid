@@ -1,26 +1,26 @@
 <template>
     <Loader v-if="user.loading" />
     <Content title="المستخدمين">
-        <template #header>
-            <li class="breadcrumb-item">
-                <router-link to="/dashboard">الرئيسية</router-link>
-            </li>
-        </template>
+
         <template #content>
             <div class="new-item">
                 <create-user />
             </div>
             <EasyDataTable :server-items-length="user.total" buttons-pagination v-model:server-options="query"
                 :headers="headers" :items="user.users" body-text-direction="right" table-class-name="customize-table"
-                theme-color="#0dcaf0" :table-height="500" :loading="user.loading" alternating border-cell>
+                theme-color="#0dcaf0" :table-height="550" :loading="user.loading" alternating border-cell>
                 <template #item-role="item">
                     {{item.role.title}}
                 </template>
                 <template #item-operation="item">
                     <div class="operation-wrapper text-right">
-                        <table-icon @click="user.showTable(item)" icon="eye" color="info" title="عرض المستخدم"/>
-                        <table-icon @click="user.editTable(item)" />
-                        <table-icon @click="user.editTable(item)" icon="trash" color="danger" title="حذف المستخدم"/>
+                        <table-icon @click="user.showItem(item)" icon="eye" color="info" title="عرض المستخدم" />
+                        <table-icon @click="user.editItem(item)" />
+                        <!-- <table-icon @click="user.deleteItem(item)" icon="trash" color="danger" title="حذف المستخدم" /> -->
+                        <table-icon @click="user.lockItem(item)" icon="lock" color="danger" title="فتح الحساب"
+                            v-if="!item.status" />
+                        <table-icon @click="user.lockItem(item)" icon="unlock" color="success" title="قفل الحساب"
+                            v-else />
                     </div>
                 </template>
             </EasyDataTable>

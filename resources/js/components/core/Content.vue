@@ -5,12 +5,12 @@
                 <div class="row clearfix">
                     <div class="col-md-6 col-sm-12 text-left hidden-xs">
                         <h2>{{ title }}</h2>
-                        <nav aria-label="breadcrumb">
+                        <!-- <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <slot name="header" />
                                 <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
                             </ol>
-                        </nav>
+                        </nav> -->
                         <!-- <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-round" title="">Add New</a> -->
 
                     </div>

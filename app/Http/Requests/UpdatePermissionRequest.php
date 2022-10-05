@@ -21,6 +21,10 @@ class UpdatePermissionRequest extends FormRequest
                 'string',
                 'required',
             ],
+            'details' => [
+                'string',
+                'required',
+            ],
         ];
     }
 }

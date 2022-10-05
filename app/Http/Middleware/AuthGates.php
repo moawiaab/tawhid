@@ -29,12 +29,18 @@ class AuthGates
                 $permissionsArray[$permissions->title][] = $role->id;
             }
         }
-
-        foreach ($permissionsArray as $title => $roles) {
-            Gate::define($title, function (User $user) use ($roles) {
-                return in_array($user->role->id, $roles);
-            });
+        if ($user->account->status == 0) {
+            $permissionsArray = ['account_locked', 'dashboard_access'];
+        } elseif ($user->status == 0) {
+            $permissionsArray = ['user_locked', 'dashboard_access'];
+        } else {
+            foreach ($permissionsArray as $title => $roles) {
+                Gate::define($title, function (User $user) use ($roles) {
+                    return in_array($user->role->id, $roles);
+                });
+            }
         }
+
         return $next($request);
     }
 }

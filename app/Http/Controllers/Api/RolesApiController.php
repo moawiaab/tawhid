@@ -18,13 +18,25 @@ class RolesApiController extends Controller
     {
         abort_if(Gate::denies('role_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return  RoleResource::collection(Role::with(['permissions'])->advancedFilter()->paginate(request('limit', 10)));
+        return  RoleResource::collection(
+            auth()
+                ->user()
+                ->account
+                ->roles()
+                ->with(['permissions'])
+                ->advancedFilter()
+                ->paginate(request('rowsPerPage', 10))
+        );
     }
 
     public function store(StoreRoleRequest $request)
     {
-        $role = Role::create($request->validated());
+        $role =  auth()
+            ->user()
+            ->account
+            ->roles()->create($request->validated());
         $role->permissions()->sync($request->permissions);
+        $role->permissions()->syncWithoutDetaching(1);
 
         return (new RoleResource($role))
             ->response()
@@ -37,7 +49,9 @@ class RolesApiController extends Controller
 
         return response([
             'meta' => [
-                'permissions' => Permission::get(['id as value', 'details as label']),
+                'permissions' => Permission::where('id', '>', 1)->when(auth()->user()->account_id != 1, function ($q) {
+                    $q->where('status', 1);
+                })->get(['id as value', 'details as label']),
             ],
         ]);
     }
@@ -64,7 +78,8 @@ class RolesApiController extends Controller
     public function update(UpdateRoleRequest $request, Role $role)
     {
         $role->update($request->validated());
-        // $role->permissions()->sync($request->permissions);
+        $role->permissions()->sync($request->permissions);
+        $role->permissions()->syncWithoutDetaching(1);
 
         return (new RoleResource($role))
             ->response()
@@ -78,7 +93,9 @@ class RolesApiController extends Controller
         return response([
             'data' => new RoleResource($role),
             'meta' => [
-                'permissions' => Permission::get(['id as value', 'details as label']),
+                'permissions' => Permission::where('id', '>', 1)->when(auth()->user()->account_id != 1, function ($q) {
+                    $q->where('status', 1);
+                })->get(['id as value', 'details as label']),
                 'roles' => $role->permissions->transform(fn ($role) => [
                     $role->id
                 ]),

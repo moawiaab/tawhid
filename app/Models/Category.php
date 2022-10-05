@@ -6,25 +6,24 @@ use App\Support\HasAdvancedFilter;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Account extends Model
+class Category extends Model
 {
     use HasFactory;
-    use SoftDeletes;
     use HasAdvancedFilter;
 
-    public $table = 'accounts';
     protected $orderable = [
         'id',
         'name',
-        'details'
+        'status',
+        'details',
     ];
 
     protected $filterable = [
         'id',
         'name',
-        'details'
+        'status',
+        'details',
     ];
 
     protected $dates = [
@@ -35,22 +34,16 @@ class Account extends Model
 
     protected $fillable = [
         'name',
+        'status',
         'details',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
-    public function users()
+    public function account()
     {
-        return $this->hasMany(User::class);
-    }
-
-    public function roles()
-    {
-        return $this->hasMany(Role::class);
-    }
-
-    public function categories()
-    {
-        return $this->hasMany(Category::class);
+        return $this->belongsTo(Account::class);
     }
 
     protected function serializeDate(DateTimeInterface $date)

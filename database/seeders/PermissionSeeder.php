@@ -107,6 +107,67 @@ class PermissionSeeder extends Seeder
                 'status' => 0,
                 'title' => 'role_delete',
             ],
+            [
+                'details' => 'عرض المنتجات',
+                'status' => 1,
+                'title' => 'product_access',
+            ],
+            [
+                'details' => 'إنشاء منتج جديد',
+                'status' => 1,
+                'title' => 'product_create',
+            ],
+            [
+                'details' => 'تعديل المنتج',
+                'status' => 1,
+                'title' => 'product_edit',
+            ],
+            [
+                'details' => 'حذف المنتج',
+                'status' => 1,
+                'title' => 'product_delete',
+            ],
+            [
+                'details' => 'عرض المخازن',
+                'status' => 1,
+                'title' => 'store_access',
+            ],
+            [
+                'details' => 'إنشاء مخزن جديد',
+                'status' => 1,
+                'title' => 'store_create',
+            ],
+            [
+                'details' => 'تعديل المخزن',
+                'status' => 1,
+                'title' => 'store_edit',
+            ],
+            [
+                'details' => 'حذف المخزن',
+                'status' => 1,
+                'title' => 'store_delete',
+            ],
+
+            [
+                'details' => 'عرض أقسام المنتجات',
+                'status' => 1,
+                'title' => 'category_access',
+            ],
+            [
+                'details' => 'إنشاء قسم منتج جديدة',
+                'status' => 1,
+                'title' => 'category_create',
+            ],
+            [
+                'details' => 'تعديل قسم المنتج',
+                'status' => 1,
+                'title' => 'category_edit',
+            ],
+            [
+                'details' => 'حذف قسم المنتج',
+                'status' => 1,
+                'title' => 'category_delete',
+            ],
         ];
         Permission::insert($permissions);
     }

@@ -29,7 +29,8 @@
                         :class="openSidebar || item.url.includes($route.path) ? 'active open' : ''">
 
                         <span v-if="item.items">
-                            <a  @click="openSidebar = !openSidebar" class="has-arrow" :class="openSidebar || item.url.includes($route.path) ? 'active' : ''"
+                            <a @click="openSidebar = !openSidebar" class="has-arrow"
+                                :class="openSidebar || item.url.includes($route.path) ? 'active' : ''"
                                 :aria-expanded="openSidebar || (!openSidebar && item.url.includes($route.path))"><i
                                     :class="item.icon"></i><span>{{item.title}}</span></a>
                             <ul :aria-expanded="openSidebar || (!openSidebar && item.url.includes($route.path))"
@@ -44,7 +45,7 @@
                         </span>
 
                         <span v-else @click="openSidebar=false">
-                            <router-link :to="item.url" v-if="$can(item.access)" >
+                            <router-link :to="item.url" v-if="$can(item.access)">
                                 <i :class="item.icon"></i><span>{{item.title}}</span>
                             </router-link>
                         </span>
@@ -65,14 +66,14 @@ const userName = computed(() => 'moawia.ab');
 const sidebarItems = [
     { url: '/dashboard', title: 'الرئيسية', icon: ' icon-speedometer', access: 'dashboard_access' },
     { url: '/accounts', title: 'الفروع', icon: ' icon-shuffle ', access: 'account_access' },
-    // {
-    //     url: ['/project-departments', '/project-stages', '/projects'], title: 'إدارة المشروعات', icon: 'fa fa-code-fork',
-    //     items: [
-    //         { url: '/project-departments', title: 'أقسام المشروع', access: 'project_department_access' },
-    //         { url: '/project-stages', title: 'مراحل المشروع', access: 'stage_access' },
-    //         { url: '/projects', title: ' نافذة المشروعات', access: 'project_access' },
-    //     ]
-    // },
+    {
+        url: ['/product-departments', '/categories', '/products'], title: 'إدارة المنتجات', icon: 'fa fa-code-fork',
+        items: [
+            { url: '/stores', title: 'المخازن', access: 'store_access' },
+            { url: '/categories', title: 'أقسام المنتجات', access: 'category_access' },
+            { url: '/products', title: 'المنتجات', access: 'product_access' },
+        ]
+    },
 
 
     { url: '/users', title: 'المستخدمين', icon: ' icon-user', access: 'user_access' },
@@ -90,8 +91,9 @@ const close = () => {
     overflow: scroll;
 }
 
-.has-arrow.active ,.router-link-active{
-  color: #0dcaf0 !important;
+.has-arrow.active,
+.router-link-active {
+    color: #0dcaf0 !important;
 }
 </style>
 

@@ -2,23 +2,36 @@
     <div class="">
         <btn-create @click="showModal" />
         <form @submit.prevent="submitForm">
-            <Modal title="إضافة مستخدم جديد" ref="thisModal" maxWidth="lg">
+            <Modal title="إضافة منتج جديد" ref="thisModal">
                 <template #body>
-                    <v-text name="name" v-model="single.entry.name" type="text" title="الاسم بالكامل"
-                        :error="single.errors.name" />
-                    <v-text name="email" v-model="single.entry.email" type="email" title="البريد الالكتروني"
-                        :error="single.errors.email" />
-                    <v-text name="phone" v-model="single.entry.phone" type="phone" title=" رقم الهاتف"
-                        :error="single.errors.phone" />
-                    <v-text name="password" v-model="single.entry.password" type="password" title="كلمة المرور"
-                        :error="single.errors.password" />
-                    <v-text name="password_confirmation" v-model="single.entry.password_confirmation" type="password"
-                        title="تأكيد كلمة المرور" />
-                    <select-text name="role_id" v-model="single.entry.role_id" title="الصلاحية"
-                        :error="single.errors.role_id">
-                        <option v-for="role in single.lists.roles" :key="role.id" :value="role.id"> {{ role.title }}
+                    <v-text v-model="single.entry.name" type="text" title="اسم المنتج" :error="single.errors.name" />
+                    <v-text-area v-model="single.entry.details" type="text" title="التفاصيل"
+                        :error="single.errors.details" />
+
+                    <select-text name="category_id" v-model="single.entry.category_id" title="الأقسام"
+                        :error="single.errors.category_id">
+                        <option v-for="cat in single.lists.category" :key="cat.id" :value="cat.id"> {{ cat.name }}
                         </option>
                     </select-text>
+                    <div class="row mb-3 ">
+                        <label class="col-sm-3  col-form-label"> حالة المنتج</label>
+                        <div class="col-sm-9">
+
+                            <div class="fancy-radio m-0 mb-2">
+                                <label>
+                                    <input value="0" type="radio" v-model="single.entry.status">
+                                    <span><i></i> منتج خاص</span>
+                                </label>
+                            </div>
+
+                            <div class="fancy-radio m-0 mb-2">
+                                <label>
+                                    <input value="1" type="radio" v-model="single.entry.status">
+                                    <span><i></i> منتج عام</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </template>
                 <template #footer>
                     <btn-create icon="fa-save" type="submit" :disabled="single.loading" />
@@ -32,15 +45,16 @@
 import { ref, computed } from "vue";
 import VText from "../../components/inputs/VInput.vue";
 import SelectText from "../../components/inputs/VSelect.vue";
+import VTextArea from "../../components/inputs/VTextArea.vue";
 import Modal from "../../components/modals/ModalDialog.vue";
-import { useSingleUsers } from '../../stores/users/single';
+import { useSingleProducts } from '../../stores/Products/single';
 
 export default {
-    name: "CreateUser",
-    components: { VText, SelectText, Modal },
+    name: "CreateProduct",
+    components: { VText, SelectText, Modal,VTextArea },
     setup() {
         let thisModal = ref(null);
-        const single = useSingleUsers();
+        const single = useSingleProducts();
         const showModal = () => {
             single.$reset();
             single.fetchCreateData()

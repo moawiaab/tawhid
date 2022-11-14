@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PasswordsRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\Admin\UserResource;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request as FacadesRequest;
+use Illuminate\Validation\ValidationException;
 
 class UsersApiController extends Controller
 {
@@ -106,5 +110,23 @@ class UsersApiController extends Controller
         else
             $user->save();
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+    public function password(PasswordsRequest $request)
+    {
+
+        $user = auth()->user();
+        if (!Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'password' => ["كلمة المرور غير متطابقة حاولة مرة اخرى من فضلك"],
+            ]);
+        }
+        $user->password = Hash::make($request->newPassword);
+        if ($user->save()) {
+            return response(null, Response::HTTP_NO_CONTENT);
+        } else {
+            throw ValidationException::withMessages([
+                'password' => ["لم تتم تغيير كلمة السر بنجاح حاولة مرة اخرى"],
+            ]);
+        }
     }
 }

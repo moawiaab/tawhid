@@ -18,6 +18,7 @@ export const useRoles = defineStore("roles", {
             page: 1,
         },
         loading: false,
+        filters: { s: "" },
     }),
     getters: {
         // items: (state) => state.users,
@@ -28,7 +29,7 @@ export const useRoles = defineStore("roles", {
             this.loading = true;
             return new Promise(async (resolve, reject) => {
                 await axios
-                    .get(route, { params: this.query })
+                    .get(route, { params: { ...this.filters, ...this.query } })
                     .then((response) => {
                         this.roles = response.data.data;
                         this.total = response.data.meta.total;
@@ -43,6 +44,9 @@ export const useRoles = defineStore("roles", {
         setQuery(q: any) {
             this.query = q;
         },
+        setFilters(q: any) {
+            this.filters = q;
+        },
         editItem(item: any) {
             const roles = useSingleRoles();
             roles.showModalEdit = true;
@@ -55,7 +59,7 @@ export const useRoles = defineStore("roles", {
         },
         deleteItem(item: any) {
             Swal.fire({
-                title: 'حذف الصلاحية',
+                title: "حذف الصلاحية",
                 text: "هل تريد حذف هذه الصلاحية بالفعل",
                 icon: "error",
                 position: "center",

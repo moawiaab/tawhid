@@ -53,6 +53,15 @@ class Account extends Model
         return $this->hasMany(Category::class);
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function stores()
+    {
+        return $this->hasMany(Store::class);
+    }
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

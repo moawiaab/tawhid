@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\Admin\PermissionResource;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
@@ -20,8 +22,8 @@ class CategoryApiController extends Controller
     public function index()
     {
         abort_if(Gate::denies('category_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return PermissionResource::collection(
-            Category::with('account')->when(
+        return CategoryResource::collection(
+            Category::when(
                 auth()->user()->account_id != 1,
                 function ($q) {
                     $q->where('status', 1);
@@ -99,8 +101,15 @@ class CategoryApiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        abort_if(Gate::denies('category_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        if (auth()->user()->account_id != $category->account_id)
+            throw new Exception('ليس لك الحق في حذف هذا القسم');
+        elseif ($category->status == 1)
+            throw new Exception('هذا القسم عام لا يمكنك حذفه');
+        else
+            $category->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class ProductStore extends Model
 {
     use HasFactory;
+
+    protected $table = 'product_store';
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
 }

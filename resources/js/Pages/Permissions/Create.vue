@@ -1,7 +1,7 @@
 <template>
-    <btn-create @click="showModal" />
+    <v-list-item-title @click="showModal" > إضافة إذن جديد</v-list-item-title>
     <form @submit.prevent="submitForm">
-        <Modal title="إضافة مستخدم جديد" ref="thisModal">
+        <!-- <Modal title="إضافة مستخدم جديد" ref="thisModal">
 
             <template #body>
                 <v-text v-model="single.entry.details" title=" اسم الصلاحية" :error="single.errors.details" />
@@ -26,19 +26,17 @@
             <template #footer>
                 <btn-create icon="fa-save" type="submit" :disabled="single.loading" />
             </template>
-        </Modal>
+        </Modal> -->
     </form>
 </template>
 
 <script>
 import { ref, computed } from "vue";
-import VText from "../../components/inputs/VInput.vue";
-import Modal from "../../components/modals/ModalDialog.vue";
 import { useSinglePermissions } from '../../stores/permissions/single';
 
 export default {
     name: "CreatePermission",
-    components: { VText, Modal },
+    // components: { VText, Modal },
     setup() {
         let thisModal = ref(null);
         const single = useSinglePermissions();

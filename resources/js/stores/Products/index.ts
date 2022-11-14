@@ -17,7 +17,11 @@ export const useProducts = defineStore("index-products", {
             rowsPerPage: 20,
             page: 1,
         },
+        filter: {
+            s: "",
+        },
         loading: false,
+        errors: null,
     }),
     getters: {
         // items: (state) => state.products,
@@ -28,7 +32,7 @@ export const useProducts = defineStore("index-products", {
             this.loading = true;
             return new Promise(async (resolve, reject) => {
                 await axios
-                    .get(route, { params: this.query })
+                    .get(route, { params: { ...this.filter, ...this.query } })
                     .then((response) => {
                         this.products = response.data.data;
                         this.total = response.data.meta.total;
@@ -42,6 +46,9 @@ export const useProducts = defineStore("index-products", {
         },
         setQuery(q: any) {
             this.query = q;
+        },
+        setFilter(q: any) {
+            this.filter = q;
         },
         editItem(item: any) {
             const products = useSingleProducts();
@@ -72,7 +79,13 @@ export const useProducts = defineStore("index-products", {
                         .then((response) => {
                             this.fetchIndexData();
                         })
-                        .catch((error) => {});
+                        .catch((error) => {
+                            this.errors =
+                                error.response.data.errors || this.errors;
+                            toast.error(error.response.data.message, {
+                                timeout: 5000,
+                            });
+                        });
                 }
             });
         },

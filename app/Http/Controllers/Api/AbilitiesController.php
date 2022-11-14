@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AbilityResource;
+use App\Http\Resources\Admin\UserDataResource;
 use Illuminate\Http\Request;
 
 class AbilitiesController extends Controller
@@ -18,6 +19,9 @@ class AbilitiesController extends Controller
         if (auth()->user()->account->status == 0) {
             $permissions = ['account_locked', 'dashboard_access'];
         }
-        return new AbilityResource($permissions);
+        return [
+            'data' => new AbilityResource($permissions),
+            'user' => new UserDataResource(auth()->user())
+        ];
     }
 }

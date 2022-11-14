@@ -1,11 +1,8 @@
 import axios from "axios";
 import { defineStore } from "pinia";
-import { useToast } from "vue-toastification";
 import { useSingleAccounts } from "./single";
-import Swal from "sweetalert2";
 
 const route = "accounts";
-const toast = useToast();
 export const useAccounts = defineStore("index-accounts", {
     state: () => ({
         accounts: [],
@@ -54,49 +51,49 @@ export const useAccounts = defineStore("index-accounts", {
             accounts.fetchShowData(item.id);
         },
         lockItem(item: any) {
-            Swal.fire({
-                confirmButtonText: ` تغيرالحالة`,
-                cancelButtonText: ` إلغاء الأمر`,
-                title: "هل تريد تغيير الحالة بالفعل",
-                text: "يتم تغير الحالة من الفتح الى الإغلاق والعكس",
-                icon: "question",
-                position: "center",
-                showCancelButton: true,
-                confirmButtonColor: "rgb(21, 99, 221)",
-                showConfirmButton: true,
-                toast: false,
-            }).then((result) => {
-                if (result.value) {
-                    axios
-                        .put(`${route}/${item.id}/toggle`)
-                        .then((response) => {
-                            this.fetchIndexData();
-                        })
-                        .catch((error) => {});
-                }
-            });
+            // Swal.fire({
+            //     confirmButtonText: ` تغيرالحالة`,
+            //     cancelButtonText: ` إلغاء الأمر`,
+            //     title: "هل تريد تغيير الحالة بالفعل",
+            //     text: "يتم تغير الحالة من الفتح الى الإغلاق والعكس",
+            //     icon: "question",
+            //     position: "center",
+            //     showCancelButton: true,
+            //     confirmButtonColor: "rgb(21, 99, 221)",
+            //     showConfirmButton: true,
+            //     toast: false,
+            // }).then((result) => {
+            //     if (result.value) {
+            //         axios
+            //             .put(`${route}/${item.id}/toggle`)
+            //             .then((response) => {
+            //                 this.fetchIndexData();
+            //             })
+            //             .catch((error) => {});
+            //     }
+            // });
         },
         deleteItem(item: any) {
-            Swal.fire({
-                title: "هل تريد الحذف بالفعل",
-                icon: "error",
-                position: "center",
-                showCancelButton: true,
-                cancelButtonText: ` إلغاء الأمر`,
-                confirmButtonText: `تأكيد الحذف`,
-                confirmButtonColor: "#dd4b39",
-                showConfirmButton: true,
-                toast: false,
-            }).then((result) => {
-                if (result.value) {
-                    axios
-                        .delete(`${route}/${item.id}`)
-                        .then((response) => {
-                            this.fetchIndexData();
-                        })
-                        .catch((error) => {});
-                }
-            });
+            // Swal.fire({
+            //     title: "هل تريد الحذف بالفعل",
+            //     icon: "error",
+            //     position: "center",
+            //     showCancelButton: true,
+            //     cancelButtonText: ` إلغاء الأمر`,
+            //     confirmButtonText: `تأكيد الحذف`,
+            //     confirmButtonColor: "#dd4b39",
+            //     showConfirmButton: true,
+            //     toast: false,
+            // }).then((result) => {
+            //     if (result.value) {
+            //         axios
+            //             .delete(`${route}/${item.id}`)
+            //             .then((response) => {
+            //                 this.fetchIndexData();
+            //             })
+            //             .catch((error) => {});
+            //     }
+            // });
         },
     },
 });

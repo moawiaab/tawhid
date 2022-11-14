@@ -11,6 +11,7 @@ export const useSingleRoles = defineStore("single-roles", {
             title: "",
             permissions: [],
             users: [],
+            created_at : null
         },
         lists: {
             permissions: [],

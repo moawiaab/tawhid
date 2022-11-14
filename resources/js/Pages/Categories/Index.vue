@@ -4,19 +4,25 @@
 
         <template #content>
             <div class="new-item">
+                <btn-create color="btn-info mr-2 text-light" icon="fa-refresh" title="تحديث"
+                    :disabled="category.loading" @click.prevent="category.fetchIndexData();" />
                 <create-category />
+            </div>
+            <div class="w350 mb-2">
+                <search-filter :query="filter" />
             </div>
             <EasyDataTable :server-items-length="category.total" buttons-pagination v-model:server-options="query"
                 :headers="headers" :items="category.categories" body-text-direction="right"
                 table-class-name="customize-table" theme-color="#0dcaf0" :table-height="550" :loading="category.loading"
                 alternating border-cell>
-                <template #item-status="item">
-                    {{item.status == 1 ? 'قسم عام' : 'قسم خاص'}}  -  {{item.account.name}}
-                </template>
+                <template #loading />
                 <template #item-operation="item">
                     <div class="operation-wrapper text-right">
                         <table-icon @click="category.showItem(item)" icon="eye" color="info" title="عرض أقسام" />
-                        <table-icon @click="category.editItem(item)" />
+                        <table-icon @click="category.editItem(item)"
+                            v-if="item.editable && this.$can('product_edit')" />
+                        <table-icon @click="category.deleteItem(item)" icon="trash" color="danger" title="حذف القسم"
+                            v-if="item.deletable && this.$can('category_delete')" />
                     </div>
                 </template>
             </EasyDataTable>
@@ -46,7 +52,11 @@ const category = useCategories()
 const query = ref<ServerOptions>({ sortBy: 'id', sortType: 'desc', rowsPerPage: 20, page: 1 })
 category.fetchIndexData();
 
-
+const filter = ref({ s: '' })
+watch(filter, (q) => {
+    category.setFilter(q);
+    category.fetchIndexData();
+}, { deep: true });
 watch(query, (q) => {
     category.setQuery(q);
     category.fetchIndexData();

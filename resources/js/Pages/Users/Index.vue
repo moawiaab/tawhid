@@ -4,13 +4,19 @@
 
         <template #content>
             <div class="new-item">
+                <btn-create color="btn-info mr-2 text-light" icon="fa-refresh" title="تحديث" :disabled="user.loading"
+                    @click.prevent="user.fetchIndexData();" />
                 <create-user />
+            </div>
+            <div class="w350 mb-2">
+                <search-filter :query="filter" />
             </div>
             <EasyDataTable :server-items-length="user.total" buttons-pagination v-model:server-options="query"
                 :headers="headers" :items="user.users" body-text-direction="right" table-class-name="customize-table"
                 theme-color="#0dcaf0" :table-height="550" :loading="user.loading" alternating border-cell>
+                <template #loading />
                 <template #item-role="item">
-                    {{item.role.title}}
+                    {{item.role?item.role.title:'لا توجد صلاحية'}}
                 </template>
                 <template #item-operation="item">
                     <div class="operation-wrapper text-right">
@@ -50,11 +56,17 @@ const headers: Header[] = [
 ];
 const user = useUsers()
 const query = ref<ServerOptions>({ sortBy: 'id', sortType: 'desc', rowsPerPage: 20, page: 1 })
+const filter = ref({ s: '' })
 user.fetchIndexData();
 
 
 watch(query, (q) => {
     user.setQuery(q);
+    user.fetchIndexData();
+}, { deep: true });
+
+watch(filter, (q) => {
+    user.setFilter(q);
     user.fetchIndexData();
 }, { deep: true });
 </script>

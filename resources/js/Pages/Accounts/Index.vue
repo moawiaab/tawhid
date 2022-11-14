@@ -4,6 +4,8 @@
 
         <template #content>
             <div class="new-item">
+                <btn-create color="btn-info mr-2 text-light" icon="fa-refresh" title="تحديث" :disabled="account.loading"
+                    @click.prevent="account.fetchIndexData();" />
                 <create-account />
             </div>
             <EasyDataTable :server-items-length="account.total" buttons-pagination v-model:server-options="query"

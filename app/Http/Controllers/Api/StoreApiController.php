@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoresRequest;
+use App\Http\Resources\StoresResource;
+use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class StoreApiController extends Controller
 {
@@ -14,7 +19,12 @@ class StoreApiController extends Controller
      */
     public function index()
     {
-        //
+        abort_if(Gate::denies('product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return StoresResource::collection(
+            Store::advancedFilter()
+                ->where('account_id', auth()->user()->account_id)
+                ->paginate(request('rowsPerPage', 20))
+        );
     }
 
     /**
@@ -24,7 +34,12 @@ class StoreApiController extends Controller
      */
     public function create()
     {
-        //
+        abort_if(Gate::denies('product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return response([
+            'meta' => [
+                'products' =>  auth()->user()->account->products()->get(['id as value', 'name as label'])
+            ],
+        ]);
     }
 
     /**
@@ -33,9 +48,12 @@ class StoreApiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoresRequest $request)
     {
-        //
+        $store = auth()->user()->account->stores()->create($request->validated());
+        if ($store->save())
+            $store->products()->sync($request->products);
+        return  response(null, Response::HTTP_CREATED);
     }
 
     /**

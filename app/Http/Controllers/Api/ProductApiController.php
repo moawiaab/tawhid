@@ -3,7 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\ProductRequest;
+use App\Http\Resources\Admin\PermissionResource;
+use App\Http\Resources\ProductsResource;
+use App\Models\Category;
+use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class ProductApiController extends Controller
 {
@@ -14,7 +23,18 @@ class ProductApiController extends Controller
      */
     public function index()
     {
-        //
+        abort_if(Gate::denies('product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return ProductsResource::collection(
+            Product::when(
+                auth()->user()->account_id != 1,
+                function ($q) {
+                    $q->where('status', 1)->orWhere('account_id', auth()->user()->account_id);
+                }
+            )->advancedFilter()
+            ->paginate(
+                request('rowsPerPage', 20)
+            )
+        );
     }
 
     /**
@@ -24,7 +44,17 @@ class ProductApiController extends Controller
      */
     public function create()
     {
-        //
+        abort_if(Gate::denies('product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return response([
+            'meta' => [
+                'category' => Category::when(
+                    auth()->user()->account_id != 1,
+                    function ($q) {
+                        $q->where('status', 1);
+                    }
+                )->get(['id', 'name'])
+            ],
+        ]);
     }
 
     /**
@@ -33,9 +63,13 @@ class ProductApiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        //
+        $data = [
+            'user_id' => auth()->id()
+        ];
+        auth()->user()->account->products()->create($request->validated() + $data);
+        return  response(null, Response::HTTP_CREATED);
     }
 
     /**
@@ -55,9 +89,20 @@ class ProductApiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        //
+        abort_if(Gate::denies('product_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return response([
+            'data' => new PermissionResource($product),
+            'meta' => [
+                'category' => Category::when(
+                    auth()->user()->account_id != 1,
+                    function ($q) {
+                        $q->where('status', 1);
+                    }
+                )->get(['id', 'name'])
+            ],
+        ]);
     }
 
     /**
@@ -67,9 +112,10 @@ class ProductApiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, Product $product)
     {
-        //
+        $product->update($request->validated());
+        return  response(null, Response::HTTP_CREATED);
     }
 
     /**
@@ -78,8 +124,15 @@ class ProductApiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        abort_if(Gate::denies('product_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        if (auth()->user()->account_id != $product->account_id)
+            throw new Exception('ليس لك الحق في حذف هذا المنتج');
+        elseif ($product->status == 1)
+            throw new Exception('هذا المنتج عام لا يمكنك حذفه');
+        else
+            $product->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

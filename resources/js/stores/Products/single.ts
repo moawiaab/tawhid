@@ -89,7 +89,7 @@ export const useSingleProducts = defineStore("single-products", {
             this.showModalEdit = false;
             axios.get(`${route}/${id}/edit`).then((response) => {
                 this.entry = response.data.data;
-                // this.lists = response.data.meta;
+                this.lists = response.data.meta;
             });
         },
 

@@ -17,7 +17,9 @@ export const useUsers = defineStore("index-users", {
             rowsPerPage: 20,
             page: 1,
         },
+        filter: { s: "" },
         loading: false,
+        errors: null,
     }),
     getters: {
         // items: (state) => state.users,
@@ -28,7 +30,7 @@ export const useUsers = defineStore("index-users", {
             this.loading = true;
             return new Promise(async (resolve, reject) => {
                 await axios
-                    .get(route, { params: this.query })
+                    .get(route, { params: { ...this.filter, ...this.query } })
                     .then((response) => {
                         this.users = response.data.data;
                         this.total = response.data.meta.total;
@@ -42,6 +44,9 @@ export const useUsers = defineStore("index-users", {
         },
         setQuery(q: any) {
             this.query = q;
+        },
+        setFilter(q: any) {
+            this.filter = q;
         },
         editItem(item: any) {
             const users = useSingleUsers();

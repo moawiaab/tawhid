@@ -18,6 +18,8 @@ export const useCategories = defineStore("index-categories", {
             page: 1,
         },
         loading: false,
+        errors: null,
+        filter : { s: ''}
     }),
     getters: {
         // items: (state) => state.categories,
@@ -28,7 +30,7 @@ export const useCategories = defineStore("index-categories", {
             this.loading = true;
             return new Promise(async (resolve, reject) => {
                 await axios
-                    .get(route, { params: this.query })
+                    .get(route, { params: {...this.filter,...this.query} })
                     .then((response) => {
                         this.categories = response.data.data;
                         this.total = response.data.meta.total;
@@ -42,6 +44,9 @@ export const useCategories = defineStore("index-categories", {
         },
         setQuery(q: any) {
             this.query = q;
+        },
+        setFilter(q: any) {
+            this.filter = q;
         },
         editItem(item: any) {
             const categories = useSingleCategories();
@@ -72,7 +77,13 @@ export const useCategories = defineStore("index-categories", {
                         .then((response) => {
                             this.fetchIndexData();
                         })
-                        .catch((error) => {});
+                        .catch((error) => {
+                            this.errors =
+                                error.response.data.errors || this.errors;
+                            toast.error(error.response.data.message, {
+                                timeout: 5000,
+                            });
+                        });
                 }
             });
         },

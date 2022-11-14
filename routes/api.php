@@ -26,6 +26,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Users
     Route::resource('/users', UsersApiController::class);
     Route::put('/users/{user}/toggle', [UsersApiController::class, 'toggle'])->name('user.toggle');
+    Route::post('/users/password', [UsersApiController::class, 'password'])->name('users.password');
     Route::get('/shops/data', [UsersApiController::class, 'showData']);
 
 });

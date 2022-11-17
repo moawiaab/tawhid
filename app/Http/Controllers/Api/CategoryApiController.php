@@ -21,7 +21,7 @@ class CategoryApiController extends Controller
      */
     public function index()
     {
-        abort_if(Gate::denies('category_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('category_access'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         return CategoryResource::collection(
             Category::when(
                 auth()->user()->account_id != 1,
@@ -75,7 +75,7 @@ class CategoryApiController extends Controller
      */
     public function edit(Category $category)
     {
-        abort_if(Gate::denies('category_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('category_edit'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
 
         return response([
             'data' => new PermissionResource($category),
@@ -103,7 +103,7 @@ class CategoryApiController extends Controller
      */
     public function destroy(Category $category)
     {
-        abort_if(Gate::denies('category_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('category_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         if (auth()->user()->account_id != $category->account_id)
             throw new Exception('ليس لك الحق في حذف هذا القسم');
         elseif ($category->status == 1)

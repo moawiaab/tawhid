@@ -2,6 +2,7 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { useSinglePermissions } from "./single";
 import { useSetting } from "../settings/SettingIndex";
+import { useSettingAlert } from "../settings/SettingAlert";
 
 const route = "permissions";
 export const usePermissions = defineStore("index-permissions", {
@@ -17,7 +18,11 @@ export const usePermissions = defineStore("index-permissions", {
             page: 1,
         },
         loading: false,
-        filters: { s: "" },
+        filters: { s: "", trashed: "" },
+        showDeleted: false,
+        itemId: null,
+        itemsSelected: [],
+        trashed: false,
     }),
     getters: {
         // items: (state) => state.permissions,
@@ -56,28 +61,99 @@ export const usePermissions = defineStore("index-permissions", {
             permissions.showModalShow = true;
             permissions.fetchShowData(item.id);
         },
+        showDeletedMethod(item, trash = false) {
+            this.itemId = item;
+            this.showDeleted = true;
+            this.trashed = trash;
+        },
+        deleteItem() {
+            axios
+                .delete(`${route}/${this.itemId}`)
+                .then((response) => {
+                    useSettingAlert().setAlert(
+                        "تم حذف الإذن بنجاح",
+                        "success",
+                        true
+                    );
+                    this.showDeleted = false;
+                    this.fetchIndexData();
+                    this.itemId = null;
+                })
+                .catch((error) => {
+                    useSettingAlert().setAlert(
+                        error.response.data.message,
+                        "warning",
+                        true
+                    );
+                });
+        },
 
-        deleteItem(item) {
-            // Swal.fire({
-            //     title: "هل تريد الحذف بالفعل",
-            //     icon: "error",
-            //     position: "center",
-            //     showCancelButton: true,
-            //     cancelButtonText: ` إلغاء الأمر`,
-            //     confirmButtonText: `تأكيد الحذف`,
-            //     confirmButtonColor: "#dd4b39",
-            //     showConfirmButton: true,
-            //     toast: false,
-            // }).then((result) => {
-            //     if (result.value) {
-            //         axios
-            //             .delete(`${route}/${item.id}`)
-            //             .then((response) => {
-            //                 this.fetchIndexData();
-            //             })
-            //             .catch((error) => {});
-            //     }
-            // });
+        deleteAllItem(items) {
+            const item = { items: items.map((e) => e.id) };
+            console.log(item);
+            axios
+                .post(`${route}/delete-all`, item)
+                .then((response) => {
+                    useSettingAlert().setAlert(
+                        "تم حذف جميع الأذونات المختارة بنجاح",
+                        "success",
+                        true
+                    );
+                    this.showDeleted = false;
+                    this.fetchIndexData();
+                    this.itemId = null;
+                })
+                .catch((error) => {
+                    useSettingAlert().setAlert(
+                        error.response.data.message,
+                        "warning",
+                        true
+                    );
+                });
+        },
+
+        deleteTrash() {
+            axios
+                .put(`${route}/${this.itemId}/delete-restore`)
+                .then((response) => {
+                    useSettingAlert().setAlert(
+                        "تم حذف الإذن من سلة المحذوفات بنجاح",
+                        "success",
+                        true
+                    );
+                    this.showDeleted = false;
+                    this.fetchIndexData();
+                    this.itemId = null;
+                })
+                .catch((error) => {
+                    useSettingAlert().setAlert(
+                        error.response.data.message,
+                        "warning",
+                        true
+                    );
+                });
+        },
+
+        restoreItem(item) {
+            axios
+                .put(`${route}/${item}/restore`)
+                .then((response) => {
+                    useSettingAlert().setAlert(
+                        "تم ارجاع الإذن بنجاح",
+                        "success",
+                        true
+                    );
+                    this.showDeleted = false;
+                    this.fetchIndexData();
+                    this.itemId = null;
+                })
+                .catch((error) => {
+                    useSettingAlert().setAlert(
+                        error.response.data.message,
+                        "warning",
+                        true
+                    );
+                });
         },
     },
 });

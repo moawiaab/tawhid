@@ -1,8 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
-import { useToast } from "vue-toastification";
+import { useSettingAlert } from "../settings/SettingAlert";
 import { useRoles } from "./roles";
-const toast = useToast();
 const route = "roles";
 export const useSingleRoles = defineStore("single-roles", {
     state: () => ({
@@ -11,7 +10,7 @@ export const useSingleRoles = defineStore("single-roles", {
             title: "",
             permissions: [],
             users: [],
-            created_at : null
+            created_at: null,
         },
         lists: {
             permissions: [],
@@ -38,15 +37,21 @@ export const useSingleRoles = defineStore("single-roles", {
                 await axios
                     .post(route, this.entry)
                     .then((response) => {
-                        toast.success("تم إضافة الصلاحية بنجاح");
+                        useSettingAlert().setAlert(
+                            "تم إضافة الصلاحية بنجاح",
+                            "success",
+                            true
+                        );
                         roleIndex.fetchIndexData();
                         resolve(response);
                     })
                     .catch((error) => {
                         this.errors = error.response.data.errors || this.errors;
-                        toast.error(error.response.data.message, {
-                            timeout: 5000,
-                        });
+                        useSettingAlert().setAlert(
+                            error.response.data.message,
+                            "warning",
+                            true
+                        );
                         reject(error);
                     })
                     .finally(() => {
@@ -62,15 +67,21 @@ export const useSingleRoles = defineStore("single-roles", {
                 await axios
                     .put(`${route}/${this.entry.id}`, this.entry)
                     .then((response) => {
-                        toast.success("تم تعديل الصلاحية بنجاح");
+                        useSettingAlert().setAlert(
+                            "تم تعديل الصلاحية بنجاح",
+                            "success",
+                            true
+                        );
                         roleIndex.fetchIndexData();
                         resolve(response);
                     })
                     .catch((error) => {
                         this.errors = error.response.data.errors || this.errors;
-                        toast.error(error.response.data.message, {
-                            timeout: 5000,
-                        });
+                        useSettingAlert().setAlert(
+                            error.response.data.message,
+                            "warning",
+                            true
+                        );
                         reject(error);
                     })
                     .finally(() => {

@@ -1,7 +1,7 @@
 <template>
     <v-list class="px-1">
         <MenuItem v-for="(item, index) in sidebar.items" :key="index" :data="item.children" :label="item.text"
-            :icon="item.icon" :depth="0" :url="item.url??''" :openUrl="item.url??''"/>
+            :icon="item.icon" :depth="0" :url="item.url??''" :openUrl="item.url??''" :access="item.access"/>
     </v-list>
 </template>
 

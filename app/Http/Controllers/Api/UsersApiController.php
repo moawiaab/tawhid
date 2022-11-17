@@ -17,11 +17,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Validation\ValidationException;
 
+
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class UsersApiController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         return UserResource::collection(
             auth()
                 ->user()
@@ -45,7 +49,7 @@ class UsersApiController extends Controller
 
     public function create()
     {
-        abort_if(Gate::denies('user_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('user_create'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
 
         return response([
             'meta' => [
@@ -60,7 +64,7 @@ class UsersApiController extends Controller
 
     public function show(User $user)
     {
-        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
 
         return response([
             'data' => new UserResource($user->load(['role', 'account'])),
@@ -77,7 +81,7 @@ class UsersApiController extends Controller
 
     public function edit(User $user)
     {
-        abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
 
         return response([
             'data' => new UserResource($user->load(['role', 'account'])),
@@ -92,7 +96,7 @@ class UsersApiController extends Controller
 
     public function destroy(User $user)
     {
-        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
 
         $user->delete();
 
@@ -101,7 +105,7 @@ class UsersApiController extends Controller
 
     public function toggle(User $user)
     {
-        abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         $user->status = !$user->status;
         if (auth()->id() == $user->id)
             throw new Exception('لا يمكنك قفل حسابك');
@@ -128,5 +132,16 @@ class UsersApiController extends Controller
                 'password' => ["لم تتم تغيير كلمة السر بنجاح حاولة مرة اخرى"],
             ]);
         }
+    }
+
+    public function export()
+    {
+        if (request('type') == 'xlsx') {
+            return Excel::download(new UsersExport, 'users.xlsx');
+        } else {
+            return Excel::download(new UsersExport, 'users.csv');
+        }
+        // return (new UsersExport)->download('invoices.xlsx', Excel::XLSX);
+
     }
 }

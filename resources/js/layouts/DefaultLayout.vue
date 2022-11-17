@@ -16,6 +16,11 @@
                 <v-icon>wifi</v-icon>
 
                 <v-icon>mdi-triangle</v-icon>
+                <marquee direction="right" scrollamount="2" loop="1" :onfinish="setNewItem">
+                    <!-- <h1> -->
+                    <font face="Andalus" size="3" >وزان الجوهرة عالم المنوعات </font>
+                    <!-- <h1 /> -->
+                </marquee>
                 <v-spacer></v-spacer>
                 <v-btn variant="text" prepend-icon="mdi-clock-outline"> {{ formatDate(now, "hh:mm:ss") }} </v-btn>
                 <v-btn variant="text" prepend-icon="mdi-calendar-range"> {{ formatDate(now, "YYYY-MM-DD") }} </v-btn>
@@ -31,7 +36,7 @@
             </v-navigation-drawer>
             <v-navigation-drawer v-model="settings.drawer" location="end">
                 <!--  -->
-                <v-row align="end" dir="ltr" v-if="settings.window < 1280">
+                <v-row justify="end" v-if="settings.window < 1280">
                     <v-app-bar-nav-icon @click="settings.drawer = false" v-cloak>
                         <v-icon icon="mdi-close" />
                     </v-app-bar-nav-icon>
@@ -39,13 +44,6 @@
 
                 <v-list color="main-side">
                     <v-list-subheader title="القائمةالجانبية"></v-list-subheader>
-                    <!-- <router-link v-for="(item, i) in sidebar.items" :key="i" :to="item.url">
-                        <v-list-item :value="item" :class="router.path === item.url && 'active-item-aside'" class="mx-1"
-                            variant="plain" :prepend-icon="item.icon">
-                            <v-list-item-title v-text="item.text"></v-list-item-title>
-                        </v-list-item>
-                    </router-link> -->
-
                     <recursive-menu />
                 </v-list>
             </v-navigation-drawer>
@@ -100,9 +98,9 @@
 </template>
 
 <script>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useOnline, formatDate, useNow, useTitle } from '@vueuse/core'
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useSetting } from '../stores/settings/SettingIndex'
 import { useSettingsItem } from '../stores/settings/SettingItem';
 import { useSettingPassword } from '../stores/settings/SettingPassword';
@@ -113,31 +111,25 @@ import RecursiveMenu from '../components/menu/Menu.vue';
 export default {
     components: { Dialog, Password, RecursiveMenu },
     setup() {
-        const open = ref(false)
         const settings = useSetting();
         const sidebar = useSettingsItem();
         const password = useSettingPassword()
         const now = useNow();
         const router = useRoute();
-        const routerList = useRouter();
         const online = useOnline()
         const alertData = useSettingAlert()
         const wifi = computed(() => online.value ? 'mdi-wifi-arrow-left-right' : 'mdi-wifi-strength-off-outline')
+        onMounted(() => sidebar.getRoles());
         useTitle(`اسم البرنامج | ${router.name}`)
         watch(router, (e) => {
             useTitle(`اسم البرنامج | ${e.name}`);
             sidebar.getRoles()
         })
 
-        const items = [
-            { title: 'Click Me' },
-            { title: 'Click Me' },
-            { title: 'Click Me' },
-            { title: 'Click Me 2' },
-        ];
+        const setNewItem = () => {
+            console.log('item end time')
+        }
         return {
-            open,
-            items,
             settings,
             wifi,
             now,
@@ -146,7 +138,7 @@ export default {
             sidebar,
             password,
             alertData,
-            routerList
+            setNewItem
         }
     }
 }

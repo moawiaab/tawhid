@@ -1,19 +1,29 @@
 <template>
-    <div class="menu-item" :class="{ opened: expanded || openUrl.includes(route.path) }" v-if="$can(`${access}_access`)">
-        <v-list-item @click="toggleMenu()" v-if="data" :active="expanded || openUrl.includes(route.path)">
+    <div
+        class="menu-item"
+        :class="{ opened: expanded || openUrl.includes(route.path) }"
+    >
+        <v-list-item
+            @click="toggleMenu()"
+            v-if="data"
+            :active="expanded || openUrl.includes(route.path)"
+        >
             <template v-slot:prepend>
                 <v-icon :icon="icon"></v-icon>
             </template>
             <v-list-item-title v-text="label"> </v-list-item-title>
             <template v-slot:append>
-                <v-icon :icon="`${expanded || openUrl.includes(route.path)
-                ? 'mdi-chevron-down'
-                : 'mdi-chevron-left'
-                }`" :class="{ opened: expanded }">
+                <v-icon
+                    :icon="`${
+                        expanded || openUrl.includes(route.path)
+                            ? 'mdi-chevron-down'
+                            : 'mdi-chevron-left'
+                    }`"
+                    :class="{ opened: expanded }"
+                >
                 </v-icon>
             </template>
         </v-list-item>
-
         <router-link :to="url" v-else>
             <v-list-item :title="label" :active="route.path == url">
                 <template v-slot:prepend>
@@ -21,15 +31,27 @@
                 </template>
             </v-list-item>
         </router-link>
-
         <v-divider></v-divider>
-        <div v-show="showChildren || openUrl.includes(route.path)" class="items-container" :style="{
-            height: openUrl.includes(route.path) ? '100%' : containerHeight,
-            background: settings.theme == 'light' ? '#eeeeee' : '#424242'
-        }" ref="container">
-            <menu-item :class="{ opened: showChildren }" v-for="(item, index) in data" :key="index"
-                :data="item.children" :label="item.text" :icon="item.icon" :depth="depth + 1" :url="item.url"
-                :access="item.access" />
+        <div
+            v-show="showChildren || openUrl.includes(route.path)"
+            class="items-container"
+            :style="{
+                height: openUrl.includes(route.path) ? '100%' : containerHeight,
+                background : settings.theme == 'light' ? '#eeeeee' : '#424242'
+            } "
+            ref="container"
+
+        >
+            <menu-item
+                :class="{ opened: showChildren }"
+                v-for="(item, index) in data"
+                :key="index"
+                :data="item.children"
+                :label="item.text"
+                :icon="item.icon"
+                :depth="depth + 1"
+                :url="item.url"
+            />
         </div>
     </div>
 </template>
@@ -44,7 +66,6 @@ export default {
         data: { type: Object },
         label: { type: String },
         icon: { type: String },
-        access: { type: String },
         depth: { type: Number },
         smallMenu: { type: Boolean },
         url: { type: String },
@@ -113,7 +134,7 @@ export default {
     margin-left: 7px !important;
 }
 
-.v-list-item__prepend>.v-icon {
+.v-list-item__prepend > .v-icon {
     margin-inline-end: 10px !important;
     margin-left: 10px !important;
 }

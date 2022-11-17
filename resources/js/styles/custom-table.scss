@@ -23,6 +23,23 @@
     transform: rotate(135deg) !important;
 }
 
+.easy-checkbox {
+    margin: 3px !important;
+}
+.delete-all-items{
+    direction: rtl;
+}
+
+.delete-fail-row{
+    --easy-table-body-row-background-color: #f07c7c;
+    --easy-table-body-row-font-color: #fff;
+
+    --easy-table-body-even-row-font-color: #f4f4f4;
+    --easy-table-body-even-row-background-color: #dd8585;
+
+    --easy-table-body-row-hover-font-color: #cccccc;
+    --easy-table-body-row-hover-background-color: #ec6060;
+}
 .customize-table {
     --easy-table-border: 1px solid #e2e9ee;
     --easy-table-row-border: 1px solid #e2e9ee;
@@ -100,9 +117,9 @@
 
     --easy-table-scrollbar-track-color: #191919;
     --easy-table-scrollbar-color: #191919;
-    --easy-table-scrollbar-thumb-color: #242424;;
+    --easy-table-scrollbar-thumb-color: #242424;
+    ;
     --easy-table-scrollbar-corner-color: #191919;
 
     --easy-table-loading-mask-background-color: #191919;
-  }
-
+}

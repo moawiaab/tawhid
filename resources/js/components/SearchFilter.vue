@@ -1,5 +1,5 @@
 <template>
-    <div class="w-25" :class="{
+    <div class="w-50" :class="{
         'has-items': query.s,
         'is-focused': focus
     }">

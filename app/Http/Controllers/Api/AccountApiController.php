@@ -18,13 +18,13 @@ class AccountApiController extends Controller
      */
     public function index()
     {
-        abort_if(Gate::denies('account_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('account_access'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         return PermissionResource::collection(Account::advancedFilter()->paginate(request('rowsPerPage', 20)));
     }
 
     public function toggle(Account $account)
     {
-        abort_if(Gate::denies('account_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('account_edit'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         $account->status = !$account->status;
         $account->save();
         return response(null, Response::HTTP_NO_CONTENT);

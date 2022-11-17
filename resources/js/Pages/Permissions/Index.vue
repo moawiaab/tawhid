@@ -9,96 +9,220 @@
                 <search-filter :query="filters" />
             </v-col>
             <v-col class="text-left">
-                <v-chip color="blue" class="mx-2" prepend-icon="mdi-filter-cog-outline" @click="openItem">
+                <v-chip color="blue" label class="ma-2" prepend-icon="mdi-filter-cog-outline" @click="openItem">
                     بحث متقدم
                 </v-chip>
-                <v-chip color="green" class="mr-2" prepend-icon="mdi-refresh"
-                    @click.prevent="permission.fetchIndexData();">
+                <v-chip color="green" label class="ma-2" prepend-icon="mdi-refresh"
+                    @click.prevent="permission.fetchIndexData()">
                     تحديث البيانات
-                    <template v-slot:append>
-                    </template>
+                    <template v-slot:append> </template>
                 </v-chip>
+                <v-chip color="red" label class="ma-2" prepend-icon="mdi-database-refresh-outline"
+                    @click="headerItem.removeAllItem">
+                    إعادة الضبط
+                </v-chip>
+                <!-- mdiDatabaseRefreshOutline -->
+                <v-menu :close-on-content-click="false">
+                    <template v-slot:activator="{ props }">
+                        <v-chip color="gary" class="ma-2" prepend-icon="mdi-dots-vertical" v-bind="props" label>
+                            إعدادات
+                        </v-chip>
+                    </template>
+                    <v-list>
+                        <v-list-item-title class="mx-4 text-blue">الأعمدة المعروضة</v-list-item-title>
+                        <v-list-item v-for="(i, index) in headerItem.headerTable" :key="index" prepend-icon="mdi-check">
+                            <v-list-item-title @click="headerItem.addItem(i)">
+                                {{ i.text }}</v-list-item-title>
+                        </v-list-item>
+                        <v-divider />
+                        <v-list-item-title class="mx-4 text-red">الأعمدة الغير معروضة</v-list-item-title>
+                        <v-list-item v-for="(i, index) in headerItem.menuItem" :key="index" prepend-icon="mdi-close">
+                            <v-list-item-title @click="headerItem.removeItem(index)">
+                                {{ i.text }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
             </v-col>
         </v-row>
     </div>
     <v-expansion-panels v-model="filtersItem">
         <v-expansion-panel value="filtersItem">
             <v-expansion-panel-text>
-                <v-container class="bg-surface-variant">
-                    <v-row no-gutters>
-                        <v-col v-for="n in 3" :key="n" cols="12" sm="4">
-                            <v-sheet class="ma-2 pa-2">
-                                One of three columns
-                            </v-sheet>
-                        </v-col>
-                    </v-row>
-                </v-container>
+                <v-row no-gutters>
+                    <v-col>
+                        <v-radio-group inline v-model="filters.trashed">
+                            <v-radio label="عرض البيانات الغير محذوفة" value="" color="info"></v-radio>
+                            <v-radio label="عرض البيانات المحذوف فقط" value="only" color="info"></v-radio>
+                            <v-radio label="عرض جميع البيانات معاً" value="with" color="info"></v-radio>
+                        </v-radio-group>
+                    </v-col>
+                </v-row>
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>
-
     <data-table :server-items-length="permission.total" buttons-pagination v-model:server-options="query"
-        :headers="headers" :items="permission.permissions" body-text-direction="right"
-        :table-class-name="theme.theme == 'light' ? 'customize-table' : 'customize-table-small'" theme-color="#551a8b"
-        :table-height="550" :loading="permission.loading" alternating border-cell>
+        :headers="headerItem.headerTable" :items="permission.permissions" body-text-direction="right" :table-class-name="
+            theme.theme == 'light' ? 'customize-table' : 'customize-table-small'
+        " theme-color="#551a8b" :table-height="500" :loading="permission.loading" alternating border-cell
+        v-model:items-selected="itemsSelected" :body-row-class-name="bodyRowClassNameFunction">
         <template #loading />
+        <template #header-operation="header">
+            <div class="delete-all-items">
+                <import-menu url="permissions" />
+                <export-menu url="permissions" :data="permission.permissions" />
+                <v-icon icon="mdi-delete-sweep-outline" color="red" @click="permission.showDeletedMethod('delete')"
+                    v-if="$can('permission_delete')" />
+            </div>
+        </template>
         <template #item-operation="item">
             <div class="operation-wrapper text-left">
-                <v-icon icon="mdi-pencil-outline" @click="permission.editItem(item)" color="green" class="mx-1" />
-                <v-icon icon="mdi-trash-can" @click="permission.deleteItem(item)" color="error" title="حذف الإذن"
-                    class="mx-1" />
+                <v-toolbar-title></v-toolbar-title>
+                <!-- <v-icon icon="mdi-pencil-outline" @click="permission.editItem(item)" color="green" class="mx-1" /> -->
+                <edit-icon @click="permission.editItem(item)" role="permission" v-if="!item.deleted_at" />
+                <delete-icon @click="permission.showDeletedMethod(item.id)" role="permission" v-if="!item.deleted_at" />
+                <delete-icon @click="permission.showDeletedMethod(item.id, true)" role="permission" v-if="item.deleted_at" />
+                <delete-icon @click="permission.restoreItem(item.id)" role="permission" v-if="item.deleted_at"
+                    :resat="true" />
+                <!-- <v-icon icon="mdi-trash-can" @click="permission.showDeletedMethod(item.id)" color="error"
+                    title="حذف الإذن" class="mx-1" /> -->
             </div>
         </template>
     </data-table>
-    <edit-permission />
 
+    <delete-item title="هل تريد الحذف" v-model="permission.showDeleted">
+        <template #content>
+            <span v-if="permission.itemId == 'delete'">
+                هل تريد حذف جميع البيانات المختارة
+                <v-chip v-for="item in itemsSelected" :text="item.details" class="ma-1" />
+            </span>
+            <span v-else>هل تريد الحذف بالفعل ستفقد البيانات </span>
+        </template>
+        <template #footer>
+            <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal"
+                @click="permission.deleteAllItem(itemsSelected)" v-if="permission.itemId == 'delete'">
+                حذف الجميع
+            </v-btn>
+            <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal" @click="permission.deleteTrash()"
+                v-else-if="permission.trashed == true">
+                 حذف من السلة
+            </v-btn>
+            <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal" @click="permission.deleteItem()"
+                v-else>
+                تأكيد الحذف
+            </v-btn>
+            <v-btn color="red-darken-1" prepend-icon="mdi-close" variant="tonal"
+                @click="permission.showDeleted = false">
+                إلغاء الأمر
+            </v-btn>
+        </template>
+    </delete-item>
+    <edit-permission />
+    <PrintList title="الأذونات" :header="headerItem.headerTable" :items="permission.permissions" />
 </template>
 <script lang="ts">
-import { ref, watch } from '@vue/runtime-core';
-import { usePermissions } from '../../stores/permissions';
-import type { Header, ServerOptions } from "vue3-easy-data-table";
+import { ref, watch } from "@vue/runtime-core";
+import { usePermissions } from "../../stores/permissions";
+import { useSettingsHeaderTable } from "../../stores/settings/SettingHeaderTable";
+import type {
+    Header,
+    ServerOptions,
+    Item,
+    BodyRowClassNameFunction,
+} from "vue3-easy-data-table";
 import EditPermission from "./Edit.vue";
 import CreatePermission from "./Create.vue";
-import { useSetting } from '../../stores/settings/SettingIndex';
-import HeaderTitle from '../../components/HeaderTitle.vue';
-import SearchFilter from '../../components/SearchFilter.vue';
+import { useSetting } from "../../stores/settings/SettingIndex";
+import HeaderTitle from "../../components/HeaderTitle.vue";
+import SearchFilter from "../../components/SearchFilter.vue";
+import PrintList from "../../components/PrintList.vue";
+
 export default {
-    components: { EditPermission, CreatePermission, HeaderTitle, SearchFilter },
+    components: {
+        EditPermission,
+        CreatePermission,
+        HeaderTitle,
+        SearchFilter,
+        PrintList,
+    },
     setup() {
         const theme = useSetting();
-        const headers: Header[] = [
-            { text: "اسم الصلاحية", value: "details", width: 200, },
-            { text: "ربط الصلاحية", value: "title", width: 200 },
-            { text: "تاريخ الإنشاء", value: "created_at", sortable: true },//
-            { text: "ربط الصلاحية", value: "title", width: 200 },
-            { text: "", value: "operation", width: 100 },
-        ];
-        const permission = usePermissions()
-        const query = ref<ServerOptions>({ sortBy: 'id', sortType: 'desc', rowsPerPage: 20, page: 1 })
+        const permission = usePermissions();
+        const query = ref<ServerOptions>({
+            sortBy: "id",
+            sortType: "desc",
+            rowsPerPage: 20,
+            page: 1,
+        });
+        const filters = ref({ s: "", trashed: "" });
+        const filtersItem = ref("");
+        const openMenu = ref(false);
+        const headerItem = useSettingsHeaderTable();
+        const itemsSelected = ref<Item[]>([]);
         permission.fetchIndexData();
-        const filters = ref({ s: '' })
-        const filtersItem = ref('')
+        const headers: Header[] = [
+            {
+                text: "اسم الصلاحية",
+                value: "details",
+                width: 200,
+                sortable: true,
+            },
+            {
+                text: "ربط الصلاحية",
+                value: "title",
+                width: 200,
+                sortable: true,
+            },
+            { text: "تاريخ الإنشاء", value: "created_at", sortable: true },
+            { text: "إعدادات", value: "operation", width: 100 },
+        ];
+        const bodyRowClassNameFunction: BodyRowClassNameFunction = (
+            item: Item,
+            index: number
+        ): string => {
+            if (item.deleted_at) return "delete-fail-row";
+            return '';
+        };
+        headerItem.setHeaderItems(headers, "permissions");
+
         const openItem = () => {
-            // filtersItem.value = !filtersItem.valueI
             if (filtersItem.value) {
                 filtersItem.value = "";
             } else {
                 filtersItem.value = "filtersItem";
             }
-        }
+        };
 
-        watch(filters, (q) => {
-            permission.setFilters(q);
-            permission.fetchIndexData();
-        }, { deep: true });
+        watch(
+            filters,
+            (q) => {
+                permission.setFilters(q);
+                permission.fetchIndexData();
+            },
+            { deep: true }
+        );
 
-        watch(query, (q) => {
-            permission.setQuery(q);
-            permission.fetchIndexData();
-        }, { deep: true });
-        return { theme, headers, permission, query, filters, openItem, filtersItem }
-    }
-}
+        watch(
+            query,
+            (q) => {
+                permission.setQuery(q);
+                permission.fetchIndexData();
+            },
+            { deep: true }
+        );
+        return {
+            theme,
+            headerItem,
+            permission,
+            query,
+            filters,
+            openItem,
+            filtersItem,
+            openMenu,
+            itemsSelected,
+            bodyRowClassNameFunction
+        };
+    },
+};
 </script>
 
 <style>

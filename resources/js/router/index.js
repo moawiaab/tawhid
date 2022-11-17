@@ -16,7 +16,7 @@ const routes = [
             {
                 path: "/users",
                 name: " المستخدمين",
-                component: () => import("@/Pages/Users/UsersPage.vue"),
+                component: () => import("@/Pages/Users/Index.vue"),
             },
             {
                 path: "/accounts",
@@ -33,21 +33,21 @@ const routes = [
                 name: " permissions.index",
                 component: () => import("@/Pages/Permissions/Index.vue"),
             },
-            {
-                path: "/categories",
-                name: " categories.index",
-                component: () => import("@/Pages/Categories/Index.vue"),
-            },
-            {
-                path: "/products",
-                name: " products.index",
-                component: () => import("@/Pages/Products/Index.vue"),
-            },
-            {
-                path: "/stores",
-                name: " stores.index",
-                component: () => import("@/Pages/Stores/Index.vue"),
-            },
+            // {
+            //     path: "/categories",
+            //     name: " categories.index",
+            //     component: () => import("@/Pages/Categories/Index.vue"),
+            // },
+            // {
+            //     path: "/products",
+            //     name: " products.index",
+            //     component: () => import("@/Pages/Products/Index.vue"),
+            // },
+            // {
+            //     path: "/stores",
+            //     name: " stores.index",
+            //     component: () => import("@/Pages/Stores/Index.vue"),
+            // },
         ],
     },
 ];

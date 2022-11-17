@@ -19,7 +19,8 @@ class Permission extends Model
     protected $orderable = [
         'id',
         'title',
-        'details'
+        'details',
+        'created_at'
     ];
 
     protected $filterable = [
@@ -42,8 +43,24 @@ class Permission extends Model
         'deleted_at',
     ];
 
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where($field ?? 'id', $value)->withTrashed()->firstOrFail();
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed === 'with') {
+                $query->withTrashed();
+            } elseif ($trashed === 'only') {
+                $query->onlyTrashed();
+            }
+        });
     }
 }

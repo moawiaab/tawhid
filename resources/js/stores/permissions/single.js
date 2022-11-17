@@ -1,6 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import { usePermissions } from ".";
+import { useSettingAlert } from "../settings/SettingAlert";
 const route = "permissions";
 export const useSinglePermissions = defineStore("single-permissions", {
     state: () => ({
@@ -15,13 +16,11 @@ export const useSinglePermissions = defineStore("single-permissions", {
             roles: [],
             account: [],
         },
+
         loading: false,
         errors: {
-            name: null,
-            email: null,
-            password: null,
-            role_id: null,
-            phone: null,
+            title: "",
+            details: "",
         },
         details: [" عرض ", " إنشاء ", " تعديل ", " حذف "],
         title: ["_access", "_create", "_edit", "_delete"],
@@ -41,7 +40,11 @@ export const useSinglePermissions = defineStore("single-permissions", {
                 await axios
                     .post(route, this.entry)
                     .then((response) => {
-                        // toast.success("تم إضافة الإذن بنجاح");
+                        useSettingAlert().setAlert(
+                            "تم إضافة الإذن بنجاح",
+                            "success",
+                            true
+                        );
                         userIndex.fetchIndexData();
                         resolve(response);
                     })
@@ -50,6 +53,11 @@ export const useSinglePermissions = defineStore("single-permissions", {
                         // toast.error(error.response.data.message, {
                         //     timeout: 5000,
                         // });
+                        useSettingAlert().setAlert(
+                            error.response.data.message,
+                            "success",
+                            true
+                        );
                         reject(error);
                     })
                     .finally(() => {
@@ -66,14 +74,21 @@ export const useSinglePermissions = defineStore("single-permissions", {
                     .put(`${route}/${this.entry.id}`, this.entry)
                     .then((response) => {
                         // toast.success("تم تعديل الإذن بنجاح");
+                        useSettingAlert().setAlert(
+                            "تم تعديل الإذن بنجاح",
+                            "success",
+                            true
+                        );
                         userIndex.fetchIndexData();
                         resolve(response);
                     })
                     .catch((error) => {
                         this.errors = error.response.data.errors || this.errors;
-                        // toast.error(error.response.data.message, {
-                        //     timeout: 5000,
-                        // });
+                        useSettingAlert().setAlert(
+                            error.response.data.message,
+                            "success",
+                            true
+                        );
                         reject(error);
                     })
                     .finally(() => {
@@ -90,7 +105,7 @@ export const useSinglePermissions = defineStore("single-permissions", {
         },
         //start in edit
         fetchEditData(id) {
-            this.showModalEdit = false;
+            // this.showModalEdit = false;
             axios.get(`${route}/${id}/edit`).then((response) => {
                 this.entry = response.data.data;
                 this.lists = response.data.meta;

@@ -1,13 +1,13 @@
 import axios from "axios";
 import { defineStore } from "pinia";
-import Swal from "sweetalert2";
-import { useToast } from "vue-toastification";
+import { useSettingAlert } from "../settings/SettingAlert";
+import { useSetting } from "../settings/SettingIndex";
 import { useSingleRoles } from "./single";
 
-const toast = useToast();
 const route = "roles";
-export const useRoles = defineStore("roles", {
+export const useRoles = defineStore("roles-index", {
     state: () => ({
+        theme: useSetting().theme,
         roles: [],
         total: 0,
         page: 1,
@@ -18,10 +18,14 @@ export const useRoles = defineStore("roles", {
             page: 1,
         },
         loading: false,
-        filters: { s: "" },
+        filters: { s: "", trashed: "" },
+        showDeleted: false,
+        itemId: null,
+        itemsSelected: [],
+        trashed: false,
     }),
     getters: {
-        // items: (state) => state.users,
+        // items: (state) => state.roles,
         // totalItem: (state) => state.total,
     },
     actions: {
@@ -41,44 +45,115 @@ export const useRoles = defineStore("roles", {
                     });
             });
         },
-        setQuery(q: any) {
+        setQuery(q:any) {
             this.query = q;
         },
-        setFilters(q: any) {
+        setFilters(q:any) {
             this.filters = q;
         },
-        editItem(item: any) {
+        editItem(item:any) {
             const roles = useSingleRoles();
             roles.showModalEdit = true;
             roles.fetchEditData(item.id);
         },
-        showItem(item: any) {
+        showItem(item :any) {
             const roles = useSingleRoles();
             roles.showModalShow = true;
             roles.fetchShowData(item.id);
         },
-        deleteItem(item: any) {
-            Swal.fire({
-                title: "حذف الصلاحية",
-                text: "هل تريد حذف هذه الصلاحية بالفعل",
-                icon: "error",
-                position: "center",
-                showCancelButton: true,
-                cancelButtonText: ` إلغاء الأمر`,
-                confirmButtonText: `تأكيد الحذف`,
-                confirmButtonColor: "#dd4b39",
-                showConfirmButton: true,
-                toast: false,
-            }).then((result) => {
-                if (result.value) {
-                    axios
-                        .delete(`${route}/${item.id}`)
-                        .then((response) => {
-                            this.fetchIndexData();
-                        })
-                        .catch((error) => {});
-                }
-            });
+        showDeletedMethod(item:any, trash = false) {
+            this.itemId = item;
+            this.showDeleted = true;
+            this.trashed = trash;
+        },
+        deleteItem() {
+            axios
+                .delete(`${route}/${this.itemId}`)
+                .then((response) => {
+                    useSettingAlert().setAlert(
+                        "تم حذف الإذن بنجاح",
+                        "success",
+                        true
+                    );
+                    this.showDeleted = false;
+                    this.fetchIndexData();
+                    this.itemId = null;
+                })
+                .catch((error) => {
+                    useSettingAlert().setAlert(
+                        error.response.data.message,
+                        "warning",
+                        true
+                    );
+                });
+        },
+
+        deleteAllItem(items:any) {
+            const item = { items: items.map((e:any) => e.id) };
+            console.log(item);
+            axios
+                .post(`${route}/delete-all`, item)
+                .then((response) => {
+                    useSettingAlert().setAlert(
+                        "تم حذف جميع الأذونات المختارة بنجاح",
+                        "success",
+                        true
+                    );
+                    this.showDeleted = false;
+                    this.fetchIndexData();
+                    this.itemId = null;
+                })
+                .catch((error) => {
+                    useSettingAlert().setAlert(
+                        error.response.data.message,
+                        "warning",
+                        true
+                    );
+                });
+        },
+
+        deleteTrash() {
+            axios
+                .put(`${route}/${this.itemId}/delete-restore`)
+                .then((response) => {
+                    useSettingAlert().setAlert(
+                        "تم حذف الإذن من سلة المحذوفات بنجاح",
+                        "success",
+                        true
+                    );
+                    this.showDeleted = false;
+                    this.fetchIndexData();
+                    this.itemId = null;
+                })
+                .catch((error) => {
+                    useSettingAlert().setAlert(
+                        error.response.data.message,
+                        "warning",
+                        true
+                    );
+                });
+        },
+
+        restoreItem(item:Number) {
+            axios
+                .put(`${route}/${item}/restore`)
+                .then((response) => {
+                    useSettingAlert().setAlert(
+                        "تم ارجاع الإذن بنجاح",
+                        "success",
+                        true
+                    );
+                    this.showDeleted = false;
+                    this.fetchIndexData();
+                    this.itemId = null;
+                })
+                .catch((error) => {
+                    useSettingAlert().setAlert(
+                        error.response.data.message,
+                        "warning",
+                        true
+                    );
+                });
         },
     },
 });

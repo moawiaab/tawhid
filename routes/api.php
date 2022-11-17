@@ -14,6 +14,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('abilities', [AbilitiesController::class, 'index']);
 
     Route::resource('permissions', PermissionsApiController::class);
+    Route::post('/permissions/delete-all', [PermissionsApiController::class,'destroyAll']);
+    Route::post('/permissions/add-all', [PermissionsApiController::class,'addAll']);
+    Route::put('/permissions/{item}/restore', [PermissionsApiController::class,'restore']);
+    Route::put('/permissions/{item}/delete-restore', [PermissionsApiController::class,'deleteRestore']);
+    Route::get('/permissions-export', [PermissionsApiController::class, 'export']);
+
     Route::get('accounts', [AccountApiController::class, 'index']);
     Route::put('/accounts/{account}/toggle', [AccountApiController::class, 'toggle'])->name('account.toggle');
 

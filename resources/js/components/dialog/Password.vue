@@ -28,10 +28,6 @@
                                 @click="data.showPassword = false">
                                 إلغاء الأمر
                             </v-btn>
-                            <!-- <v-btn color="green-darken-1" prepend-icon="mdi-content-save-edit" variant="tonal"
-                                type="submit">
-                                تنفيذ الأمر
-                            </v-btn> -->
                             <btn-save :loading="data.loading" />
                         </v-card-actions>
                     </v-card>

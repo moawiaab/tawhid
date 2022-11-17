@@ -3,13 +3,13 @@ const items = [
         text: "المستخدمين",
         icon: "mdi-account-cog-outline",
         url: ["/users1", "/roles1", "/parmesans1"],
-        access: "",
+        access: "user",
         children: [
             {
                 text: "المستخدمين",
                 icon: "mdi-dots-horizontal",
                 url: "/users1",
-                access: "user_access",
+                access: "user",
             },
             { text: "الصلاحيات", icon: "mdi-dots-horizontal", url: "/roles1" },
             {
@@ -24,7 +24,7 @@ const items = [
         text: "لوحة التحكم",
         icon: "mdi-home-outline",
         url: "/dashboard",
-        access: "",
+        access: "dashboard",
     },
     {
         text: " الفروع",
@@ -36,20 +36,20 @@ const items = [
         text: "المستخدمين",
         icon: "mdi-account-cog-outline",
         url: ["/users", "/roles", "/permissions"],
-        access: "",
+        access: "user",
         children: [
             {
                 text: "المستخدمين",
                 icon: "mdi-account-details-outline",
                 url: "/users",
-                access: "",
+                access: "user",
             },
-            { text: "الصلاحيات", icon: "mdi-flag", url: "/roles", access: "" },
+            { text: "الصلاحيات", icon: "mdi-account-lock-outline", url: "/roles", access: "role" },
             {
                 text: "الأذونات",
-                icon: "mdi-lock",
+                icon: "mdi-lock-outline",
                 url: "/permissions",
-                access: "",
+                access: "permission",
             },
         ],
     },

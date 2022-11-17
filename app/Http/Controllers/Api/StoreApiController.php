@@ -19,7 +19,7 @@ class StoreApiController extends Controller
      */
     public function index()
     {
-        abort_if(Gate::denies('product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('product_access'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         return StoresResource::collection(
             Store::advancedFilter()
                 ->where('account_id', auth()->user()->account_id)
@@ -34,7 +34,7 @@ class StoreApiController extends Controller
      */
     public function create()
     {
-        abort_if(Gate::denies('product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('product_create'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         return response([
             'meta' => [
                 'products' =>  auth()->user()->account->products()->get(['id as value', 'name as label'])

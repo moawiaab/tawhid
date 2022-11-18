@@ -1,11 +1,11 @@
 <template>
-    <v-icon icon="mdi-pencil-outline" color="green" class="mx-1" v-if="can(`${role}_edit`,  'all')" />
+    <v-icon icon="mdi-eye-settings-outline" color="blue" class="mx-1" v-if="can(`${role}_access`,  'all')" />
 </template>
 
 <script>
 import { useAbility } from '@casl/vue'
 export default {
-    name: "EditIcon",
+    name: "ShowIcon",
     props: ['role'],
     setup() {
         const { can } = useAbility();

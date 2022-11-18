@@ -40,6 +40,21 @@ class Role extends Model
         'deleted_at',
     ];
 
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where($field ?? 'id', $value)->withTrashed()->firstOrFail();
+    }
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed === 'with') {
+                $query->withTrashed();
+            } elseif ($trashed === 'only') {
+                $query->onlyTrashed();
+            }
+        });
+    }
+
     public function permissions()
     {
         return $this->belongsToMany(Permission::class);
@@ -49,9 +64,8 @@ class Role extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
-      public function users()
+    public function users()
     {
         return $this->hasMany(User::class, 'role_id', 'id');
     }
-
 }

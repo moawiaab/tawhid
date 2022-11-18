@@ -94,13 +94,6 @@ class PermissionsApiController extends Controller
         return response(null, Response::HTTP_NO_CONTENT);
     }
 
-    public function export()
-    {
-        // $data = Permission::select(['title', 'details', 'created_at'])->get();
-        // $pdf = PDF::loadView('pdf_print', compact(['data']));
-        // return $pdf->stream('document.pdf');
-    }
-
     public function addAll(Request $request)
     {
         // Permission::insert($request[0]);

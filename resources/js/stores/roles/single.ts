@@ -18,8 +18,8 @@ export const useSingleRoles = defineStore("single-roles", {
         },
         loading: false,
         errors: {
-            title: null,
-            permissions: null,
+            title: '',
+            permissions: '',
         },
         showModalEdit: false,
         showModalShow: false,
@@ -94,11 +94,12 @@ export const useSingleRoles = defineStore("single-roles", {
         fetchCreateData() {
             axios.get(`${route}/create`).then((response) => {
                 this.lists = response.data.meta;
+                console.log(this.lists);
             });
         },
         //start in edit
         fetchEditData(id: Number) {
-            this.showModalEdit = false;
+            this.showModalEdit = true;
             axios.get(`${route}/${id}/edit`).then((response) => {
                 this.entry = response.data.data;
                 this.lists = response.data.meta;

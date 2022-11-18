@@ -53,7 +53,6 @@ export const useSettingsItem = defineStore("item-settings", {
                 ability.update([
                     { action: response.data.data, subject: "all" },
                 ]);
-                console.log("Sidebar/setName", response.data.user);
             });
         },
     },

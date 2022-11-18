@@ -38,7 +38,7 @@
     </v-dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from 'vue'
 import { useSettingsHeaderTable } from '../../stores/settings/SettingHeaderTable'
 

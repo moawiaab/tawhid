@@ -18,7 +18,7 @@
                 <v-icon>mdi-triangle</v-icon>
                 <marquee direction="right" scrollamount="2" loop="1" :onfinish="setNewItem">
                     <!-- <h1> -->
-                    <font face="Andalus" size="3" >وزان الجوهرة عالم المنوعات </font>
+                    <font face="Andalus" size="3">وزان الجوهرة عالم المنوعات </font>
                     <!-- <h1 /> -->
                 </marquee>
                 <v-spacer></v-spacer>
@@ -26,15 +26,16 @@
                 <v-btn variant="text" prepend-icon="mdi-calendar-range"> {{ formatDate(now, "YYYY-MM-DD") }} </v-btn>
 
             </v-system-bar>
-            <v-navigation-drawer v-model="settings.menu" class="pt-5" rail location="end" v-if="settings.window > 1280">
+            <v-navigation-drawer v-model="settings.menu" class="pt-5" rail location="end" v-if="settings.window > 1280"
+                rail-width="40">
                 <Dialog />
                 <router-link v-for="item, n in sidebar.itemNav" :key="n" :to="item.url ?? ''">
-                    <v-avatar :color="`grey-${router.path === item.url ? 'darken' : 'lighten'}-2`" size="36"
+                    <v-avatar :color="`grey-${router.path === item.url ? 'darken' : 'lighten'}-2`" size="25"
                         class="d-block text-center mx-auto mb-5" :icon="item.icon" />
                     <v-tooltip activator="parent" location="start">{{ item.text }}</v-tooltip>
                 </router-link>
             </v-navigation-drawer>
-            <v-navigation-drawer v-model="settings.drawer" location="end">
+            <v-navigation-drawer v-model="settings.drawer" location="end" width="240">
                 <!--  -->
                 <v-row justify="end" v-if="settings.window < 1280">
                     <v-app-bar-nav-icon @click="settings.drawer = false" v-cloak>
@@ -148,6 +149,8 @@ export default {
 .notranslate.v-icon {
     margin-left: 7px !important;
 }
+
+
 
 .v-list-item__prepend>.v-icon {
     margin-inline-end: 10px !important;

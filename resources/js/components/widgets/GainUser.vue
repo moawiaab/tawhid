@@ -93,8 +93,10 @@
 </template>
 
 
-<script setup>
-const props = defineProps({ data: Array });
+<script >
+export default {
+    props: { data: Array }
+}
 </script>
 
 <style scoped>

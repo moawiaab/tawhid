@@ -1,5 +1,6 @@
 <template>
-    <div class="menu-item" :class="{ opened: expanded || openUrl.includes(route.path) }" v-if="$can(`${access}_access`)">
+    <div class="menu-item" :class="{ opened: expanded || openUrl.includes(route.path) }"
+        v-if="can(`${access}_access`,'all')">
         <v-list-item @click="toggleMenu()" v-if="data" :active="expanded || openUrl.includes(route.path)">
             <template v-slot:prepend>
                 <v-icon :icon="icon"></v-icon>
@@ -38,6 +39,7 @@
 import { ref, onMounted, nextTick, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useSetting } from "../../stores/settings/SettingIndex";
+import { useAbility } from "@casl/vue";
 export default {
     name: "menu-item",
     props: {
@@ -51,6 +53,7 @@ export default {
         openUrl: { type: Array, default: [] },
     },
     setup(props) {
+        const { can } = useAbility()
         const expanded = ref(false);
         const showChildren = ref(false);
         const containerHeight = ref(0);
@@ -96,6 +99,7 @@ export default {
             container,
             containerHeight,
             itemToggleMenu,
+            can
         };
     },
 };
@@ -106,6 +110,11 @@ export default {
 
     .items-container {
         transition: height 0.3s ease;
+    }
+
+    .mdi-chevron-left.notranslate.v-icon,
+    .mdi-chevron-down.notranslate.v-icon {
+        margin-left: -15px !important;
     }
 }
 

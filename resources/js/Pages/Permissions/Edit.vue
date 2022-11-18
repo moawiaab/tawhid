@@ -35,7 +35,6 @@ import { useSettingAlert } from '../../stores/settings/SettingAlert';
 export default {
     name: "EditPermission",
     setup() {
-        let thisModal = ref(false);
         const single = useSinglePermissions();
         const rules = {
             password: [(val) => val < 10 || `I don't believe you!`],
@@ -45,12 +44,11 @@ export default {
                     "لا تترك هذا الحقل فارغاً لو سمحت",
             ],
         };
-        const showModal = computed(() => single.showModalEdit);
 
         const submitForm = () => single.updateData().then(() => {
             if (validation()) {
                 single.updateData().then(() => {
-                    thisModal.value = false;
+                    single.showModalEdit = false;
                     single.$reset();
                 })
             } else {
@@ -63,9 +61,7 @@ export default {
                 && single.entry.title)
         }
         return {
-            thisModal,
             single,
-            showModal,
             submitForm,
             rules
         }

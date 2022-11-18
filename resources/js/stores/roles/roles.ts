@@ -71,7 +71,7 @@ export const useRoles = defineStore("roles-index", {
                 .delete(`${route}/${this.itemId}`)
                 .then((response) => {
                     useSettingAlert().setAlert(
-                        "تم حذف الإذن بنجاح",
+                        "تم حذف الصلاحية بنجاح",
                         "success",
                         true
                     );
@@ -95,7 +95,7 @@ export const useRoles = defineStore("roles-index", {
                 .post(`${route}/delete-all`, item)
                 .then((response) => {
                     useSettingAlert().setAlert(
-                        "تم حذف جميع الأذونات المختارة بنجاح",
+                        "تم حذف جميع الصلاحيات المختارة بنجاح",
                         "success",
                         true
                     );
@@ -111,35 +111,12 @@ export const useRoles = defineStore("roles-index", {
                     );
                 });
         },
-
-        deleteTrash() {
-            axios
-                .put(`${route}/${this.itemId}/delete-restore`)
-                .then((response) => {
-                    useSettingAlert().setAlert(
-                        "تم حذف الإذن من سلة المحذوفات بنجاح",
-                        "success",
-                        true
-                    );
-                    this.showDeleted = false;
-                    this.fetchIndexData();
-                    this.itemId = null;
-                })
-                .catch((error) => {
-                    useSettingAlert().setAlert(
-                        error.response.data.message,
-                        "warning",
-                        true
-                    );
-                });
-        },
-
         restoreItem(item:Number) {
             axios
                 .put(`${route}/${item}/restore`)
                 .then((response) => {
                     useSettingAlert().setAlert(
-                        "تم ارجاع الإذن بنجاح",
+                        "تم ارجاع الصلاحية بنجاح",
                         "success",
                         true
                     );

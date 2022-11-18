@@ -9,22 +9,22 @@
                 <search-filter :query="filters" />
             </v-col>
             <v-col class="text-left">
-                <v-chip color="blue" label class="ma-2" prepend-icon="mdi-filter-cog-outline" @click="openItem">
+                <v-chip size="small" color="blue" label class="ma-2" prepend-icon="mdi-filter-cog-outline" @click="openItem">
                     بحث متقدم
                 </v-chip>
-                <v-chip color="green" label class="ma-2" prepend-icon="mdi-refresh"
+                <v-chip size="small" color="green" label class="ma-2" prepend-icon="mdi-refresh"
                     @click.prevent="permission.fetchIndexData()">
                     تحديث البيانات
                     <template v-slot:append> </template>
                 </v-chip>
-                <v-chip color="red" label class="ma-2" prepend-icon="mdi-database-refresh-outline"
+                <v-chip size="small" color="red" label class="ma-2" prepend-icon="mdi-database-refresh-outline"
                     @click="headerItem.removeAllItem">
                     إعادة الضبط
                 </v-chip>
                 <!-- mdiDatabaseRefreshOutline -->
                 <v-menu :close-on-content-click="false">
                     <template v-slot:activator="{ props }">
-                        <v-chip color="gary" class="ma-2" prepend-icon="mdi-dots-vertical" v-bind="props" label>
+                        <v-chip size="small" color="gary" class="ma-2" prepend-icon="mdi-dots-vertical" v-bind="props" label>
                             إعدادات
                         </v-chip>
                     </template>
@@ -36,9 +36,9 @@
                         </v-list-item>
                         <v-divider />
                         <v-list-item-title class="mx-4 text-red">الأعمدة الغير معروضة</v-list-item-title>
-                        <v-list-item v-for="(i, index) in headerItem.menuItem" :key="index" prepend-icon="mdi-close">
+                        <v-list-item v-for="{ text }, index in headerItem.menuItem" :key="index" prepend-icon="mdi-close">
                             <v-list-item-title @click="headerItem.removeItem(index)">
-                                {{ i.text }}</v-list-item-title>
+                                {{ text }}</v-list-item-title>
                         </v-list-item>
                     </v-list>
                 </v-menu>
@@ -71,7 +71,7 @@
                 <import-menu url="permissions" />
                 <export-menu url="permissions" :data="permission.permissions" />
                 <v-icon icon="mdi-delete-sweep-outline" color="red" @click="permission.showDeletedMethod('delete')"
-                    v-if="$can('permission_delete')" />
+                    v-if="can('permission_delete', 'all')" />
             </div>
         </template>
         <template #item-operation="item">
@@ -80,7 +80,8 @@
                 <!-- <v-icon icon="mdi-pencil-outline" @click="permission.editItem(item)" color="green" class="mx-1" /> -->
                 <edit-icon @click="permission.editItem(item)" role="permission" v-if="!item.deleted_at" />
                 <delete-icon @click="permission.showDeletedMethod(item.id)" role="permission" v-if="!item.deleted_at" />
-                <delete-icon @click="permission.showDeletedMethod(item.id, true)" role="permission" v-if="item.deleted_at" />
+                <delete-icon @click="permission.showDeletedMethod(item.id, true)" role="permission"
+                    v-if="item.deleted_at" />
                 <delete-icon @click="permission.restoreItem(item.id)" role="permission" v-if="item.deleted_at"
                     :resat="true" />
                 <!-- <v-icon icon="mdi-trash-can" @click="permission.showDeletedMethod(item.id)" color="error"
@@ -104,7 +105,7 @@
             </v-btn>
             <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal" @click="permission.deleteTrash()"
                 v-else-if="permission.trashed == true">
-                 حذف من السلة
+                حذف من السلة
             </v-btn>
             <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal" @click="permission.deleteItem()"
                 v-else>
@@ -120,6 +121,7 @@
     <PrintList title="الأذونات" :header="headerItem.headerTable" :items="permission.permissions" />
 </template>
 <script lang="ts">
+import { useAbility } from '@casl/vue';
 import { ref, watch } from "@vue/runtime-core";
 import { usePermissions } from "../../stores/permissions";
 import { useSettingsHeaderTable } from "../../stores/settings/SettingHeaderTable";
@@ -145,6 +147,7 @@ export default {
         PrintList,
     },
     setup() {
+        const { can } = useAbility();
         const theme = useSetting();
         const permission = usePermissions();
         const query = ref<ServerOptions>({
@@ -210,6 +213,7 @@ export default {
             { deep: true }
         );
         return {
+            can,
             theme,
             headerItem,
             permission,

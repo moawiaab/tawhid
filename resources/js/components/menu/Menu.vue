@@ -5,7 +5,7 @@
     </v-list>
 </template>
 
-<script>
+<script lang="ts">
 import { useSettingsItem } from '../../stores/settings/SettingItem';
 import MenuItem from './MenuItem.vue';
 

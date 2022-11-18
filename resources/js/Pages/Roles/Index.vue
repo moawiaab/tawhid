@@ -9,22 +9,24 @@
                 <search-filter :query="filters" />
             </v-col>
             <v-col class="text-left">
-                <v-chip color="blue" label class="ma-2" prepend-icon="mdi-filter-cog-outline" @click="openItem">
+                <v-chip color="blue" size="small" label class="ma-2" prepend-icon="mdi-filter-cog-outline"
+                    @click="openItem">
                     بحث متقدم
                 </v-chip>
-                <v-chip color="green" label class="ma-2" prepend-icon="mdi-refresh"
+                <v-chip size="small" color="green" label class="ma-2" prepend-icon="mdi-refresh"
                     @click.prevent="roles.fetchIndexData()">
                     تحديث البيانات
                     <template v-slot:append> </template>
                 </v-chip>
-                <v-chip color="red" label class="ma-2" prepend-icon="mdi-database-refresh-outline"
+                <v-chip size="small" color="red" label class="ma-2" prepend-icon="mdi-database-refresh-outline"
                     @click="headerItem.removeAllItem">
                     إعادة الضبط
                 </v-chip>
                 <!-- mdiDatabaseRefreshOutline -->
                 <v-menu :close-on-content-click="false">
                     <template v-slot:activator="{ props }">
-                        <v-chip color="gary" class="ma-2" prepend-icon="mdi-dots-vertical" v-bind="props" label>
+                        <v-chip size="small" color="gary" class="ma-2" prepend-icon="mdi-dots-vertical" v-bind="props"
+                            label>
                             إعدادات
                         </v-chip>
                     </template>
@@ -36,9 +38,10 @@
                         </v-list-item>
                         <v-divider />
                         <v-list-item-title class="mx-4 text-red">الأعمدة الغير معروضة</v-list-item-title>
-                        <v-list-item v-for="(i, index) in headerItem.menuItem" :key="index" prepend-icon="mdi-close">
+                        <v-list-item v-for="{ text }, index in headerItem.menuItem" :key="index"
+                            prepend-icon="mdi-close">
                             <v-list-item-title @click="headerItem.removeItem(index)">
-                                {{ i.text }}</v-list-item-title>
+                                {{ text }}</v-list-item-title>
                         </v-list-item>
                     </v-list>
                 </v-menu>
@@ -69,30 +72,44 @@
         <template #item-permissions="item">
             {{ item.permissions.length }}
         </template>
+        <template #item-users="item">
+            {{ item.users.length }}
+        </template>
         <template #expand="item">
-            <div style="padding: 5px">
-                <v-chip class="ma-1" v-for="p in item.permissions"
-                    :key="p.id">{{ p.details }}</v-chip>
-            </div>
+            <v-row>
+                <v-col>
+                    <v-list-item-title>الأذونات لهذه الصلاحية</v-list-item-title>
+                    <v-chip color="red" class="ma-1" v-for="{ id, details } in item.permissions" :key="id" size="small">
+                        {{ details }}
+                    </v-chip>
+                </v-col>
+                <v-divider vertical />
+                <v-col>
+                    <v-list-item-title>المستخدمين لهذه الصلاحية</v-list-item-title>
+                    <v-chip color="primary" class="ma-1" v-for="{ id, name } in item.users" :key="id" size="small">{{
+                            name
+                    }}
+                    </v-chip>
+                </v-col>
+            </v-row>
+
         </template>
         <template #header-operation="header">
             <div class="delete-all-items">
-                <import-menu url="roles" />
+                <!-- <import-menu url="roles" /> -->
+                <v-spacer/>
                 <export-menu url="roles" :data="roles.roles" />
                 <v-icon icon="mdi-delete-sweep-outline" color="red" @click="roles.showDeletedMethod('delete')"
-                    v-if="$can('role_delete')" />
+                    v-if="can('role_delete', 'all')" />
             </div>
         </template>
         <template #item-operation="item">
             <div class="operation-wrapper text-left">
                 <v-toolbar-title></v-toolbar-title>
-                <!-- <v-icon icon="mdi-pencil-outline" @click="role.editItem(item)" color="green" class="mx-1" /> -->
+                <show-icon role="role"/>
                 <edit-icon @click="roles.editItem(item)" role="role" v-if="!item.deleted_at" />
-                <delete-icon @click="roles.showDeletedMethod(item.id)" role="role" v-if="!item.deleted_at" />
-                <delete-icon @click="roles.showDeletedMethod(item.id, true)" role="role" v-if="item.deleted_at" />
+                <delete-icon @click="roles.showDeletedMethod(item.id)" role="role" />
                 <delete-icon @click="roles.restoreItem(item.id)" role="role" v-if="item.deleted_at" :resat="true" />
-                <!-- <v-icon icon="mdi-trash-can" @click="permission.showDeletedMethod(item.id)" color="error"
-                    title="حذف الإذن" class="mx-1" /> -->
             </div>
         </template>
     </data-table>
@@ -101,7 +118,7 @@
         <template #content>
             <span v-if="roles.itemId == 'delete'">
                 هل تريد حذف جميع البيانات المختارة
-                <v-chip v-for="item in itemsSelected" :text="item.details" class="ma-1" />
+                <v-chip v-for="item in itemsSelected" :text="item.title" class="ma-1" />
             </span>
             <span v-else>هل تريد الحذف بالفعل ستفقد البيانات </span>
         </template>
@@ -109,10 +126,6 @@
             <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal"
                 @click="roles.deleteAllItem(itemsSelected)" v-if="roles.itemId == 'delete'">
                 حذف الجميع
-            </v-btn>
-            <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal" @click="roles.deleteTrash()"
-                v-else-if="roles.trashed == true">
-                حذف من السلة
             </v-btn>
             <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal" @click="roles.deleteItem()"
                 v-else>
@@ -123,11 +136,12 @@
             </v-btn>
         </template>
     </delete-item>
-    <edit-permission />
+    <edit-role />
     <PrintList title="الصلاحيات" :header="headerItem.headerTable" :items="roles.roles" />
 </template>
 <script lang="ts">
 import { ref, watch, onMounted } from "@vue/runtime-core";
+import { useAbility } from '@casl/vue';
 import { useRoles } from "../../stores/roles/roles";
 import { useSettingsHeaderTable } from "../../stores/settings/SettingHeaderTable";
 import type {
@@ -152,6 +166,7 @@ export default {
         PrintList,
     },
     setup() {
+        const { can } = useAbility();
         const theme = useSetting();
         const roles = useRoles();
         const query = ref<ServerOptions>({
@@ -169,6 +184,7 @@ export default {
         const headers: Header[] = [
             { text: "اسم الصلاحية", value: "title", width: 200, sortable: true },
             { text: 'عدد الصلاحيات', value: "permissions", width: 200 },
+            { text: 'عدد المستخدمين', value: "users", width: 200 },
             { text: "تاريخ الإنشاء", value: "created_at", sortable: true },//
             { text: "", value: "operation", width: 100 },
         ];
@@ -180,10 +196,6 @@ export default {
             return '';
         };
         headerItem.setHeaderItems(headers, "roles");
-
-        onMounted(() => {
-            //    console.log( localStorage.getItem('header-table'));
-        })
 
         const openItem = () => {
             if (filtersItem.value) {
@@ -211,6 +223,7 @@ export default {
             { deep: true }
         );
         return {
+            can,
             theme,
             headerItem,
             roles,

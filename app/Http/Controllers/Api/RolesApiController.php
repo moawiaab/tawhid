@@ -11,6 +11,7 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class RolesApiController extends Controller
 {
@@ -23,8 +24,9 @@ class RolesApiController extends Controller
                 ->user()
                 ->account
                 ->roles()
-                ->with(['permissions'])
+                ->with(['permissions', 'users'])
                 ->advancedFilter()
+                ->filter(FacadesRequest::only('trashed'))
                 ->paginate(request('rowsPerPage', 10))
         );
     }
@@ -78,8 +80,10 @@ class RolesApiController extends Controller
     public function update(UpdateRoleRequest $request, Role $role)
     {
         $role->update($request->validated());
-        $role->permissions()->sync($request->permissions);
-        $role->permissions()->syncWithoutDetaching(1);
+        if (is_numeric($request->permissions[0]) != null) {
+            $role->permissions()->sync($request->permissions);
+            $role->permissions()->syncWithoutDetaching(1);
+        }
 
         return (new RoleResource($role))
             ->response()
@@ -97,7 +101,7 @@ class RolesApiController extends Controller
                     $q->where('status', 1);
                 })->get(['id as value', 'details as label']),
                 'roles' => $role->permissions->transform(fn ($role) => [
-                    $role->id
+                    'value' => $role->id,
                 ]),
             ],
         ]);
@@ -106,9 +110,40 @@ class RolesApiController extends Controller
     public function destroy(Role $role)
     {
         abort_if(Gate::denies('role_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        if ($role->deleted_at) {
+            $role->forceDelete();
+        } else {
+            $role->delete();
+        }
 
-        $role->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
 
+    public function destroyAll(Request $request)
+    {
+        abort_if(Gate::denies('role_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        Role::whereIn('id', $request->items)->onlyTrashed()->forceDelete();
+        Role::whereIn('id', $request->items)->delete();
+
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function addAll(Request $request)
+    {
+        // Role::insert($request[0]);
+        foreach ($request[0] as $value) {
+            $perm = new Role();
+            $perm->title = $value['title'];
+            $perm->details = $value['details'];
+            $perm->save();
+        }
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+    public function restore(Role $item)
+    {
+        abort_if(Gate::denies('role_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        $item->restore();
         return response(null, Response::HTTP_NO_CONTENT);
     }
 }

@@ -70,6 +70,20 @@ class User extends Authenticatable
     ];
 
 
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where($field ?? 'id', $value)->withTrashed()->firstOrFail();
+    }
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed === 'with') {
+                $query->withTrashed();
+            } elseif ($trashed === 'only') {
+                $query->onlyTrashed();
+            }
+        });
+    }
 
     public function getEmailVerifiedAtAttribute($value)
     {
@@ -88,8 +102,6 @@ class User extends Authenticatable
         }
     }
 
-
-
     public function role() : BelongsTo
     {
         return $this->belongsTo(Role::class);
@@ -105,14 +117,4 @@ class User extends Authenticatable
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function scopeFilter($query, array $filters)
-    {
-        $query->when($filters['trashed'] ?? null, function ($query, $trashed) {
-            if ($trashed === 'with') {
-                $query->withTrashed();
-            } elseif ($trashed === 'only') {
-                $query->onlyTrashed();
-            }
-        });
-    }
 }

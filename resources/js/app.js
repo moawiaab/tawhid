@@ -30,6 +30,7 @@ import EditIcon from "./components/icons/EditIcon.vue";
 import ShowIcon from "./components/icons/ShowIcon.vue";
 import ExportMenu from "./components/dialog/ExportMenu.vue";
 import ImportMenu from "./components/dialog/ImportMenu.vue";
+import MainPage from "./components/pages/MainPage.vue"
 
 import VueHtmlToPaper from "./plugins/vueHtmlToPaper";
 // Painia Settings
@@ -76,6 +77,7 @@ app.component("edit-icon", EditIcon);
 app.component("delete-icon", DeleteIcon);
 app.component("show-icon", ShowIcon);
 
+app.component("main-page", MainPage);
 app.component("export-menu", ExportMenu);
 app.component("import-menu", ImportMenu);
 app.mount("#app");

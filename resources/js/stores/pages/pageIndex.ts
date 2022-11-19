@@ -2,13 +2,12 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { useSettingAlert } from "../settings/SettingAlert";
 import { useSetting } from "../settings/SettingIndex";
-import { useSingleUsers } from "./single";
-const route = "users";
+import { useSinglePage } from "./pageSingle";
 
-export const useUsers = defineStore("index-users", {
+export const usePageIndex = defineStore("index-pages", {
     state: () => ({
         theme: useSetting().theme,
-        users: [],
+        data: [],
         total: 0,
         page: 1,
         query: {
@@ -23,9 +22,12 @@ export const useUsers = defineStore("index-users", {
         itemId: null,
         itemsSelected: [],
         trashed: false,
+        route: String,
+        alertMessage: String,
+        table: String,
     }),
     getters: {
-        // items: (state) => state.users,
+        // items: (state) => state.data,
         // totalItem: (state) => state.total,
     },
     actions: {
@@ -33,9 +35,11 @@ export const useUsers = defineStore("index-users", {
             this.loading = true;
             return new Promise(async (resolve, reject) => {
                 await axios
-                    .get(route, { params: { ...this.filters, ...this.query } })
+                    .get(this.route, {
+                        params: { ...this.filters, ...this.query },
+                    })
                     .then((response) => {
-                        this.users = response.data.data;
+                        this.data = response.data.data;
                         this.total = response.data.meta.total;
                         this.page = response.data.meta.current_page;
                     })
@@ -52,13 +56,13 @@ export const useUsers = defineStore("index-users", {
             this.filters = q;
         },
         editItem(item: any) {
-            const single = useSingleUsers();
+            const single = useSinglePage();
             single.showModalEdit = true;
             single.fetchEditData(item.id);
-            console.log(single.showModalEdit + '  itrms')
+            console.log(single.showModalEdit + "  itrms");
         },
         showItem(item: any) {
-            const single = useSingleUsers();
+            const single = useSinglePage();
             single.showModalShow = true;
             single.fetchShowData(item.id);
         },
@@ -69,10 +73,10 @@ export const useUsers = defineStore("index-users", {
         },
         deleteItem() {
             axios
-                .delete(`${route}/${this.itemId}`)
+                .delete(`${this.route}/${this.itemId}`)
                 .then((response) => {
                     useSettingAlert().setAlert(
-                        "تم حذف المستخدم بنجاح",
+                        "تم الحذف بنجاح",
                         "success",
                         true
                     );
@@ -93,10 +97,10 @@ export const useUsers = defineStore("index-users", {
             const item = { items: items.map((e: any) => e.id) };
             console.log(item);
             axios
-                .post(`${route}/delete-all`, item)
+                .post(`${this.route}/delete-all`, item)
                 .then((response) => {
                     useSettingAlert().setAlert(
-                        "تم حذف جميع المستخدمين بنجاح",
+                        "تم حذف الجميع بنجاح",
                         "success",
                         true
                     );
@@ -114,10 +118,10 @@ export const useUsers = defineStore("index-users", {
         },
         restoreItem(item: Number) {
             axios
-                .put(`${route}/${item}/restore`)
+                .put(`${this.route}/${item}/restore`)
                 .then((response) => {
                     useSettingAlert().setAlert(
-                        "تم ارجاع المستخدم بنجاح",
+                        "تم الارجاع  بنجاح",
                         "success",
                         true
                     );
@@ -132,6 +136,14 @@ export const useUsers = defineStore("index-users", {
                         true
                     );
                 });
+        },
+
+        setup(route: String, table: String) {
+            useSinglePage().$reset();
+            this.route = route;
+            this.table = table;
+            useSinglePage().setRoute(route)
+            useSinglePage().fetchCreateData()
         },
     },
 });

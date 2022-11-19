@@ -1,7 +1,7 @@
 <template>
-    <Loader v-if="roles.loading" />
-    <header-title title="الصلاحيات">
-        <create-role />
+    <Loader v-if="pages.loading" />
+    <header-title :title="title">
+        <slot name="create" />
     </header-title>
     <div>
         <v-row align="center" no-gutters>
@@ -14,7 +14,7 @@
                     بحث متقدم
                 </v-chip>
                 <v-chip size="small" color="green" label class="ma-2" prepend-icon="mdi-refresh"
-                    @click.prevent="roles.fetchIndexData()">
+                    @click.prevent="pages.fetchIndexData()">
                     تحديث البيانات
                     <template v-slot:append> </template>
                 </v-chip>
@@ -53,96 +53,81 @@
             <v-expansion-panel-text>
                 <v-row no-gutters>
                     <v-col>
-                        <v-radio-group inline v-model="filters.trashed">
+                        <v-radio-group v-model="filters.trashed">
                             <v-radio label="عرض البيانات الغير محذوفة" value="" color="info"></v-radio>
                             <v-radio label="عرض البيانات المحذوف فقط" value="only" color="info"></v-radio>
                             <v-radio label="عرض جميع البيانات معاً" value="with" color="info"></v-radio>
                         </v-radio-group>
                     </v-col>
+                    <slot name="filter" />
                 </v-row>
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>
-    <data-table :server-items-length="roles.total" buttons-pagination v-model:server-options="query"
-        :headers="headerItem.headerTable" :items="roles.roles" body-text-direction="right" :table-class-name="
+    <data-table :server-items-length="pages.total" buttons-pagination v-model:server-options="query"
+        :headers="headerItem.headerTable" :items="pages.data" body-text-direction="right" :table-class-name="
             theme.theme == 'light' ? 'customize-table' : 'customize-table-small'
-        " theme-color="#551a8b" :table-height="500" :loading="roles.loading" alternating border-cell
+        " theme-color="#551a8b" :table-height="500" :loading="pages.loading" alternating border-cell
         v-model:items-selected="itemsSelected" :body-row-class-name="bodyRowClassNameFunction">
         <template #loading />
-        <template #item-permissions="item">
-            {{ item.permissions.length }}
-        </template>
-        <template #item-users="item">
-            {{ item.users.length }}
-        </template>
-        <template #expand="item">
-            <v-row>
-                <v-col>
-                    <v-list-item-title>الأذونات لهذه الصلاحية</v-list-item-title>
-                    <v-chip color="red" class="ma-1" v-for="{ id, details } in item.permissions" :key="id" size="small">
-                        {{ details }}
-                    </v-chip>
-                </v-col>
-                <v-divider vertical />
-                <v-col>
-                    <v-list-item-title>المستخدمين لهذه الصلاحية</v-list-item-title>
-                    <v-chip color="primary" class="ma-1" v-for="{ id, name } in item.users" :key="id" size="small">{{
-                            name
-                    }}
-                    </v-chip>
-                </v-col>
-            </v-row>
-
+        <template #expand="item" v-if="expand">
+            <slot name="expand" :item="item" />
         </template>
         <template #header-operation="header">
-            <div class="delete-all-items">
-                <!-- <import-menu url="roles" /> -->
-                <v-spacer/>
-                <export-menu url="roles" :data="roles.roles" />
-                <v-icon icon="mdi-delete-sweep-outline" color="red" @click="roles.showDeletedMethod('delete')"
-                    v-if="can('role_delete', 'all')" />
-            </div>
+            <v-col class="text-left">
+                <import-menu url="pages" />
+                <export-menu url="pages" :data="pages.data" />
+                <v-icon icon="mdi-delete-sweep-outline" color="red" @click="pages.showDeletedMethod('delete')"
+                    v-if="can(`${role}_delete`, 'all')" />
+            </v-col>
         </template>
+
         <template #item-operation="item">
             <div class="operation-wrapper text-left">
                 <v-toolbar-title></v-toolbar-title>
-                <show-icon role="role"/>
-                <edit-icon @click="roles.editItem(item)" role="role" v-if="!item.deleted_at" />
-                <delete-icon @click="roles.showDeletedMethod(item.id)" role="role" />
-                <delete-icon @click="roles.restoreItem(item.id)" role="role" v-if="item.deleted_at" :resat="true" />
+                <slot name="table-operation" :item="item.id" />
+                <show-icon :role="role" @click="pages.showItem(item)" />
+                <edit-icon @click="pages.editItem(item)" :role="role" v-if="!item.deleted_at" />
+                <delete-icon @click="pages.showDeletedMethod(item.id)" :role="role" />
+                <delete-icon @click="pages.restoreItem(item.id)" :role="role" v-if="item.deleted_at" :resat="true" />
+
             </div>
         </template>
     </data-table>
 
-    <delete-item title="هل تريد الحذف" v-model="roles.showDeleted">
+    <delete-item title="هل تريد الحذف" v-model="pages.showDeleted">
         <template #content>
-            <span v-if="roles.itemId == 'delete'">
+            <span v-if="pages.itemId == 'delete'">
                 هل تريد حذف جميع البيانات المختارة
-                <v-chip v-for="item in itemsSelected" :text="item.title" class="ma-1" />
+                <v-chip v-for="item in itemsSelected" :text="item.title ?? item.name" class="ma-1" />
             </span>
             <span v-else>هل تريد الحذف بالفعل ستفقد البيانات </span>
         </template>
         <template #footer>
             <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal"
-                @click="roles.deleteAllItem(itemsSelected)" v-if="roles.itemId == 'delete'">
+                @click="pages.deleteAllItem(itemsSelected)" v-if="pages.itemId == 'delete'">
                 حذف الجميع
             </v-btn>
-            <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal" @click="roles.deleteItem()"
+            <v-btn color="blue-darken-1" prepend-icon="mdi-trash-can" variant="tonal" @click="pages.deleteItem()"
                 v-else>
                 تأكيد الحذف
             </v-btn>
-            <v-btn color="red-darken-1" prepend-icon="mdi-close" variant="tonal" @click="roles.showDeleted = false">
+            <v-btn color="red-darken-1" prepend-icon="mdi-close" variant="tonal" @click="pages.showDeleted = false">
                 إلغاء الأمر
             </v-btn>
         </template>
     </delete-item>
-    <edit-role />
-    <PrintList title="الصلاحيات" :header="headerItem.headerTable" :items="roles.roles" />
+    <!-- <edit-page>
+        <slot name="edit" />
+    </edit-page> -->
+    <slot />
+    <show-page />
+    <PrintList :title="title" :header="headerItem.headerTable" :items="pages.data" />
 </template>
 <script lang="ts">
-import { ref, watch, onMounted } from "@vue/runtime-core";
+import { ref, watch } from "@vue/runtime-core";
 import { useAbility } from '@casl/vue';
-import { useRoles } from "../../stores/roles/roles";
+import { usePageIndex } from "../../stores/pages/pageIndex";
 import { useSettingsHeaderTable } from "../../stores/settings/SettingHeaderTable";
 import type {
     Header,
@@ -150,26 +135,33 @@ import type {
     Item,
     BodyRowClassNameFunction,
 } from "vue3-easy-data-table";
-import EditRole from "./Edit.vue";
-import CreateRole from "./Create.vue";
+import EditPage from "./Edit.vue";
+import CreatePage from "./Create.vue";
+import ShowPage from "./Show.vue"
 import { useSetting } from "../../stores/settings/SettingIndex";
 import HeaderTitle from "../../components/HeaderTitle.vue";
-import SearchFilter from "../../components/SearchFilter.vue";
 import PrintList from "../../components/PrintList.vue";
 
 export default {
-    name: "RolesIndex",
+    name: "MainPage",
     components: {
-        EditRole,
-        CreateRole,
+        EditPage,
+        CreatePage,
         HeaderTitle,
-        SearchFilter,
         PrintList,
+        ShowPage
     },
-    setup() {
+
+    props: {
+        headers: Headers,
+        expand: { type: Boolean, default: false },
+        role: { type: String },
+        title: { type: String },
+    },
+    setup(props) {
         const { can } = useAbility();
         const theme = useSetting();
-        const roles = useRoles();
+        const pages = usePageIndex();
         const query = ref<ServerOptions>({
             sortBy: "id",
             sortType: "desc",
@@ -181,14 +173,8 @@ export default {
         const openMenu = ref(false);
         const headerItem = useSettingsHeaderTable();
         const itemsSelected = ref<Item[]>([]);
-        roles.fetchIndexData();
-        const headers: Header[] = [
-            { text: "اسم الصلاحية", value: "title", width: 200, sortable: true },
-            { text: 'عدد الصلاحيات', value: "permissions", width: 200 },
-            { text: 'عدد المستخدمين', value: "users", width: 200 },
-            { text: "تاريخ الإنشاء", value: "created_at", sortable: true },//
-            { text: "إعدادات", value: "operation", width: 100 },
-        ];
+        pages.fetchIndexData();
+
         const bodyRowClassNameFunction: BodyRowClassNameFunction = (
             item: Item,
             index: number
@@ -196,7 +182,7 @@ export default {
             if (item.deleted_at) return "delete-fail-row";
             return '';
         };
-        headerItem.setHeaderItems(headers, "roles");
+        headerItem.setHeaderItems(props.headers, pages.table);
 
         const openItem = () => {
             if (filtersItem.value) {
@@ -209,8 +195,8 @@ export default {
         watch(
             filters,
             (q) => {
-                roles.setFilters(q);
-                roles.fetchIndexData();
+                pages.setFilters(q);
+                pages.fetchIndexData();
             },
             { deep: true }
         );
@@ -218,8 +204,8 @@ export default {
         watch(
             query,
             (q) => {
-                roles.setQuery(q);
-                roles.fetchIndexData();
+                pages.setQuery(q);
+                pages.fetchIndexData();
             },
             { deep: true }
         );
@@ -227,7 +213,7 @@ export default {
             can,
             theme,
             headerItem,
-            roles,
+            pages,
             query,
             filters,
             openItem,
@@ -239,7 +225,3 @@ export default {
     },
 };
 </script>
-
-<style>
-/* .text-left-col {} */
-</style>

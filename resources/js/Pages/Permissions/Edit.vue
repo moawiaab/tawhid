@@ -2,15 +2,15 @@
     <v-dialog v-model="single.showModalEdit" persistent max-width="600" class="text-right">
         <v-form @submit.prevent="submitForm" ref="form">
             <v-card>
-                <v-card-title class="text-h5">
+                <v-card-title class="text-h5 text-primary">
                     تعديل إذن الدخول
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-text-field clearable label="اسم الصلاحية" variant="outlined" hint="هنا اسم الصلاحية "
+                    <v-text-field clearable label="اسم الصلاحية" variant="underlined" color="primary" hint="هنا اسم الصلاحية "
                         v-model="single.entry.details" :rules="rules.required" :error-messages="single.errors.details"
                         required />
-                    <v-text-field clearable label="الرابط" variant="outlined"
+                    <v-text-field clearable label="الرابط" variant="underlined" color="primary"
                         hint="رابط الصلاحية يجب عن تكون بالانجليزية حتى لا توجه مشاكل" v-model="single.entry.title"
                         :rules="rules.required" required :error-messages="single.errors.title" />
 

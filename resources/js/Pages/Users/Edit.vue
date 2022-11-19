@@ -1,48 +1,77 @@
 <template>
-    <form @submit.prevent="submitForm">
-        <Modal title=" تعديل المستخدم " ref="thisModal" maxWidth="lg">
-            <template #body>
-                <v-text v-model="single.entry.name" type="text" title="الاسم بالكامل" :error="single.errors.name" />
-                <v-text v-model="single.entry.email" type="email" title="البريد الالكتروني"
-                    :error="single.errors.email" />
-                <v-text v-model="single.entry.phone" type="number" title=" رقم الهاتف" :error="single.errors.phone"
-                    :required="false" />
-                <select-text v-model="single.entry.role_id" title="الصلاحية" :error="single.errors.role_id">
-                    <option v-for="role in single.lists.roles" :key="role.id" :value="role.id"> {{ role.title }}
-                    </option>
-                </select-text>
-            </template>
-            <template #footer>
-                <btn-create icon="fa-save" type="submit" :disabled="loading" title="تعديل" />
-            </template>
-        </Modal>
-    </form>
+    <v-dialog v-model="model.showModalEdit" persistent max-width="800" scrollable>
+        <v-form @submit.prevent="submitForm" ref="form">
+            <v-card>
+                <v-card-title class="text-h5 text-primary">
+                    تعديل بيانات المستخدم
+                </v-card-title>
+                <v-divider></v-divider>
+                <v-card-text>
+                    <v-text-field clearable label="اسم المستخدم" variant="underlined" hint="هنا اسم المستخدم "
+                        v-model="single.entry.name" :rules="rules.required" :error-messages="single.errors.name"
+                        required color="primary" />
+                    <v-text-field clearable label="رقم الهاتف" variant="underlined" hint="هنا رقم الهاتف "
+                        v-model="single.entry.phone" :rules="rules.required" :error-messages="single.errors.phone"
+                        required color="primary" type="phone" />
+                    <v-select v-model="single.entry.role_id" clearable label="Select" :items="single.lists.roles"
+                        variant="underlined" item-title="title" item-value="id">
+                    </v-select>
+                </v-card-text>
+
+                <v-divider />
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="red-darken-1" prepend-icon="mdi-close" variant="tonal"
+                        @click="model.showModalEdit = false">
+                        إلغاء الأمر
+                    </v-btn>
+                    <btn-save :loading="single.loading" />
+                </v-card-actions>
+            </v-card>
+        </v-form>
+    </v-dialog>
 </template>
 
 
-<script>
-import { ref, computed, watch, onMounted } from "vue";
-import VText from "../../components/inputs/VInput.vue";
-import SelectText from "../../components/inputs/VSelect.vue";
-import Modal from "../../components/modals/ModalDialog.vue";
+<script lang="ts">
 import { useSingleUsers } from '../../stores/users/single';
+import { useSettingAlert } from '../../stores/settings/SettingAlert';
+import { useSinglePage } from '../../stores/pages/pageSingle';
 
 export default {
     name: "EditUser",
-    components: { VText, SelectText, Modal },
     setup() {
-        let thisModal = ref(null);
         const single = useSingleUsers();
-        const submitForm = () => single.updateData().then(() => thisModal.value.hide())
-        const showModal = computed(() => single.showModalEdit);
+        const model = useSinglePage()
+        single.setupEntry(model.entry, model.lists)
+        const submitForm = () => single.updateData().then(() => {
+            if (validation()) {
+                single.updateData().then(() => {
+                    model.showModalEdit = false;
+                    single.$reset();
+                })
+            } else {
+                useSettingAlert().setAlert("لا تترك حقل فارغ لو سمحت", 'warning', true)
+            }
+        })
 
-        watch(showModal, (q) => {
-            thisModal.value.show();
-        }, { deep: true });
+        const rules = {
+            required: [
+                (val: any) =>
+                    (val || "").length > 0 ||
+                    "لا تترك هذا الحقل فارغاً لو سمحت",
+            ],
+        };
+
+        const validation = () => {
+            return (single.entry.name && single.entry.phone)
+        }
+
         return {
-            thisModal,
             single,
             submitForm,
+            rules,
+            model
         }
     },
 

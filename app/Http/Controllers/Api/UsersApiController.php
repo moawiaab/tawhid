@@ -19,6 +19,7 @@ use Illuminate\Validation\ValidationException;
 
 
 use App\Exports\UsersExport;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UsersApiController extends Controller
@@ -27,12 +28,11 @@ class UsersApiController extends Controller
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         return UserResource::collection(
-            auth()
-                ->user()
-                ->account
-                ->users()
-                ->with(['role', 'account'])
-                ->advancedFilter()
+            User::advancedFilter()
+                ->when(auth()->user()->account_id != 1, function ($i) {
+                    $i->where('account_id', auth()->user()->account_id);
+                })
+                ->filter(FacadesRequest::only('trashed'))
                 ->paginate(request('rowsPerPage', 20))
         );
     }
@@ -84,7 +84,7 @@ class UsersApiController extends Controller
         abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
 
         return response([
-            'data' => new UserResource($user->load(['role', 'account'])),
+            'data' => new UserResource($user),
             'meta' => [
                 'roles' => auth()
                     ->user()
@@ -98,7 +98,11 @@ class UsersApiController extends Controller
     {
         abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
 
-        $user->delete();
+        if ($user->deleted_at) {
+            $user->forceDelete();
+        } else {
+            $user->delete();
+        }
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
@@ -143,5 +147,33 @@ class UsersApiController extends Controller
         }
         // return (new UsersExport)->download('invoices.xlsx', Excel::XLSX);
 
+    }
+
+    public function destroyAll(Request $request)
+    {
+        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        User::whereIn('id', $request->items)->onlyTrashed()->forceDelete();
+        User::whereIn('id', $request->items)->delete();
+
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function addAll(Request $request)
+    {
+        // User::insert($request[0]);
+        foreach ($request[0] as $value) {
+            $perm = new User();
+            $perm->title = $value['title'];
+            $perm->details = $value['details'];
+            $perm->save();
+        }
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+    public function restore(User $item)
+    {
+        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        $item->restore();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

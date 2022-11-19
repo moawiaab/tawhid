@@ -1,10 +1,10 @@
 <template>
-    <v-btn variant="text" @click="thisModal = !thisModal"> إضافة صلاحية جديدة</v-btn>
+    <v-btn variant="text" @click="thisModal = !thisModal"> إضافة صلاحية </v-btn>
     <v-dialog v-model="thisModal" persistent max-width="1200" scrollable>
         <v-form @submit.prevent="submitForm" ref="form">
             <v-card>
                 <v-card-title class="text-h5">
-                    إضافة صلاحية دخول جديدة
+                    إضافة صلاحية جديدة
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
@@ -42,6 +42,7 @@
 <script lang="ts">
 import { ref, watch } from "vue";
 import { useSingleRoles } from '../../stores/roles/single';
+import { useSettingAlert } from '../../stores/settings/SettingAlert';
 
 export default {
     name: "CreateRole",
@@ -55,10 +56,16 @@ export default {
                     "لا تترك هذا الحقل فارغاً لو سمحت",
             ],
         };
-        const submitForm = () => single.storeData().then(() => {
-            thisModal.value = false;
-            single.$reset();
-        })
+        const submitForm = () => {
+            if (validation()) {
+                single.storeData().then(() => {
+                    thisModal.value = false;
+                    single.$reset();
+                })
+            } else {
+                useSettingAlert().setAlert("لا تترك حقل فارغ لو سمحت", 'warning', true)
+            }
+        }
 
         watch(thisModal, (e) => {
             single.$reset();

@@ -26,7 +26,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Roles
     Route::resource('roles', RolesApiController::class);
     Route::post('/roles/delete-all', [RolesApiController::class,'destroyAll']);
-    Route::post('/roles/add-all', [RolesApiController::class,'addAll']);
     Route::put('/roles/{item}/restore', [RolesApiController::class,'restore']);
 
     Route::resource('categories', CategoryApiController::class);
@@ -36,7 +35,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Users
     Route::resource('/users', UsersApiController::class);
     Route::put('/users/{user}/toggle', [UsersApiController::class, 'toggle'])->name('user.toggle');
+    Route::post('/users/delete-all', [UsersApiController::class,'destroyAll']);
+    Route::post('/users/add-all', [UsersApiController::class,'addAll']);
+    Route::put('/users/{item}/restore', [UsersApiController::class,'restore']);
     Route::post('/users/password', [UsersApiController::class, 'password'])->name('users.password');
+
     Route::get('/shops/data', [UsersApiController::class, 'showData']);
 
 });

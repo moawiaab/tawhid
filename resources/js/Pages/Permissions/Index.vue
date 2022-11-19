@@ -139,6 +139,7 @@ import SearchFilter from "../../components/SearchFilter.vue";
 import PrintList from "../../components/PrintList.vue";
 
 export default {
+    name: "PermissionsIndex",
     components: {
         EditPermission,
         CreatePermission,

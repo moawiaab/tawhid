@@ -39,10 +39,8 @@ class User extends Authenticatable
         'id',
         'name',
         'email',
-        'email_verified_at',
         'phone',
-        'role',
-        'profile_photo_path',
+        'role.title',
     ];
 
     protected $filterable = [
@@ -51,7 +49,6 @@ class User extends Authenticatable
         'email',
         'role.title',
         'phone',
-        'account.name',
     ];
 
     protected $fillable = [

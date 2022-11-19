@@ -18,11 +18,11 @@ const routes = [
                 name: " المستخدمين",
                 component: () => import("@/Pages/Users/Index.vue"),
             },
-            {
-                path: "/accounts",
-                name: " accounts.index",
-                component: () => import("@/Pages/Accounts/Index.vue"),
-            },
+            // {
+            //     path: "/accounts",
+            //     name: " accounts.index",
+            //     component: () => import("@/Pages/Accounts/Index.vue"),
+            // },
             {
                 path: "/roles",
                 name: " roles.index",

@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="model.showModalShow" max-width="1200" scrollable>
+    <v-dialog v-model="single.showModalShow" persistent max-width="1200" scrollable>
         <v-card>
             <v-card-title class="text-h5 text-primary">
                 عرض بيانات المستخدم
@@ -8,30 +8,26 @@
             <v-card-text>
                 <v-row>
                     <v-col cols="4">
-                        <v-list-item>
-                            <v-list-item-title>{{ single.entry.name }}</v-list-item-title>
+                        <v-list-item :title="single.entry.name">
                             <template v-slot:prepend>
                                 <v-chip label class="ml-2" prepend-icon="mdi-account-outline"> الاسم</v-chip>
                             </template>
                         </v-list-item>
-                        <v-list-item>
-                            <v-list-item-title>{{ single.entry.email }}</v-list-item-title>
+                        <v-list-item :title="single.entry.email">
                             <template v-slot:prepend>
-                                <v-chip label class="ml-2" prepend-icon="mdi-email-outline"> البريد </v-chip>
+                             <v-chip label class="ml-2" prepend-icon="mdi-email-outline">  البريد </v-chip>
                             </template>
                         </v-list-item>
 
-                        <v-list-item>
-                            <v-list-item-title>{{ single.entry.phone }}</v-list-item-title>
+                        <v-list-item :title="single.entry.phone">
                             <template v-slot:prepend>
-                                <v-chip label class="ml-2" prepend-icon="mdi-phone-outline"> رقم الهاتف </v-chip>
+                             <v-chip label class="ml-2" prepend-icon="mdi-phone-outline">  رقم الهاتف </v-chip>
                             </template>
                         </v-list-item>
 
-                        <v-list-item>
-                            <v-list-item-title>{{ single.entry.role }}</v-list-item-title>
+                        <v-list-item :title="single.entry.role">
                             <template v-slot:prepend>
-                                <v-chip label class="ml-2" prepend-icon="mdi-lock-outline"> الصلاحية</v-chip>
+                             <v-chip label class="ml-2" prepend-icon="mdi-lock-outline">  الصلاحية</v-chip>
                             </template>
                         </v-list-item>
 
@@ -45,7 +41,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="red-darken-1" prepend-icon="mdi-close" variant="tonal"
-                    @click="model.showModalShow = false">
+                    @click="single.showModalShow = false">
                     إلغاء الأمر
                 </v-btn>
             </v-card-actions>
@@ -55,18 +51,14 @@
 
 
 <script lang="ts">
-import { useSinglePage } from '../../stores/pages/pageSingle';
 import { useSingleUsers } from '../../stores/users/single';
 
 export default {
-    name: "ShowUser",
+    name: "ShowPage",
     setup() {
         const single = useSingleUsers();
-        const model = useSinglePage();
-        single.setupEntry(model.entry, model.lists)
         return {
             single,
-            model
         }
     },
 }

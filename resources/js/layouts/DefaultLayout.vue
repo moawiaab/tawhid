@@ -1,7 +1,7 @@
 
 <template>
     <v-app id="" :theme="settings.getTheme">
-        <v-layout ref="app" dir="rtl" v-resize="settings.onResize">
+        <v-layout ref="app" v-resize="settings.onResize">
             <v-system-bar>
                 <v-btn variant="text" :prepend-icon="!settings.menu ? 'mdi-menu-open' : 'mdi-menu-right-outline'"
                     @click="settings.setMenu" width="20" class="px-1">
@@ -18,7 +18,7 @@
                 <v-icon>mdi-triangle</v-icon>
                 <marquee direction="right" scrollamount="2" loop="1" :onfinish="setNewItem">
                     <!-- <h1> -->
-                    <font face="Andalus" size="3">وزان الجوهرة عالم المنوعات </font>
+                    <font face="Andalus" size="3" color="grey"> التوحيد هو حق الله على العبيد </font>
                     <!-- <h1 /> -->
                 </marquee>
                 <v-spacer></v-spacer>
@@ -30,13 +30,13 @@
                 rail-width="40">
                 <Dialog />
                 <router-link v-for="item, n in sidebar.itemNav" :key="n" :to="item.url ?? ''">
-                    <v-avatar :color="`grey-${router.path === item.url ? 'darken' : 'lighten'}-2`" size="25"
+                    <v-avatar :color="`purple-${route.path === item.url ? 'darken' : 'lighten'}-4`" size="30"
                         class="d-block text-center mx-auto mb-5" :icon="item.icon" />
                     <v-tooltip activator="parent" location="start">{{ item.text }}</v-tooltip>
                 </router-link>
             </v-navigation-drawer>
             <v-navigation-drawer v-model="settings.drawer" location="end" width="240">
-                <!--  -->
+
                 <v-row justify="end" v-if="settings.window < 1280">
                     <v-app-bar-nav-icon @click="settings.drawer = false" v-cloak>
                         <v-icon icon="mdi-close" />
@@ -57,10 +57,9 @@
                 <v-toolbar-title />
                 <v-menu transition="scroll-x-transition">
                     <template v-slot:activator="{ props }">
-                        <v-list-item title="welcome" prepend-icon="mdi-account-circle" v-bind="props" value="22">
-                        </v-list-item>
-                        <!-- <v-avatar size="36" class="text-center mx-5" icon="mdi-account-circle" v-bind="props" >
-                        </v-avatar> -->
+
+                        <v-avatar size="36" class="text-center mx-3" icon="mdi-account-circle" v-bind="props" >
+                        </v-avatar>
                     </template>
                     <v-list>
                         <v-list-item v-for="(item, index) in sidebar.userList" :key="index" :value="index"
@@ -99,7 +98,7 @@
 </template>
 
 <script>
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, onUnmounted, watch } from 'vue'
 import { useOnline, formatDate, useNow, useTitle } from '@vueuse/core'
 import { useRoute } from "vue-router";
 import { useSetting } from '../stores/settings/SettingIndex'
@@ -116,13 +115,14 @@ export default {
         const sidebar = useSettingsItem();
         const password = useSettingPassword()
         const now = useNow();
-        const router = useRoute();
+        const route = useRoute();
         const online = useOnline()
         const alertData = useSettingAlert()
         const wifi = computed(() => online.value ? 'mdi-wifi-arrow-left-right' : 'mdi-wifi-strength-off-outline')
         onMounted(() => sidebar.getRoles());
-        useTitle(`اسم البرنامج | ${router.name}`)
-        watch(router, (e) => {
+        onUnmounted(()=> console.log("app onUnmounted"));
+        useTitle(`اسم البرنامج | ${route.name}`)
+        watch(route, (e) => {
             useTitle(`اسم البرنامج | ${e.name}`);
             sidebar.getRoles()
         })
@@ -135,11 +135,11 @@ export default {
             wifi,
             now,
             formatDate,
-            router,
+            route,
             sidebar,
             password,
             alertData,
-            setNewItem
+            setNewItem,
         }
     }
 }
@@ -149,8 +149,6 @@ export default {
 .notranslate.v-icon {
     margin-left: 7px !important;
 }
-
-
 
 .v-list-item__prepend>.v-icon {
     margin-inline-end: 10px !important;

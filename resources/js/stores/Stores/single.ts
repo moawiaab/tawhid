@@ -1,26 +1,24 @@
 import axios from "axios";
 import { defineStore } from "pinia";
-import { useToast } from "vue-toastification";
-import { useStores } from ".";
-const toast = useToast();
+import { usePageIndex } from "../pages/pageIndex";
+import { useSettingAlert } from "../settings/SettingAlert";
+interface entryData {
+    id: Number | null;
+    name: String;
+    details: String;
+    products: Array<[]>;
+}
 const route = "stores";
 export const useSingleStores = defineStore("single-stores", {
     state: () => ({
-        entry: {
-            id: null,
-            name: "",
-            details: "",
-            products : [],
-            status: 1,
-        },
+        entry: <entryData>{},
         lists: {
-            roles: [],
-            account: [],
+            products: [],
         },
         loading: false,
         errors: {
-            name: null,
-            details: null,
+            name: '',
+            details: '',
         },
         showModalEdit: false,
         showModalShow: false,
@@ -32,21 +30,26 @@ export const useSingleStores = defineStore("single-stores", {
     actions: {
         // send data to server in created
         storeData() {
-            const userIndex = useStores();
             this.loading = true;
             return new Promise(async (resolve, reject) => {
                 await axios
                     .post(route, this.entry)
                     .then((response) => {
-                        toast.success("تم إضافة المخزن بنجاح");
-                        userIndex.fetchIndexData();
+                        useSettingAlert().setAlert(
+                            "تم إضافة المخزن بنجاح",
+                            "warning",
+                            true
+                        );
+                        usePageIndex().fetchIndexData();
                         resolve(response);
                     })
                     .catch((error) => {
                         this.errors = error.response.data.errors || this.errors;
-                        toast.error(error.response.data.message, {
-                            timeout: 5000,
-                        });
+                        useSettingAlert().setAlert(
+                            error.response.data.message,
+                            "warning",
+                            true
+                        );
                         reject(error);
                     })
                     .finally(() => {
@@ -57,20 +60,25 @@ export const useSingleStores = defineStore("single-stores", {
         // send data to server in updated
         updateData() {
             this.loading = true;
-            const userIndex = useStores();
             return new Promise(async (resolve, reject) => {
                 await axios
                     .put(`${route}/${this.entry.id}`, this.entry)
                     .then((response) => {
-                        toast.success("تم تعديل المخزن بنجاح");
-                        userIndex.fetchIndexData();
+                        useSettingAlert().setAlert(
+                            "تم تعديل المخزن بنجاح",
+                            "warning",
+                            true
+                        );
+                        usePageIndex().fetchIndexData();
                         resolve(response);
                     })
                     .catch((error) => {
                         this.errors = error.response.data.errors || this.errors;
-                        toast.error(error.response.data.message, {
-                            timeout: 5000,
-                        });
+                        useSettingAlert().setAlert(
+                            error.response.data.message,
+                            "warning",
+                            true
+                        );
                         reject(error);
                     })
                     .finally(() => {
@@ -79,27 +87,9 @@ export const useSingleStores = defineStore("single-stores", {
             });
         },
 
-        //start in create
-        fetchCreateData() {
-            axios.get(`stores/create`).then((response) => {
-                this.lists = response.data.meta;
-            });
-        },
-        //start in edit
-        fetchEditData(id: Number) {
-            this.showModalEdit = false;
-            axios.get(`${route}/${id}/edit`).then((response) => {
-                this.entry = response.data.data;
-                this.lists = response.data.meta;
-            });
-        },
-
-        fetchShowData(id: Number) {
-            this.showModalShow = false;
-            axios.get(`${route}/${id}`).then((response) => {
-                this.entry = response.data.data;
-                // this.lists = response.data.meta;
-            });
+        setupEntry(entry: any, categories: any) {
+            this.entry = entry;
+            this.lists = categories
         },
     },
 });

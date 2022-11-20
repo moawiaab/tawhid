@@ -76,10 +76,10 @@
         </template>
         <template #header-operation="header">
             <v-col class="text-left">
-                <import-menu :url="pages.route" />
+                <import-menu :url="pages.route" v-if="addSelected"/>
                 <export-menu :url="pages.route" :data="pages.data" />
                 <v-icon icon="mdi-delete-sweep-outline" color="red" @click="pages.showDeletedMethod('delete')"
-                    v-if="can(`${role}_delete`, 'all')" />
+                    v-if="can(`${role}_delete`, 'all') && deleteAll" />
             </v-col>
         </template>
 
@@ -165,6 +165,9 @@ export default {
         viewable: { type: Boolean, default: true },
         editable: { type: Boolean, default: true },
         deletable: { type: Boolean, default: true },
+        deleteAll: { type: Boolean, default: true },
+        addSelected: { type: Boolean, default: true },
+
     },
     setup(props) {
         const { can } = useAbility();

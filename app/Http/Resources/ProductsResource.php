@@ -18,8 +18,12 @@ class ProductsResource extends JsonResource
             'id'         => $this->id,
             'name'       => $this->name,
             'details'    => $this->details,
-            'deletable'  => $this->account_id == auth()->user()->account_id && $this->status == 0,
+            'deletable'  => ($this->account_id == auth()->user()->account_id
+                && $this->status == 0
+                && $this->products->where('account_id', auth()->user()->account_id)->sum('number') <= 0) ?? false,
             'editable'   => $this->account_id == auth()->user()->account_id,
+            'number'     => $this->products->where('account_id', auth()->user()->account_id)->sum('number') ?? 0,
+            'items'      => ProductStoreResource::collection($this->products->where('account_id', auth()->user()->account_id)) ?? [],
             'category'   => $this->category ? $this->category->name : 'لا يوجد قسم',
             'status_label' => $this->status
                 ? 'منتج عام' . ' - ' . $this->account->name ?? ''

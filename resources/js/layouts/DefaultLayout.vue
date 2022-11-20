@@ -124,7 +124,7 @@ export default {
         onUnmounted(()=> console.log("app onUnmounted"));
         useTitle(`اسم البرنامج | ${route.name}`)
         watch(route, (e) => {
-            useTitle(`اسم البرنامج | ${e.title}`);
+            useTitle(`اسم البرنامج | ${e.name}`);
             sidebar.getRoles()
         })
 

@@ -51,7 +51,7 @@ class ProductApiController extends Controller
                 'categories' => Category::when(
                     auth()->user()->account_id != 1,
                     function ($q) {
-                        $q->where('status', 1);
+                        $q->where('status', 1)->orWhere('account_id', auth()->user()->account_id);
                     }
                 )->get(['id', 'name'])
             ],

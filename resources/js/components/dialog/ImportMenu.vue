@@ -41,6 +41,7 @@
 <script lang="ts">
 import { ref } from 'vue'
 import { useSettingsHeaderTable } from '../../stores/settings/SettingHeaderTable'
+import { usePageIndex } from '../../stores/pages/pageIndex'
 
 export default {
     name: 'ImportMenu',
@@ -51,6 +52,7 @@ export default {
         const localHeader = item.headers.filter((e) => e.value != "operation")
         const storeData = () => item.storeData(props.url).then(() => {
             closeModel.value = false;
+            usePageIndex().fetchIndexData()
             item.fileData = [];
         })
 

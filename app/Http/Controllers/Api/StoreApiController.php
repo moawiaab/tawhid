@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoresRequest;
 use App\Http\Resources\StoresResource;
+use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class StoreApiController extends Controller
 {
@@ -23,6 +25,7 @@ class StoreApiController extends Controller
         return StoresResource::collection(
             Store::advancedFilter()
                 ->where('account_id', auth()->user()->account_id)
+                ->filter(FacadesRequest::only('trashed'))
                 ->paginate(request('rowsPerPage', 20))
         );
     }
@@ -37,7 +40,12 @@ class StoreApiController extends Controller
         abort_if(Gate::denies('store_create'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         return response([
             'meta' => [
-                'products' =>  auth()->user()->account->products()->get(['id as value', 'name as label'])
+                'products' =>  Product::when(
+                    auth()->user()->account_id != 1,
+                    function ($q) {
+                        $q->where('status', 1)->orWhere('account_id', auth()->user()->account_id);
+                    }
+                )->get(['id', 'name'])
             ],
         ]);
     }
@@ -52,7 +60,14 @@ class StoreApiController extends Controller
     {
         $store = auth()->user()->account->stores()->create($request->validated());
         if ($store->save())
-            $store->products()->sync($request->products);
+            $store->products()->syncWithPivotValues(
+                $request->products,
+                [
+                    'user_id' => auth()->id(),
+                    'account_id' => auth()->user()->account_id,
+                    'created_at' => time(),
+                ]
+            );
         return  response(null, Response::HTTP_CREATED);
     }
 

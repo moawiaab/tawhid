@@ -63,6 +63,9 @@ class Category extends Model
         return $this->belongsTo(Account::class);
     }
 
+    public function products() {
+        return $this->hasMany(Product::class);
+    }
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

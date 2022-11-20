@@ -18,10 +18,11 @@ return new class extends Migration
             $table->integer('product_id')->index();
             $table->integer('store_id')->index();
             $table->decimal('number', 10)->default(0);
-            $table->integer('user_id')->index()->nullable();
             $table->decimal('amount', 10)->default(0);
             $table->decimal('price', 10)->default(0);
             $table->decimal('gain')->default(30);
+            $table->integer('user_id')->index()->nullable();
+            $table->integer('account_id')->index()->nullable();
             $table->timestamps();
         });
     }

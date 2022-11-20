@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\Admin\PermissionResource;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ProductsResource;
 use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class CategoryApiController extends Controller
                     $q->where('status', 1);
                 }
             )->advancedFilter()->filter(FacadesRequest::only('trashed'))
-            ->paginate(request('rowsPerPage', 20))
+                ->paginate(request('rowsPerPage', 20))
         );
     }
 
@@ -62,9 +63,14 @@ class CategoryApiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        //
+        return [
+            'data' => new CategoryResource($category),
+            'meta' => [
+                'products' => ProductsResource::collection($category->products),
+            ]
+        ];
     }
 
     /**

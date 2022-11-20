@@ -8,6 +8,7 @@ interface entryData {
     name: String;
     details: String;
     status: Number;
+    created_at :String
 }
 
 const route = "categories";
@@ -15,7 +16,7 @@ export const useSingleCategories = defineStore("single-categories", {
     state: () => ({
         entry: <entryData>{},
         lists: {
-            roles: [],
+            products: [],
         },
         loading: false,
         errors: {
@@ -86,8 +87,9 @@ export const useSingleCategories = defineStore("single-categories", {
             });
         },
 
-        setupEntry(entry: any) {
+        setupEntry(entry: any, lists: any): void {
             this.entry = entry;
+            this.lists = lists;
         },
     },
 });

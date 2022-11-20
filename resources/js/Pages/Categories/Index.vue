@@ -1,5 +1,5 @@
 <template>
-    <main-page :headers="headers" role="category" title="أقسام المنتجات" :viewable="false" :editable="false"
+    <main-page :headers="headers" role="category" title="أقسام المنتجات"  :editable="false"
         :deletable="false">
         <template #create>
             <create-category />

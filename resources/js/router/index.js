@@ -10,13 +10,11 @@ const routes = [
         children: [
             {
                 path: "/dashboard",
-                title: "لوحة التحكم",
                 name: "لوحة التحكم",
                 component: () => import("@/Pages/DashboardPage.vue"),
             },
             {
                 path: "/users",
-                title: " المستخدمين",
                 name: " المستخدمين",
                 component: () => import("@/Pages/Users/Index.vue"),
             },
@@ -27,33 +25,29 @@ const routes = [
             // },
             {
                 path: "/roles",
-                name: " roles.index",
-                title: " الصلاحيات",
+                name: " الصلاحيات",
                 component: () => import("@/Pages/Roles/Index.vue"),
             },
             {
                 path: "/permissions",
-                name: " permissions.index",
-                title : "الأذونات",
+                name : "الأذونات",
                 component: () => import("@/Pages/Permissions/Index.vue"),
             },
             {
                 path: "/categories",
-                name: " categories.index",
-                title: " أقسام المنتجات",
+                name: " أقسام المنتجات",
                 component: () => import("@/Pages/Categories/Index.vue"),
             },
             {
                 path: "/products",
-                name: " products.index",
-                title: " المنتجات",
+                name: " المنتجات",
                 component: () => import("@/Pages/Products/Index.vue"),
             },
-            // {
-            //     path: "/stores",
-            //     name: " stores.index",
-            //     component: () => import("@/Pages/Stores/Index.vue"),
-            // },
+            {
+                path: "/stores",
+                name: " المخازن",
+                component: () => import("@/Pages/Stores/Index.vue"),
+            },
         ],
     },
 ];

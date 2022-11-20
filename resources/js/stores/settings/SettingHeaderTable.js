@@ -116,7 +116,7 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
                     .post(`${url}/add-all`, [this.fileData])
                     .then((response) => {
                         useSettingAlert().setAlert(
-                            "تم إضافة جميع البيانات بنجاح اضغط زر التحديث لجلب البيانات",
+                            "تم إضافة جميع البيانات بنجاح",
                             "success",
                             true
                         );

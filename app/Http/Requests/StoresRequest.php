@@ -27,7 +27,7 @@ class StoresRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:50'],
             'details' => ['required', 'string'],
-            'status' => ['required', 'integer'],
+            // 'status' => ['required', 'integer'],
         ];
     }
 }

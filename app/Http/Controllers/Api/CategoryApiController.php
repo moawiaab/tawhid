@@ -120,9 +120,9 @@ class CategoryApiController extends Controller
 
     public function destroyAll(Request $request)
     {
-        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
-        Category::whereIn('id', $request->items)->where('status', 1)->onlyTrashed()->forceDelete();
-        Category::whereIn('id', $request->items)->delete('status', 1);
+        abort_if(Gate::denies('category_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        Category::whereIn('id', $request->items)->where('status', 0)->onlyTrashed()->forceDelete();
+        Category::whereIn('id', $request->items)->delete('status', 0);
 
 
         return response(null, Response::HTTP_NO_CONTENT);
@@ -131,6 +131,7 @@ class CategoryApiController extends Controller
     public function addAll(Request $request)
     {
         // Category::insert($request[0]);
+        abort_if(Gate::denies('category_create'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         foreach ($request[0] as $value) {
             $perm = new Category();
             $perm->name = $value['name'];
@@ -143,7 +144,7 @@ class CategoryApiController extends Controller
     }
     public function restore(Category $item)
     {
-        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        abort_if(Gate::denies('category_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         $item->restore();
         return response(null, Response::HTTP_NO_CONTENT);
     }

@@ -34,7 +34,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/categories/{item}/restore', [CategoryApiController::class,'restore']);
 
     Route::resource('stores', StoreApiController::class);
+    Route::post('/stores/delete-all', [StoreApiController::class,'destroyAll']);
+    Route::post('/stores/add-all', [StoreApiController::class,'addAll']);
+    Route::put('/stores/{item}/restore', [StoreApiController::class,'restore']);
+
     Route::resource('products', ProductApiController::class);
+    Route::post('/products/delete-all', [ProductApiController::class,'destroyAll']);
+    Route::post('/products/add-all', [ProductApiController::class,'addAll']);
+    Route::put('/products/{item}/restore', [ProductApiController::class,'restore']);
 
     // Users
     Route::resource('/users', UsersApiController::class);

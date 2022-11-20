@@ -64,6 +64,7 @@
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>
+
     <data-table :server-items-length="pages.total" buttons-pagination v-model:server-options="query"
         :headers="headerItem.headerTable" :items="pages.data" body-text-direction="right" :table-class-name="
             theme.theme == 'light' ? 'customize-table' : 'customize-table-small'
@@ -86,10 +87,11 @@
             <div class="operation-wrapper text-left">
                 <v-toolbar-title></v-toolbar-title>
                 <slot name="table-operation" :item="item" />
-                <show-icon :role="role" @click="pages.showItem(item)" v-if="viewable"/>
+                <show-icon :role="role" @click="pages.showItem(item)" v-if="viewable" />
                 <edit-icon @click="pages.editItem(item.id)" :role="role" v-if="!item.deleted_at && editable" />
-                <delete-icon @click="pages.showDeletedMethod(item.id)" :role="role" v-if="deletable"/>
-                <delete-icon @click="pages.restoreItem(item.id)" :role="role" v-if="item.deleted_at && deletable" :resat="true" />
+                <delete-icon @click="pages.showDeletedMethod(item.id)" :role="role" v-if="deletable" />
+                <delete-icon @click="pages.restoreItem(item.id)" :role="role" v-if="item.deleted_at && deletable"
+                    :resat="true" />
 
             </div>
         </template>
@@ -99,7 +101,10 @@
         <template #content>
             <span v-if="pages.itemId == 'delete'">
                 هل تريد حذف جميع البيانات المختارة
-                <v-chip v-for="item in itemsSelected" :text="item.title ?? item.name" class="ma-1" />
+                <br/>
+                <template v-for="item in itemsSelected">
+                    <v-chip :text="item.title ?? item.name" class="ma-1" v-if="item.deletable"/>
+                </template>
             </span>
             <span v-else>هل تريد الحذف بالفعل ستفقد البيانات </span>
         </template>
@@ -176,6 +181,7 @@ export default {
         const openMenu = ref(false);
         const headerItem = useSettingsHeaderTable();
         const itemsSelected = ref<Item[]>([]);
+
         pages.fetchIndexData();
 
         const bodyRowClassNameFunction: BodyRowClassNameFunction = (
@@ -223,7 +229,7 @@ export default {
             filtersItem,
             openMenu,
             itemsSelected,
-            bodyRowClassNameFunction
+            bodyRowClassNameFunction,
         };
     },
 };

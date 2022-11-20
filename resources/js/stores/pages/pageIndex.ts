@@ -59,7 +59,6 @@ export const usePageIndex = defineStore("index-pages", {
             const single = useSinglePage();
             single.showModalEdit = true;
             single.fetchEditData(item);
-            console.log(single.showModalEdit + "  itrms");
         },
         showItem(item: any) {
             const single = useSinglePage();

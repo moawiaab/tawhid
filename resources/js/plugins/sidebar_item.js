@@ -27,7 +27,7 @@ const items = [
                 url: "/products",
                 text: "المنتجات",
                 access: "product",
-                icon: "mdi-sitemap-outline",
+                icon: "mdi-format-list-checkbox",
             },
         ],
     },

@@ -21,9 +21,10 @@ class ProductsResource extends JsonResource
             'deletable'  => $this->account_id == auth()->user()->account_id && $this->status == 0,
             'editable'   => $this->account_id == auth()->user()->account_id,
             'category'   => $this->category ? $this->category->name : 'لا يوجد قسم',
-            'status'     => $this->status
+            'status_label' => $this->status
                 ? 'منتج عام' . ' - ' . $this->account->name ?? ''
                 : 'منتج خاص'  . ' - ' . $this->account->name ?? '',
+            'status'  => $this->status,
             'created_at' => $this->created_at ? $this->created_at->format('d-m-Y') : '',
             'deleted_at' => $this->deleted_at ?? '',
         ];

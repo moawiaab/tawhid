@@ -26,6 +26,7 @@ export default {
             { text: "البريد", value: "email", width: 200 },
             { text: "رقم الهاتف", value: "phone", sortable: true },
             { text: "الصلاحية", value: "role", sortable: true },
+            { text: "الفرع", value: "account"},
             { text: "تاريخ الإنشاء", value: "created_at", sortable: true },//
             { text: "إعدادات", value: "operation", width: 150 },
         ];

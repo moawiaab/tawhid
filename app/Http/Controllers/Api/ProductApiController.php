@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class ProductApiController extends Controller
 {
@@ -30,10 +31,10 @@ class ProductApiController extends Controller
                 function ($q) {
                     $q->where('status', 1)->orWhere('account_id', auth()->user()->account_id);
                 }
-            )->advancedFilter()
-            ->paginate(
-                request('rowsPerPage', 20)
-            )
+            )->advancedFilter()->filter(FacadesRequest::only('trashed'))
+                ->paginate(
+                    request('rowsPerPage', 20)
+                )
         );
     }
 
@@ -47,7 +48,7 @@ class ProductApiController extends Controller
         abort_if(Gate::denies('product_create'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
         return response([
             'meta' => [
-                'category' => Category::when(
+                'categories' => Category::when(
                     auth()->user()->account_id != 1,
                     function ($q) {
                         $q->where('status', 1);
@@ -95,7 +96,7 @@ class ProductApiController extends Controller
         return response([
             'data' => new PermissionResource($product),
             'meta' => [
-                'category' => Category::when(
+                'categories' => Category::when(
                     auth()->user()->account_id != 1,
                     function ($q) {
                         $q->where('status', 1);
@@ -131,8 +132,44 @@ class ProductApiController extends Controller
             throw new Exception('ليس لك الحق في حذف هذا المنتج');
         elseif ($product->status == 1)
             throw new Exception('هذا المنتج عام لا يمكنك حذفه');
-        else
-            $product->delete();
+
+        else {
+            if ($product->deleted_at) {
+                $product->forceDelete();
+            } else {
+                $product->delete();
+            }
+        }
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function destroyAll(Request $request)
+    {
+        abort_if(Gate::denies('product_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        Product::whereIn('id', $request->items)->where('status', 0)->onlyTrashed()->forceDelete();
+        Product::whereIn('id', $request->items)->delete('status', 0);
+
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function addAll(Request $request)
+    {
+        abort_if(Gate::denies('product_create'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        foreach ($request[0] as $value) {
+            $perm = new Product();
+            $perm->name = $value['name'];
+            $perm->details = $value['details'];
+            $perm->status = 0;
+            $perm->account_id = auth()->user()->account_id;
+            $perm->save();
+        }
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+    public function restore(Product $item)
+    {
+        abort_if(Gate::denies('product_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        $item->restore();
         return response(null, Response::HTTP_NO_CONTENT);
     }
 }

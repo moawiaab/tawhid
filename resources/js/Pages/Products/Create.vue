@@ -1,23 +1,27 @@
 <template>
-    <v-btn variant="text" @click="model.showModalCreate = true"> إضافة قسم</v-btn>
+    <v-btn variant="text" @click="model.showModalCreate = true"> إضافة منتج</v-btn>
     <v-dialog v-model="model.showModalCreate" persistent max-width="600" scrollable>
         <v-form @submit.prevent="submitForm">
             <v-card>
                 <v-card-title class="text-h5 text-primary">
-                    إضافة قسم جديد
+                    إضافة منتج جديد
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-text-field clearable label="اسم القسم" variant="underlined" hint="هنا اسم القسم "
+                    <v-text-field clearable label="اسم المنتج" variant="underlined" hint="هنا اسم المنتج "
                         v-model="single.entry.name" :rules="rules.required" :error-messages="single.errors.name"
                         required color="primary" />
-                    <v-text-field clearable label="التفاصيل" variant="underlined" hint="هنا التفاصيل القسم "
+                    <v-text-field clearable label="التفاصيل" variant="underlined" hint="هنا التفاصيل المنتج "
                         v-model="single.entry.details" :rules="rules.required" :error-messages="single.errors.details"
                         required color="primary" />
 
-                    <v-radio-group label=" حالة القسم" v-model="single.entry.status">
-                        <v-radio label=" قسم خاص" value="0"></v-radio>
-                        <v-radio label=" قسم عام" value="1"></v-radio>
+                    <v-select v-model="single.entry.category_id" clearable label="قسم المنتج" :items="single.lists.categories"
+                        variant="underlined" item-title="name" item-value="id">
+                    </v-select>
+
+                    <v-radio-group label=" حالة المنتج" v-model="single.entry.status">
+                        <v-radio label=" منتج خاص" value="0"></v-radio>
+                        <v-radio label=" منتج عام" value="1"></v-radio>
                     </v-radio-group>
 
                 </v-card-text>
@@ -37,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { useSingleCategories } from '../../stores/Categories/single';
+import { useSingleProducts } from '../../stores/Products/single';
 import { useSettingAlert } from '../../stores/settings/SettingAlert';
 import { useSinglePage } from '../../stores/pages/pageSingle';
 import { watch } from 'vue';
@@ -45,12 +49,12 @@ import { watch } from 'vue';
 export default {
     name: "CreateUser",
     setup() {
-        const single = useSingleCategories();
+        const single = useSingleProducts();
         const model = useSinglePage();
         watch(model, (e) => {
             if (e.showModalCreate) {
-                single.$reset()
-                single.setupEntry(model.entry)
+                single.$reset();
+                single.setupEntry(model.entry, model.lists)
             }
         })
 
@@ -65,8 +69,8 @@ export default {
         const submitForm = () => {
             if (validation()) {
                 single.storeData().then(() => {
+                    single.$reset;
                     model.showModalCreate = false;
-                    single.$reset();
                     model.entry = {}
                 })
             } else {

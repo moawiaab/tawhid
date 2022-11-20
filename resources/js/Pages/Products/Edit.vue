@@ -7,12 +7,22 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-text-field clearable label="اسم القسم" variant="underlined" hint="هنا اسم القسم "
+                    <v-text-field clearable label="اسم المنتج" variant="underlined" hint="هنا اسم المنتج "
                         v-model="single.entry.name" :rules="rules.required" :error-messages="single.errors.name"
                         required color="primary" />
-                    <v-text-field clearable label="التفاصيل" variant="underlined" hint="هنا التفاصيل القسم "
+                    <v-text-field clearable label="التفاصيل" variant="underlined" hint="هنا التفاصيل المنتج "
                         v-model="single.entry.details" :rules="rules.required" :error-messages="single.errors.details"
                         required color="primary" />
+
+                    <v-select v-model="single.entry.category_id" clearable label="قسم المنتج" :items="single.lists.categories"
+                        variant="underlined" item-title="name" item-value="id">
+                    </v-select>
+
+                    <v-radio-group label=" حالة المنتج" v-model="single.entry.status" v-if="!single.entry.status">
+                        <v-radio label=" منتج خاص" :value="0"></v-radio>
+                        <v-radio label=" منتج عام" :value="1"></v-radio>
+                    </v-radio-group>
+
                 </v-card-text>
 
                 <v-divider />
@@ -31,7 +41,7 @@
 
 
 <script lang="ts">
-import { useSingleCategories } from '../../stores/Categories/single';
+import { useSingleProducts } from '../../stores/Products/single';
 import { useSettingAlert } from '../../stores/settings/SettingAlert';
 import { useSinglePage } from '../../stores/pages/pageSingle';
 import { watch } from '@vue/runtime-core';
@@ -39,12 +49,11 @@ import { watch } from '@vue/runtime-core';
 export default {
     name: "EditUser",
     setup() {
-        const single = useSingleCategories();
+        const single = useSingleProducts();
         const model = useSinglePage()
         watch(model, (e) => {
             if (e.showModalEdit) {
-                single.$reset()
-                single.setupEntry(model.entry)
+                single.setupEntry(model.entry, model.lists)
             }
         })
         const submitForm = () => single.updateData().then(() => {

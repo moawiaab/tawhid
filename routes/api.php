@@ -29,6 +29,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/roles/{item}/restore', [RolesApiController::class,'restore']);
 
     Route::resource('categories', CategoryApiController::class);
+    Route::post('/categories/delete-all', [CategoryApiController::class,'destroyAll']);
+    Route::post('/categories/add-all', [CategoryApiController::class,'addAll']);
+    Route::put('/categories/{item}/restore', [CategoryApiController::class,'restore']);
+
     Route::resource('stores', StoreApiController::class);
     Route::resource('products', ProductApiController::class);
 

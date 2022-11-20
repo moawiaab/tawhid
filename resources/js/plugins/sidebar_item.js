@@ -1,5 +1,4 @@
 const items = [
-
     {
         text: "لوحة التحكم",
         icon: "mdi-home-outline",
@@ -7,10 +6,36 @@ const items = [
         access: "dashboard",
     },
     {
+        url: ["/stores", "/categories", "/products"],
+        text: "إدارة المنتجات",
+        icon: "mdi-window-shutter-cog",
+        access: "product_management",
+        children: [
+            {
+                url: "/stores",
+                text: "المخازن",
+                access: "store",
+                icon: "mdi-storefront-minus-outline",
+            },
+            {
+                text: "أقسام المنتجات",
+                url: "/categories",
+                access: "category",
+                icon: "mdi-tune-vertical",
+            },
+            {
+                url: "/products",
+                text: "المنتجات",
+                access: "product",
+                icon: "mdi-sitemap-outline",
+            },
+        ],
+    },
+    {
         text: "المستخدمين",
         icon: "mdi-account-cog-outline",
         url: ["/users", "/roles", "/permissions"],
-        access: "user",
+        access: "user_management",
         children: [
             {
                 text: "المستخدمين",
@@ -18,7 +43,12 @@ const items = [
                 url: "/users",
                 access: "user",
             },
-            { text: "الصلاحيات", icon: "mdi-account-lock-outline", url: "/roles", access: "role" },
+            {
+                text: "الصلاحيات",
+                icon: "mdi-account-lock-outline",
+                url: "/roles",
+                access: "role",
+            },
             {
                 text: "الأذونات",
                 icon: "mdi-lock-outline",

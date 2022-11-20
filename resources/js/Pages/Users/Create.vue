@@ -55,13 +55,19 @@
 import { useSingleUsers } from '../../stores/users/single';
 import { useSettingAlert } from '../../stores/settings/SettingAlert';
 import { useSinglePage } from '../../stores/pages/pageSingle';
+import { watch } from '@vue/runtime-core';
 
 export default {
     name: "CreateUser",
     setup() {
         const single = useSingleUsers();
         const model = useSinglePage();
-        single.setupEntry(model.entry, model.lists)
+        watch(model, (e) => {
+            if (e.showModalCreate) {
+                single.$reset()
+                single.setupEntry(model.entry, model.lists)
+            }
+        })
 
         const rules = {
             required: [

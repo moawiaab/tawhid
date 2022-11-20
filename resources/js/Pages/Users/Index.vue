@@ -20,7 +20,7 @@ export default {
     setup() {
         const pages = usePageIndex();
         pages.$reset()
-        pages.setup('users', "users");
+        pages.setup('users');
         const headers: import('vue3-easy-data-table').Header[] = [
             { text: "اسم المستخدم", value: "name", width: 200, sortable: true },
             { text: "البريد", value: "email", width: 200 },

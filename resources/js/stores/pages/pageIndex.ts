@@ -58,7 +58,7 @@ export const usePageIndex = defineStore("index-pages", {
         editItem(item: any) {
             const single = useSinglePage();
             single.showModalEdit = true;
-            single.fetchEditData(item.id);
+            single.fetchEditData(item);
             console.log(single.showModalEdit + "  itrms");
         },
         showItem(item: any) {
@@ -94,8 +94,13 @@ export const usePageIndex = defineStore("index-pages", {
         },
 
         deleteAllItem(items: any) {
-            const item = { items: items.map((e: any) => e.id) };
-            console.log(item);
+            const item = {
+                items: items.map((e: any) => {
+                    if (e.deletable) {
+                       return e.id;
+                    }
+                }),
+            };
             axios
                 .post(`${this.route}/delete-all`, item)
                 .then((response) => {
@@ -138,12 +143,12 @@ export const usePageIndex = defineStore("index-pages", {
                 });
         },
 
-        setup(route: String, table: String) {
+        setup(route: String) {
             useSinglePage().$reset();
             this.route = route;
-            this.table = table;
-            useSinglePage().setRoute(route)
-            useSinglePage().fetchCreateData()
+            this.table = route;
+            useSinglePage().setRoute(route);
+            useSinglePage().fetchCreateData();
         },
     },
 });

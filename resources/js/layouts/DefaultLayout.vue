@@ -58,7 +58,8 @@
                 <v-menu transition="scroll-x-transition">
                     <template v-slot:activator="{ props }">
 
-                        <v-avatar size="36" class="text-center mx-3" icon="mdi-account-circle" v-bind="props" >
+                        <v-avatar size="36" class="text-center ml-4"  v-bind="props" >
+                            <v-icon icon="mdi-account-circle" size="34"/>
                         </v-avatar>
                     </template>
                     <v-list>

@@ -1,21 +1,18 @@
 <template>
-    <v-dialog v-model="model.showModalEdit" persistent max-width="800" scrollable>
+    <v-dialog v-model="model.showModalEdit" persistent max-width="500" scrollable>
         <v-form @submit.prevent="submitForm" ref="form">
             <v-card>
                 <v-card-title class="text-h5 text-primary">
-                    تعديل بيانات المستخدم
+                    تعديل بيانات القسم
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-text-field clearable label="اسم المستخدم" variant="underlined" hint="هنا اسم المستخدم "
+                    <v-text-field clearable label="اسم القسم" variant="underlined" hint="هنا اسم القسم "
                         v-model="single.entry.name" :rules="rules.required" :error-messages="single.errors.name"
                         required color="primary" />
-                    <v-text-field clearable label="رقم الهاتف" variant="underlined" hint="هنا رقم الهاتف "
-                        v-model="single.entry.phone" :rules="rules.required" :error-messages="single.errors.phone"
-                        required color="primary" type="phone" />
-                    <v-select v-model="single.entry.role_id" clearable label="Select" :items="single.lists.roles"
-                        variant="underlined" item-title="title" item-value="id">
-                    </v-select>
+                    <v-text-field clearable label="التفاصيل" variant="underlined" hint="هنا التفاصيل القسم "
+                        v-model="single.entry.details" :rules="rules.required" :error-messages="single.errors.details"
+                        required color="primary" />
                 </v-card-text>
 
                 <v-divider />
@@ -34,7 +31,7 @@
 
 
 <script lang="ts">
-import { useSingleUsers } from '../../stores/users/single';
+import { useSingleCategories } from '../../stores/Categories/single';
 import { useSettingAlert } from '../../stores/settings/SettingAlert';
 import { useSinglePage } from '../../stores/pages/pageSingle';
 import { watch } from '@vue/runtime-core';
@@ -42,12 +39,12 @@ import { watch } from '@vue/runtime-core';
 export default {
     name: "EditUser",
     setup() {
-        const single = useSingleUsers();
+        const single = useSingleCategories();
         const model = useSinglePage()
         watch(model, (e) => {
             if (e.showModalEdit) {
                 single.$reset()
-                single.setupEntry(model.entry, model.lists)
+                single.setupEntry(model.entry)
             }
         })
         const submitForm = () => single.updateData().then(() => {
@@ -70,7 +67,7 @@ export default {
         };
 
         const validation = () => {
-            return (single.entry.name && single.entry.phone)
+            return (single.entry.name && single.entry.details)
         }
 
         return {

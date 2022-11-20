@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class CategoryApiController extends Controller
 {
@@ -28,9 +29,8 @@ class CategoryApiController extends Controller
                 function ($q) {
                     $q->where('status', 1);
                 }
-            )->advancedFilter()->paginate(
-                request('rowsPerPage', 20)
-            )
+            )->advancedFilter()->filter(FacadesRequest::only('trashed'))
+            ->paginate(request('rowsPerPage', 20))
         );
     }
 
@@ -108,8 +108,43 @@ class CategoryApiController extends Controller
             throw new Exception('ليس لك الحق في حذف هذا القسم');
         elseif ($category->status == 1)
             throw new Exception('هذا القسم عام لا يمكنك حذفه');
-        else
-            $category->delete();
+        else {
+            if ($category->deleted_at) {
+                $category->forceDelete();
+            } else {
+                $category->delete();
+            }
+        }
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function destroyAll(Request $request)
+    {
+        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        Category::whereIn('id', $request->items)->where('status', 1)->onlyTrashed()->forceDelete();
+        Category::whereIn('id', $request->items)->delete('status', 1);
+
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function addAll(Request $request)
+    {
+        // Category::insert($request[0]);
+        foreach ($request[0] as $value) {
+            $perm = new Category();
+            $perm->name = $value['name'];
+            $perm->details = $value['details'];
+            $perm->status = 0;
+            $perm->account_id = auth()->user()->account_id;
+            $perm->save();
+        }
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+    public function restore(Category $item)
+    {
+        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
+        $item->restore();
         return response(null, Response::HTTP_NO_CONTENT);
     }
 }

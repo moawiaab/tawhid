@@ -33,11 +33,11 @@ const routes = [
                 name: " permissions.index",
                 component: () => import("@/Pages/Permissions/Index.vue"),
             },
-            // {
-            //     path: "/categories",
-            //     name: " categories.index",
-            //     component: () => import("@/Pages/Categories/Index.vue"),
-            // },
+            {
+                path: "/categories",
+                name: " categories.index",
+                component: () => import("@/Pages/Categories/Index.vue"),
+            },
             // {
             //     path: "/products",
             //     name: " products.index",

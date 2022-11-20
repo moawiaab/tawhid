@@ -51,6 +51,18 @@ class PermissionSeeder extends Seeder
                 'status' => 0,
                 'title' => 'permission_access',
             ],
+
+            [
+                'details' => 'إدارة المستخدمين',
+                'status' => 1,
+                'title' => 'user_management_access',
+            ],
+            [
+                'details' => 'إدارة المنتجات ',
+                'status' => 1,
+                'title' => 'product_management_access',
+            ],
+
             [
                 'details' => 'إنشاء إذن جديد',
                 'status' => 0,

@@ -16,7 +16,7 @@ export const useSinglePage = defineStore("single-pages", {
 
         //start in create
         fetchCreateData() {
-            axios.get(`users/create`).then((response) => {
+            axios.get(`${this.route}/create`).then((response) => {
                 this.lists = response.data.meta;
             });
         },

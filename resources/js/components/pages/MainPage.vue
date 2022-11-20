@@ -75,8 +75,8 @@
         </template>
         <template #header-operation="header">
             <v-col class="text-left">
-                <import-menu url="pages" />
-                <export-menu url="pages" :data="pages.data" />
+                <import-menu :url="pages.route" />
+                <export-menu :url="pages.route" :data="pages.data" />
                 <v-icon icon="mdi-delete-sweep-outline" color="red" @click="pages.showDeletedMethod('delete')"
                     v-if="can(`${role}_delete`, 'all')" />
             </v-col>
@@ -85,11 +85,11 @@
         <template #item-operation="item">
             <div class="operation-wrapper text-left">
                 <v-toolbar-title></v-toolbar-title>
-                <slot name="table-operation" :item="item.id" />
-                <show-icon :role="role" @click="pages.showItem(item)" />
-                <edit-icon @click="pages.editItem(item)" :role="role" v-if="!item.deleted_at" />
-                <delete-icon @click="pages.showDeletedMethod(item.id)" :role="role" />
-                <delete-icon @click="pages.restoreItem(item.id)" :role="role" v-if="item.deleted_at" :resat="true" />
+                <slot name="table-operation" :item="item" />
+                <show-icon :role="role" @click="pages.showItem(item)" v-if="viewable"/>
+                <edit-icon @click="pages.editItem(item.id)" :role="role" v-if="!item.deleted_at && editable" />
+                <delete-icon @click="pages.showDeletedMethod(item.id)" :role="role" v-if="deletable"/>
+                <delete-icon @click="pages.restoreItem(item.id)" :role="role" v-if="item.deleted_at && deletable" :resat="true" />
 
             </div>
         </template>
@@ -157,6 +157,9 @@ export default {
         expand: { type: Boolean, default: false },
         role: { type: String },
         title: { type: String },
+        viewable: { type: Boolean, default: true },
+        editable: { type: Boolean, default: true },
+        deletable: { type: Boolean, default: true },
     },
     setup(props) {
         const { can } = useAbility();

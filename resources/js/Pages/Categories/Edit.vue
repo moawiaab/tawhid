@@ -7,10 +7,10 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-text-field clearable label="اسم القسم" variant="underlined" hint="هنا اسم القسم "
+                    <v-text-field clearable label="اسم القسم" variant="solo" hint="هنا اسم القسم "
                         v-model="single.entry.name" :rules="rules.required" :error-messages="single.errors.name"
                         required color="primary" />
-                    <v-text-field clearable label="التفاصيل" variant="underlined" hint="هنا التفاصيل القسم "
+                    <v-text-field clearable label="التفاصيل" variant="solo" hint="هنا التفاصيل القسم "
                         v-model="single.entry.details" :rules="rules.required" :error-messages="single.errors.details"
                         required color="primary" />
                 </v-card-text>

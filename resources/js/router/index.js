@@ -1,7 +1,37 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
+import LoginLayout from "@/layouts/LoginLayout.vue";
 const routes = [
+    {
+        path: '/login',
+        name : "Layout Login",
+        component : LoginLayout,
+        redirect: "/login",
+        children : [
+            {
+                path: '/login',
+                name : "Login",
+                component: () => import("@/Pages/auth/Login.vue"),
+            },
+            {
+                path : '/password/reset',
+                name : "request",
+                component: () => import("@/Pages/auth/Reset.vue"),
+            },
+            {
+                path : '/reset-password/:token',
+                name : "reset-password",
+                component: () => import("@/Pages/auth/ResetPassword.vue"),
+            },
+            {
+                path : '/register',
+                name : "register",
+                component: () => import("@/Pages/auth/Register.vue"),
+            }
+
+        ]
+    },
     {
         path: "/",
         name: "Main Dashboard",
@@ -50,6 +80,11 @@ const routes = [
             },
         ],
     },
+    {
+        path : '/:pathMatch(.*)*',
+        name : 'NotFound',
+        component : () => import("@/Pages/NotFound.vue")
+    }
 ];
 
 const router = createRouter({

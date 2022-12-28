@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\StoreApiController;
 use App\Http\Controllers\Api\UsersApiController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['auth:sanctum']], function () {
+Route::group(['namespace' => 'Api', 'middleware' => ['auth:sanctum']], function () {
     Route::get('abilities', [AbilitiesController::class, 'index']);
 
     Route::resource('permissions', PermissionsApiController::class);
@@ -19,6 +19,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/permissions/{item}/restore', [PermissionsApiController::class,'restore']);
     Route::put('/permissions/{item}/delete-restore', [PermissionsApiController::class,'deleteRestore']);
     Route::get('/permissions-export', [PermissionsApiController::class, 'export']);
+
+    Route::get('/dashboard', 'DashboardApiController@index')->name('dashboard');
 
     Route::get('accounts', [AccountApiController::class, 'index']);
     Route::put('/accounts/{account}/toggle', [AccountApiController::class, 'toggle'])->name('account.toggle');

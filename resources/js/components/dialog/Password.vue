@@ -1,6 +1,6 @@
 <template>
-    <v-layout dir="rtl">
-        <v-row justify="center" dir="rtl">
+    <v-layout>
+        <v-row justify="center">
             <v-dialog v-model="data.showPassword" persistent max-width="500" class="text-right">
                 <v-form @submit.prevent="changePassword" ref="form">
                     <v-card>

@@ -8,15 +8,15 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-text-field clearable label="اسم المنتج" variant="underlined" hint="هنا اسم المنتج "
+                    <v-text-field clearable label="اسم المنتج" variant="solo" hint="هنا اسم المنتج "
                         v-model="single.entry.name" :rules="rules.required" :error-messages="single.errors.name"
                         required color="primary" />
-                    <v-text-field clearable label="التفاصيل" variant="underlined" hint="هنا التفاصيل المنتج "
+                    <v-text-field clearable label="التفاصيل" variant="solo" hint="هنا التفاصيل المنتج "
                         v-model="single.entry.details" :rules="rules.required" :error-messages="single.errors.details"
                         required color="primary" />
 
                     <v-select v-model="single.entry.category_id" clearable label="قسم المنتج" :items="single.lists.categories"
-                        variant="underlined" item-title="name" item-value="id">
+                        variant="solo" item-title="name" item-value="id">
                     </v-select>
 
                     <v-radio-group label=" حالة المنتج" v-model="single.entry.status">

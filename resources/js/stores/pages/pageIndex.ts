@@ -96,7 +96,7 @@ export const usePageIndex = defineStore("index-pages", {
             const item = {
                 items: items.map((e: any) => {
                     if (e.deletable) {
-                       return e.id;
+                        return e.id;
                     }
                 }),
             };
@@ -132,6 +132,26 @@ export const usePageIndex = defineStore("index-pages", {
                     this.showDeleted = false;
                     this.fetchIndexData();
                     this.itemId = null;
+                })
+                .catch((error) => {
+                    useSettingAlert().setAlert(
+                        error.response.data.message,
+                        "warning",
+                        true
+                    );
+                });
+        },
+
+        toggleItem(item: Number) {
+            axios
+                .put(`${this.route}/${item}/toggle`)
+                .then((response) => {
+                    useSettingAlert().setAlert(
+                        "تم تغيير الحالة  بنجاح",
+                        "success",
+                        true
+                    );
+                    this.fetchIndexData();
                 })
                 .catch((error) => {
                     useSettingAlert().setAlert(

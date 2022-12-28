@@ -1,6 +1,6 @@
 
 <template>
-    <v-app id="" :theme="settings.getTheme">
+    <v-app id="" :theme="settings.getTheme" class="fullscreen-wrapper">
         <v-layout ref="app" v-resize="settings.onResize">
             <v-system-bar>
                 <v-btn variant="text" :prepend-icon="!settings.menu ? 'mdi-menu-open' : 'mdi-menu-right-outline'"
@@ -15,10 +15,17 @@
                 <v-btn variant="text" :prepend-icon="wifi" />
                 <v-icon>wifi</v-icon>
 
-                <v-icon>mdi-triangle</v-icon>
-                <marquee direction="right" scrollamount="2" loop="1" :onfinish="setNewItem">
+                <v-icon v-fullscreen.teleport="options" :icon="fullscreen"></v-icon>
+                <marquee direction="right" scrollamount="2" loop="-1"  onmouseover="this.stop();"
+                    onmouseout="this.start();">
                     <!-- <h1> -->
-                    <font face="Andalus" size="3" color="grey"> التوحيد هو حق الله على العبيد </font>
+                    <template v-for="(altawed, index) in sidebar.altawhed" :key="index">
+                        <span :style="`margin-left:${settings.window - 400}px`">
+                            <v-icon icon="mdi-meteor"/>
+                            <font face="Andalus" size="3" color="primary"> {{ altawed.title }} : </font>
+                            <font face="Andalus" size="3" color="grey"> {{ altawed.text }} </font>
+                        </span>
+                    </template>
                     <!-- <h1 /> -->
                 </marquee>
                 <v-spacer></v-spacer>
@@ -27,7 +34,7 @@
 
             </v-system-bar>
             <v-navigation-drawer v-model="settings.menu" class="pt-5" rail location="end" v-if="settings.window > 1280"
-                rail-width="40">
+                rail-width="50">
                 <Dialog />
                 <router-link v-for="item, n in sidebar.itemNav" :key="n" :to="item.url ?? ''">
                     <v-avatar :color="`purple-${route.path === item.url ? 'darken' : 'lighten'}-4`" size="30"
@@ -37,11 +44,11 @@
             </v-navigation-drawer>
             <v-navigation-drawer v-model="settings.drawer" location="end" width="240">
 
-                <v-row justify="end" v-if="settings.window < 1280">
+                <!-- <v-row justify="end" v-if="settings.window < 1280">
                     <v-app-bar-nav-icon @click="settings.drawer = false" v-cloak>
                         <v-icon icon="mdi-close" />
                     </v-app-bar-nav-icon>
-                </v-row>
+                </v-row> -->
 
                 <v-list color="main-side">
                     <v-list-subheader title="القائمةالجانبية"></v-list-subheader>
@@ -55,11 +62,11 @@
                 <!-- <v-toolbar-title>اسم البرنامج <v-icon icon="mdi-keyboard-backspace"></v-icon> {{ router.name }}
                 </v-toolbar-title> -->
                 <v-toolbar-title />
-                <v-menu transition="scroll-x-transition">
+                <v-menu >
                     <template v-slot:activator="{ props }">
 
-                        <v-avatar size="36" class="text-center ml-4"  v-bind="props" >
-                            <v-icon icon="mdi-account-circle" size="34"/>
+                        <v-avatar size="36" class="text-center ml-4" v-bind="props">
+                            <v-icon icon="mdi-account-circle" size="34" />
                         </v-avatar>
                     </template>
                     <v-list>
@@ -99,7 +106,8 @@
 </template>
 
 <script>
-import { computed, onMounted, onUnmounted, watch } from 'vue'
+import { directive as fullscreen } from 'vue-fullscreen'
+import { computed, onMounted, onUnmounted, watch, ref } from 'vue'
 import { useOnline, formatDate, useNow, useTitle } from '@vueuse/core'
 import { useRoute } from "vue-router";
 import { useSetting } from '../stores/settings/SettingIndex'
@@ -110,6 +118,7 @@ import Dialog from '../components/Dialog.vue';
 import Password from '../components/dialog/Password.vue';
 import RecursiveMenu from '../components/menu/Menu.vue';
 export default {
+    directives: { fullscreen },
     components: { Dialog, Password, RecursiveMenu },
     setup() {
         const settings = useSetting();
@@ -117,21 +126,29 @@ export default {
         const password = useSettingPassword()
         const now = useNow();
         const route = useRoute();
+
         const online = useOnline()
         const alertData = useSettingAlert()
         const wifi = computed(() => online.value ? 'mdi-wifi-arrow-left-right' : 'mdi-wifi-strength-off-outline')
         onMounted(() => sidebar.getRoles());
-        onUnmounted(()=> console.log("app onUnmounted"));
+        onUnmounted(() => console.log("app onUnmounted"));
         useTitle(`اسم البرنامج | ${route.name}`)
         watch(route, (e) => {
             useTitle(`اسم البرنامج | ${e.name}`);
-            sidebar.getRoles()
+            // sidebar.getRoles()
         })
 
-        const setNewItem = () => {
-            console.log('item end time')
+        const fullscreen = ref("mdi-fullscreen");
+
+        const options = {
+            target: ".fullscreen-wrapper",
+            callback(isFullscreen) {
+                fullscreen.value = isFullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen"
+            },
         }
         return {
+            fullscreen,
+            options,
             settings,
             wifi,
             now,
@@ -140,7 +157,6 @@ export default {
             sidebar,
             password,
             alertData,
-            setNewItem,
         }
     }
 }
@@ -160,4 +176,19 @@ export default {
     background-color: #dfd4e9;
     border-radius: 5px !important;
 }
+
+
+
+
+.slide-enter-active,
+.slide-leave-active{
+    transition: opacity 1s transform 1s;
+}
+.slide-enter-from,
+.slide-enter-to {
+    opacity: 0;
+    transform: translateX(-30%);
+}
+
+
 </style>

@@ -8,10 +8,10 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-text-field clearable label="اسم الصلاحية" variant="underlined" color="primary" hint="هنا اسم الصلاحية "
+                    <v-text-field clearable label="اسم الصلاحية" variant="solo" color="primary" hint="هنا اسم الصلاحية "
                         v-model="single.entry.details" :rules="rules.required" :error-messages="single.errors.details"
                         required />
-                    <v-text-field clearable label="الرابط" variant="underlined" color="primary"
+                    <v-text-field clearable label="الرابط" variant="solo" color="primary"
                         hint="رابط الصلاحية يجب عن تكون بالانجليزية حتى لا توجه مشاكل" v-model="single.entry.title"
                         :rules="rules.required" required :error-messages="single.errors.title" />
 

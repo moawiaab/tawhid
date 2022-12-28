@@ -8,11 +8,11 @@
             <v-card-text>
                 <v-row>
                     <v-col cols="3">
-                        <v-file-input variant="underlined" label="اختر الملف المراد تحميله"
+                        <v-file-input variant="solo" label="اختر الملف المراد تحميله"
                             @change="item.addFile($event)"
                             accept=".ods,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
                         <v-list-item-title class="text-red">يجب عن يكون اسم الاعمدة بالانجليزي</v-list-item-title>
-                        <v-row v-for="i in localHeader">
+                        <v-row v-for="i in localHeader" :key="i">
                             <v-col>{{ i.text }}</v-col>
                             <v-col> = {{ i.value }}</v-col>
                         </v-row>

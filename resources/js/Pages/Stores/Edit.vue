@@ -7,14 +7,14 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-text-field clearable label="اسم المستخدم" variant="underlined" hint="هنا اسم المستخدم "
+                    <v-text-field clearable label="اسم المستخدم" variant="solo" hint="هنا اسم المستخدم "
                         v-model="single.entry.name" :rules="rules.required" :error-messages="single.errors.name"
                         required color="primary" />
-                    <v-text-field clearable label="رقم الهاتف" variant="underlined" hint="هنا رقم الهاتف "
+                    <v-text-field clearable label="رقم الهاتف" variant="solo" hint="هنا رقم الهاتف "
                         v-model="single.entry.phone" :rules="rules.required" :error-messages="single.errors.phone"
                         required color="primary" type="phone" />
                     <v-select v-model="single.entry.role_id" clearable label="Select" :items="single.lists.roles"
-                        variant="underlined" item-title="title" item-value="id">
+                        variant="solo" item-title="title" item-value="id">
                     </v-select>
                 </v-card-text>
 

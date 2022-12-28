@@ -15,13 +15,13 @@
             </template>
         </v-list-item>
 
-        <router-link :to="url" v-else>
-            <v-list-item :title="label" :active="route.path == url">
+        <!-- <router-link :to="url" v-else> -->
+            <v-list-item :title="label"  :to="url" v-else>
                 <template v-slot:prepend>
                     <v-icon :icon="icon"></v-icon>
                 </template>
             </v-list-item>
-        </router-link>
+        <!-- </router-link> -->
 
         <v-divider></v-divider>
         <div v-show="showChildren || openUrl.includes(route.path)" class="items-container" :style="{

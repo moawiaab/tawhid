@@ -3,6 +3,8 @@ import { createApp } from "vue";
 import router from "./router";
 import App from "./App.vue";
 import "@mdi/font/css/materialdesignicons.css";
+
+import "splitpanes/dist/splitpanes.css";
 // Vuetify
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
@@ -49,6 +51,11 @@ const vuetify = createVuetify({
     },
     isRtl: true,
     rtlClasses: ["rtl-app"],
+    defaults: {
+       VTextField: {
+        variant : 'solo'
+       }
+      },
 });
 
 const options = {

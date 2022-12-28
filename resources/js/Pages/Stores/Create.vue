@@ -8,15 +8,15 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-text-field clearable label="اسم المنتج" variant="underlined" hint="هنا اسم المنتج "
+                    <v-text-field clearable label="اسم المنتج" variant="solo" hint="هنا اسم المنتج "
                         v-model="single.entry.name" :rules="rules.required" :error-messages="single.errors.name"
                         required color="primary" />
-                    <v-text-field clearable label="التفاصيل" variant="underlined" hint="هنا التفاصيل المنتج "
+                    <v-text-field clearable label="التفاصيل" variant="solo" hint="هنا التفاصيل المنتج "
                         v-model="single.entry.details" :rules="rules.required" :error-messages="single.errors.details"
                         required color="primary" />
 
                     <v-autocomplete v-model="single.entry.products" :items="single.lists.products" clearable
-                        variant="underlined" chips closable-chips color="blue-grey-lighten-2" label="المنتجات"
+                        variant="solo" chips closable-chips color="blue-grey-lighten-2" label="المنتجات"
                         item-title="name" item-value="id" multiple>
                         <template v-slot:chip="{ props, item }">
                             <v-chip v-bind="props" :text="item.raw.name"></v-chip>

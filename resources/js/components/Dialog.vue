@@ -1,64 +1,91 @@
 <template>
     <v-row justify="center" dir="rtl">
-        <v-dialog v-model="dialog" scrollable max-width="800" class="text-right">
+        <v-dialog v-model="dialog" max-width="800" class="text-right">
             <template v-slot:activator="{ props }">
-                <v-avatar variant="plain" class="d-block text-center mx-auto mb-5" icon="mdi-playlist-edit"
-                    v-bind="props" />
+                <v-avatar
+                    variant="plain"
+                    class="d-block text-center mx-auto mb-5"
+                    icon="mdi-playlist-edit"
+                    v-bind="props"
+                />
             </template>
-            <v-card>
+            <v-card class="top">
                 <v-card-title>إعدادات اختصارات التنقل</v-card-title>
-                <v-divider></v-divider>
-                <v-card-text style="height: 300px;">
-                    <v-row no-gutters class="">
-                        <v-col cols="5">
+            </v-card>
+            <v-card style="height: 300px" color="border-t-0">
+                <v-card-text>
+                    <splitpanes class="default-theme" rtl style="height: 100%">
+                        <pane>
                             <v-list-item title="الإختصارات" />
                             <v-sheet class="px-2">
                                 <v-list>
-                                    <v-list-item v-for="(item, index) in items.itemNav" :key="index" :title="item.text"
-                                        :value="index" :append-icon="item.icon" variant="plain"
-                                        @click="items.removeItem(index)"></v-list-item>
+                                    <v-list-item
+                                        v-for="(item, index) in items.itemNav"
+                                        :key="index"
+                                        :title="item.text"
+                                        :value="index"
+                                        :append-icon="item.icon"
+                                        variant="plain"
+                                        @click="items.removeItem(index)"
+                                    ></v-list-item>
                                 </v-list>
                             </v-sheet>
-                        </v-col>
-                        <v-divider vertical></v-divider>
-                        <v-col class="text-center align-center py-16">
-                            <v-icon icon="mdi-swap-horizontal" size="50" />
-                        </v-col>
-                        <v-divider vertical></v-divider>
-                        <v-col cols="5" class="mx-1">
+                        </pane>
+                        <pane>
                             <v-list-item title="القائمة الجانبية" />
                             <v-sheet class="px-2">
                                 <v-list>
-                                    <v-list-item v-for="(item, index) in items.itemSide" :key="index" :title="item.text"
-                                        :value="index" :append-icon="item.icon" variant="plain"
-                                        @click="items.addItem(item)"></v-list-item>
+                                    <v-list-item
+                                        v-for="(item, index) in items.itemSide"
+                                        :key="index"
+                                        :title="item.text"
+                                        :value="index"
+                                        :append-icon="item.icon"
+                                        variant="plain"
+                                        @click="items.addItem(item)"
+                                    ></v-list-item>
                                 </v-list>
                             </v-sheet>
-                        </v-col>
-
-                    </v-row>
+                        </pane>
+                    </splitpanes>
                 </v-card-text>
-                <v-divider></v-divider>
+                <!-- <v-divider></v-divider>
                 <v-card-actions>
-                    <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
+                    <v-btn
+                        color="blue-darken-1"
+                        variant="text"
+                        @click="dialog = false"
+                    >
                         قفل النافذة
                     </v-btn>
-                </v-card-actions>
+                </v-card-actions> -->
             </v-card>
         </v-dialog>
     </v-row>
 </template>
 
 <script>
-import { useSettingsItem } from '../stores/settings/SettingItem';
-import { ref } from 'vue';
+import { useSettingsItem } from "../stores/settings/SettingItem";
+import { ref } from "vue";
+import { Splitpanes, Pane } from "splitpanes";
 export default {
-
+    components: { Splitpanes, Pane },
     setup() {
         const items = useSettingsItem();
-        items.setLocalItems()
-        const dialog = ref(false)
-        return { items, dialog }
-    }
-}
+        items.setLocalItems();
+        const dialog = ref(false);
+        return { items, dialog };
+    },
+};
 </script>
+
+<style scoped>
+.v-card.v-theme--light.bg-border-t-0.v-card--density-default.v-card--variant-elevated {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.v-card.v-theme--light.top.v-card--density-default.v-card--variant-elevated {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+</style>

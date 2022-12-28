@@ -10,10 +10,11 @@ export const useSinglePage = defineStore("single-pages", {
         showModalEdit: false,
         showModalShow: false,
         route: String,
+        loading: false,
+        query: {},
     }),
 
     actions: {
-
         //start in create
         fetchCreateData() {
             axios.get(`${this.route}/create`).then((response) => {
@@ -29,14 +30,22 @@ export const useSinglePage = defineStore("single-pages", {
         },
 
         fetchShowData(id: Number) {
-            axios.get(`${this.route}/${id}`).then((response) => {
-                this.entry = response.data.data ?? [];
-                this.lists = response.data.meta ?? [];
-            });
+            this.loading = true;
+            axios
+                .get(`${this.route}/${id}`, { params: this.query })
+                .then((response) => {
+                    this.entry = response.data.data ?? [];
+                    this.lists = response.data.meta ?? [];
+                })
+                .finally(() => (this.loading = false));
         },
 
         setRoute(route: String) {
             this.route = route;
+        },
+
+        setQuery(q: any) {
+            this.query = q;
         },
     },
 });

@@ -1,7 +1,8 @@
 <template>
     <main-page :headers="headers" role="user" title="المستخدمين">
         <template #create>
-            <create-user />
+             <v-btn variant="text" @click="model.showModalCreate = true"> إضافة</v-btn>
+            <create-user v-if="model.showModalCreate"/>
         </template>
 
         <edit-user />
@@ -14,11 +15,13 @@ import CreateUser from "./Create.vue";
 import EditUser from "./Edit.vue"
 import ShowUser from "./Show.vue"
 import { usePageIndex } from '../../stores/pages/pageIndex';
+import { useSinglePage } from '../../stores/pages/pageSingle';
 
 export default {
     components: { CreateUser, EditUser, ShowUser },
     setup() {
         const pages = usePageIndex();
+        const model = useSinglePage();
         pages.$reset()
         pages.setup('users');
         const headers: import('vue3-easy-data-table').Header[] = [
@@ -30,7 +33,7 @@ export default {
             { text: "تاريخ الإنشاء", value: "created_at", sortable: true },//
             { text: "إعدادات", value: "operation", width: 150 },
         ];
-        return { headers }
+        return { headers, model }
     }
 }
 </script>

@@ -1,7 +1,8 @@
 <template>
+   <div class="">
     <Loader v-if="pages.loading" />
-    <header-title :title="title">
-        <slot name="create" />
+    <header-title :title="title" :icon="createdItem">
+        <slot name="create"/>
     </header-title>
     <div>
         <v-row align="center" no-gutters>
@@ -128,6 +129,7 @@
     <slot />
     <show-page />
     <PrintList :title="title" :header="headerItem.headerTable" :items="pages.data" />
+   </div>
 </template>
 <script lang="ts">
 import { ref, watch } from "@vue/runtime-core";
@@ -167,6 +169,7 @@ export default {
         deletable: { type: Boolean, default: true },
         deleteAll: { type: Boolean, default: true },
         addSelected: { type: Boolean, default: true },
+        createdItem: { type: Boolean, default: true },
 
     },
     setup(props) {
@@ -192,6 +195,7 @@ export default {
             index: number
         ): string => {
             if (item.deleted_at) return "delete-fail-row";
+            else if(item.newItem) return "newItem-fail-row";
             return '';
         };
         headerItem.setHeaderItems(props.headers, pages.table);

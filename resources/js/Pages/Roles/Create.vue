@@ -12,7 +12,7 @@
                         v-model="single.entry.title" :rules="rules.required" :error-messages="single.errors.title"
                         required />
                     <v-autocomplete v-model="single.entry.permissions" :items="single.lists.permissions" clearable
-                        variant="underlined" chips closable-chips color="blue-grey-lighten-2" label="الصلاحيات"
+                        variant="solo" chips closable-chips color="blue-grey-lighten-2" label="الصلاحيات"
                         item-title="label" item-value="value" multiple>
                         <template v-slot:chip="{ props, item }">
                             <v-chip v-bind="props" :text="item.raw.label"></v-chip>

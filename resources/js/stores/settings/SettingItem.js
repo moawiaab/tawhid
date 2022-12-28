@@ -3,6 +3,7 @@ import items from "../../plugins/sidebar_item";
 import itemsUser from "../../plugins/user_item";
 import { useLocalStorage } from "@vueuse/core";
 import ability from "@/services/ability";
+import Altawhed from "../../plugins/tawhed";
 
 export const useSettingsItem = defineStore("item-settings", {
     state: () => ({
@@ -16,6 +17,16 @@ export const useSettingsItem = defineStore("item-settings", {
             },
         ]),
         localItems: [],
+        altawhed: Altawhed,
+        userData: useLocalStorage("userData", {
+            id: null,
+            name: null,
+            email: null,
+            phone: null,
+            account: null,
+            role: null,
+            created_at: null,
+        }),
     }),
     getters: {
         sidebar: (state) => state.items,
@@ -53,6 +64,7 @@ export const useSettingsItem = defineStore("item-settings", {
                 ability.update([
                     { action: response.data.data, subject: "all" },
                 ]);
+                this.userData = response.data.user;
             });
         },
     },

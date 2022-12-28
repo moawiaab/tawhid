@@ -6,6 +6,12 @@ const items = [
         access: "dashboard",
     },
     {
+        text: "العملاء",
+        icon: "mdi-account-details-outline",
+        url: "/clients",
+        access: "client",
+    },
+    {
         url: ["/stores", "/categories", "/products"],
         text: "إدارة المنتجات",
         icon: "mdi-window-shutter-cog",

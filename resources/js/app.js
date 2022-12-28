@@ -32,7 +32,7 @@ import EditIcon from "./components/icons/EditIcon.vue";
 import ShowIcon from "./components/icons/ShowIcon.vue";
 import ExportMenu from "./components/dialog/ExportMenu.vue";
 import ImportMenu from "./components/dialog/ImportMenu.vue";
-import MainPage from "./components/pages/MainPage.vue"
+import MainPage from "./components/pages/MainPage.vue";
 
 import VueHtmlToPaper from "./plugins/vueHtmlToPaper";
 // Painia Settings
@@ -52,10 +52,12 @@ const vuetify = createVuetify({
     isRtl: true,
     rtlClasses: ["rtl-app"],
     defaults: {
-       VTextField: {
-        variant : 'solo'
-       }
-      },
+        VTextField: {
+            variant: "solo",
+            clearable: true
+        },
+    },
+
 });
 
 const options = {

@@ -8,7 +8,7 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-text-field clearable label="اسم الصلاحية" variant="outlined" hint="هنا اسم الصلاحية "
+                    <v-text-field  label="اسم الصلاحية"  hint="هنا اسم الصلاحية "
                         v-model="single.entry.title" :rules="rules.required" :error-messages="single.errors.title"
                         required />
                     <v-autocomplete v-model="single.entry.permissions" :items="single.lists.permissions" clearable

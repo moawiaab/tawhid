@@ -47,6 +47,7 @@ export const useSingleUsers = defineStore("single-users", {
                             true
                         );
                         usePageIndex().fetchIndexData();
+                        this.loading = false;
                         resolve(response);
                     })
                     .catch((error) => {
@@ -56,10 +57,8 @@ export const useSingleUsers = defineStore("single-users", {
                             "warning",
                             true
                         );
-                        reject(error);
-                    })
-                    .finally(() => {
                         this.loading = false;
+                        reject(error);
                     });
             });
         },
@@ -76,6 +75,7 @@ export const useSingleUsers = defineStore("single-users", {
                             true
                         );
                         usePageIndex().fetchIndexData();
+                        this.loading = false;
                         resolve(response);
                     })
                     .catch((error) => {
@@ -85,10 +85,8 @@ export const useSingleUsers = defineStore("single-users", {
                             "warning",
                             true
                         );
-                        reject(error);
-                    })
-                    .finally(() => {
                         this.loading = false;
+                        reject(error);
                     });
             });
         },

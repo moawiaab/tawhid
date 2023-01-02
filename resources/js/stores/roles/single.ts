@@ -1,7 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
+import { usePageIndex } from "../pages/pageIndex";
 import { useSettingAlert } from "../settings/SettingAlert";
-import { useRoles } from "./roles";
 const route = "roles";
 export const useSingleRoles = defineStore("single-roles", {
     state: () => ({
@@ -31,7 +31,6 @@ export const useSingleRoles = defineStore("single-roles", {
     actions: {
         // send data to server in created
         storeData() {
-            const roleIndex = useRoles();
             this.loading = true;
             return new Promise(async (resolve, reject) => {
                 await axios
@@ -42,7 +41,8 @@ export const useSingleRoles = defineStore("single-roles", {
                             "success",
                             true
                         );
-                        roleIndex.fetchIndexData();
+                        this.loading = false;
+                        usePageIndex().fetchIndexData();
                         resolve(response);
                     })
                     .catch((error) => {
@@ -52,17 +52,14 @@ export const useSingleRoles = defineStore("single-roles", {
                             "warning",
                             true
                         );
-                        reject(error);
-                    })
-                    .finally(() => {
                         this.loading = false;
+                        reject(error);
                     });
             });
         },
         // send data to server in updated
         updateData() {
             this.loading = true;
-            const roleIndex = useRoles();
             return new Promise(async (resolve, reject) => {
                 await axios
                     .put(`${route}/${this.entry.id}`, this.entry)
@@ -72,7 +69,8 @@ export const useSingleRoles = defineStore("single-roles", {
                             "success",
                             true
                         );
-                        roleIndex.fetchIndexData();
+                        usePageIndex().fetchIndexData();
+                        this.loading = false;
                         resolve(response);
                     })
                     .catch((error) => {
@@ -82,11 +80,9 @@ export const useSingleRoles = defineStore("single-roles", {
                             "warning",
                             true
                         );
+                        this.loading = false;
                         reject(error);
                     })
-                    .finally(() => {
-                        this.loading = false;
-                    });
             });
         },
 

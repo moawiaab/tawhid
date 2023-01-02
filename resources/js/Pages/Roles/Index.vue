@@ -1,5 +1,6 @@
 <template>
-    <Loader v-if="roles.loading" />
+<div class="">
+        <Loader v-if="roles.loading" />
     <header-title title="الصلاحيات">
         <create-role />
     </header-title>
@@ -174,7 +175,7 @@
                 </pane>
             </splitpanes>
         </template>
-        <template #header-operation="header">
+        <template #header-operation>
             <div class="delete-all-items">
                 <!-- <import-menu url="roles" /> -->
                 <v-spacer />
@@ -258,6 +259,7 @@
         :header="headerItem.headerTable"
         :items="roles.roles"
     />
+</div>
 </template>
 <script lang="ts">
 import { ref, watch, onMounted } from "@vue/runtime-core";

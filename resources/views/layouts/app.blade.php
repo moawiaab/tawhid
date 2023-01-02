@@ -24,7 +24,7 @@
         }
     </style>
     <!-- Scripts -->
-    @vite(['resources/js/app.js'])
+    @vite(['resources/js/app.ts'])
 </head>
 
 <body class="theme-cyan font-montserrat rtl light_version">

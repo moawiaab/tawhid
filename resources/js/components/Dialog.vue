@@ -49,16 +49,6 @@
                         </pane>
                     </splitpanes>
                 </v-card-text>
-                <!-- <v-divider></v-divider>
-                <v-card-actions>
-                    <v-btn
-                        color="blue-darken-1"
-                        variant="text"
-                        @click="dialog = false"
-                    >
-                        قفل النافذة
-                    </v-btn>
-                </v-card-actions> -->
             </v-card>
         </v-dialog>
     </v-row>

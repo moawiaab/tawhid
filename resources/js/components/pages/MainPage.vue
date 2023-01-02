@@ -75,7 +75,7 @@
         <template #expand="item" v-if="expand">
             <slot name="expand" :item="item" />
         </template>
-        <template #header-operation="header">
+        <template #header-operation>
             <v-col class="text-left">
                 <import-menu :url="pages.route" v-if="addSelected"/>
                 <export-menu :url="pages.route" :data="pages.data" />
@@ -103,8 +103,8 @@
             <span v-if="pages.itemId == 'delete'">
                 هل تريد حذف جميع البيانات المختارة
                 <br/>
-                <template v-for="item in itemsSelected">
-                    <v-chip :text="item.title ?? item.name" class="ma-1" v-if="item.deletable"/>
+                <template v-for="item, index in itemsSelected">
+                    <v-chip :text="item.title ?? item.name" class="ma-1" v-if="item.deletable" :key="index"/>
                 </template>
             </span>
             <span v-else>هل تريد الحذف بالفعل ستفقد البيانات </span>

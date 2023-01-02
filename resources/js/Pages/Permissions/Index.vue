@@ -1,5 +1,6 @@
 <template>
-    <Loader v-if="permission.loading" />
+  <div class="">
+      <Loader v-if="permission.loading" />
     <header-title title="الأذونات">
         <create-permission />
     </header-title>
@@ -66,7 +67,7 @@
         " theme-color="#551a8b" :table-height="500" :loading="permission.loading" alternating border-cell
         v-model:items-selected="itemsSelected" :body-row-class-name="bodyRowClassNameFunction">
         <template #loading />
-        <template #header-operation="header">
+        <template #header-operation>
             <div class="delete-all-items">
                 <import-menu url="permissions" />
                 <export-menu url="permissions" :data="permission.permissions" />
@@ -94,7 +95,7 @@
         <template #content>
             <span v-if="permission.itemId == 'delete'">
                 هل تريد حذف جميع البيانات المختارة
-                <v-chip v-for="item in itemsSelected" :text="item.details" class="ma-1" />
+                <v-chip v-for="item, index in itemsSelected" :text="item.details" class="ma-1" :key="index" />
             </span>
             <span v-else>هل تريد الحذف بالفعل ستفقد البيانات </span>
         </template>
@@ -119,6 +120,7 @@
     </delete-item>
     <edit-permission />
     <PrintList title="الأذونات" :header="headerItem.headerTable" :items="permission.permissions" />
+  </div>
 </template>
 <script lang="ts">
 import { useAbility } from '@casl/vue';

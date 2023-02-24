@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { useLocalStorage } from "@vueuse/core";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import { read, utils, writeFileXLSX } from "xlsx";
@@ -13,16 +12,7 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
                 value: "",
             },
         ],
-        items: useLocalStorage("header-table", [
-            {
-                permissions: [],
-                users: [],
-                roles: [],
-                categories:[],
-                stores:[],
-                products:[],
-            },
-        ]),
+        items:{},
         table: "",
         fileData: [],
         file: null,
@@ -30,20 +20,20 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
         loading: false,
     }),
     getters: {
-        menuItem: (state) => state.items[0][state.table],
+        menuItem: (state) => state.items[state.table],
         headerTable: (state) =>
             state.headers.filter((e) => {
-                let list = state.items[0][state.table].map((e) => e.value);
+                let list = state.items[state.table].map((e) => e.value);
                 return !list.includes(e.value);
             }),
     },
 
     actions: {
         addItem(item) {
-            this.items[0][this.table].push(item);
+            this.items[this.table].push(item);
         },
         removeItem(index) {
-            this.items[0][this.table].splice(index, 1);
+            this.items[this.table].splice(index, 1);
         },
 
         setHeaderItems(headers, table) {
@@ -55,7 +45,7 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
         },
 
         removeAllItem() {
-            this.items[0][this.table] = [];
+            this.items[this.table] = [];
         },
 
         downloadFile(route, params) {
@@ -110,7 +100,9 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
 
         storeData(url) {
             this.loading = true;
-            const  sendData = this.fileData.filter((e)=> e.value != "id" || e.value != "options")
+            const sendData = this.fileData.filter(
+                (e) => e.value != "id" || e.value != "options"
+            );
             return new Promise(async (resolve, reject) => {
                 await axios
                     .post(`${url}/add-all`, [this.fileData])
@@ -137,4 +129,5 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
             });
         },
     },
+    persist: true,
 });

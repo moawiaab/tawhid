@@ -1,12 +1,14 @@
 // Plugins
 import vuetify from "./vuetify";
-import VueHtmlToPaper from "../plugins/vueHtmlToPaper";
+import VueHtmlToPaper from "./vueHtmlToPaper";
 import { abilitiesPlugin } from "@casl/vue";
 import ability from "../services/ability";
 import router from "../router";
 // Painia Settings
 import { createPinia } from "pinia";
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate)
 
 const options = {
     name: "_blank",

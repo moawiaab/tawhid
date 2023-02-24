@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import items from "../../plugins/sidebar_item";
 import itemsUser from "../../plugins/user_item";
-import { useLocalStorage } from "@vueuse/core";
 import ability from "@/services/ability";
 import Altawhed from "../../plugins/tawhed";
 
@@ -9,16 +8,14 @@ export const useSettingsItem = defineStore("item-settings", {
     state: () => ({
         items: items,
         userList: itemsUser,
-        navSide: useLocalStorage("nav-side", [
-            {
-                text: "لوحة التحكم",
-                icon: "mdi-home-outline",
-                url: "/dashboard",
-            },
-        ]),
+        navSide: [{
+            text: "لوحة التحكم",
+            icon: "mdi-home-outline",
+            url: "/dashboard",
+        },],
         localItems: [],
         altawhed: Altawhed,
-        userData: useLocalStorage("userData", {
+        userData: {
             id: null,
             name: null,
             email: null,
@@ -26,7 +23,7 @@ export const useSettingsItem = defineStore("item-settings", {
             account: null,
             role: null,
             created_at: null,
-        }),
+        },
     }),
     getters: {
         sidebar: (state) => state.items,
@@ -68,4 +65,5 @@ export const useSettingsItem = defineStore("item-settings", {
             });
         },
     },
+    persist :true
 });

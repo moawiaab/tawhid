@@ -8,7 +8,7 @@ export const useSettingAlert = defineStore("setting-alert", {
     }),
 
     actions: {
-        setAlert(alert, color, snackbar) {
+        setAlert(alert : string, color : string, snackbar : boolean) {
             this.alert = alert;
             this.snackbar = snackbar;
             this.color = color;

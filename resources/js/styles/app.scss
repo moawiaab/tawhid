@@ -2,19 +2,10 @@
 @import "splitpanes/dist/splitpanes.css";
 @import "vue3-easy-data-table/dist/style.css";
 
-:root {
-    direction: rtl !important;
-}
 
-.v-card-title {
+.v-card-title.text-h5.text-primary , font {
     font-family: myFirstFont !important;
-}
-
-* {
-    direction: rtl !important;
-    font-family: myFirstFont !important;
-    // font-weight: bold;
-}
+  }
 
 .page-loader-wrapper {
     z-index: 99999999;

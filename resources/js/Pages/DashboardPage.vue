@@ -15,8 +15,8 @@
           color="success"
           icon="mdi-car-brake-alert"
           title="المنتجات"
-          :text="charts.num.product"
-          subTitle="منتج"
+          :text="50"
+          subTitle="تجربة"
         />
       </v-col>
       <v-col>
@@ -24,7 +24,7 @@
           color="error"
           icon="mdi-account-tie-hat-outline"
           title="الاقسام"
-          :text="charts.num.category"
+          :text="50"
           subTitle="قسم"
         />
       </v-col>

@@ -1,7 +1,7 @@
 <template>
    <div class="">
     <Loader v-if="pages.loading" />
-    <header-title :title="title" :icon="createdItem">
+    <header-title :title="title" :icon="createdItem" v-if="createNewItem">
         <slot name="create"/>
     </header-title>
     <div>
@@ -170,6 +170,7 @@ export default {
         deleteAll: { type: Boolean, default: true },
         addSelected: { type: Boolean, default: true },
         createdItem: { type: Boolean, default: true },
+        createNewItem: { type: Boolean, default: true },
 
     },
     setup(props) {

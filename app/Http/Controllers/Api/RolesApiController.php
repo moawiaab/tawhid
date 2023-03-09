@@ -20,7 +20,7 @@ class RolesApiController extends Controller
         abort_if(Gate::denies('role_access'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
 
         return  RoleResource::collection(
-            Role::advancedFilter()
+            Role::with(['permissions', 'users'])->advancedFilter()
                 ->where('account_id', auth()->user()->account_id)
                 ->filter(FacadesRequest::only('trashed'))
                 ->paginate(request('rowsPerPage', 10))

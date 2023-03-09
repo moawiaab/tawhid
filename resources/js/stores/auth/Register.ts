@@ -1,15 +1,13 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import { useSettingAlert } from "../settings/SettingAlert";
-import { usePageIndex } from "../pages/pageIndex";
-import { useRouter, useRoute } from "vue-router";
 import { useSettingsItem } from "../settings/SettingItem";
 
 interface entryData {
     id: Number | null;
     name: String;
     userName: String;
-    email: String;
+    email: String | null | any;
     phone: String;
     password: String;
     password_confirmation: String;
@@ -67,6 +65,7 @@ export const useSingleRegister = defineStore("single-register", {
                     })
                     .then((response) => {
                         useSettingsItem().getRoles();
+                        this.loading = false;
                         resolve(response);
                     })
                     .catch((error) => {
@@ -76,10 +75,8 @@ export const useSingleRegister = defineStore("single-register", {
                             "warning",
                             true
                         );
-                        reject(error);
-                    })
-                    .finally(() => {
                         this.loading = false;
+                        reject(error);
                     });
             });
         },
@@ -100,15 +97,14 @@ export const useSingleRegister = defineStore("single-register", {
                     })
                     .then((response) => {
                         useSettingsItem().getRoles();
+                        this.loading = false;
                         resolve(response);
                     })
                     .catch((error) => {
                         this.errors = error.response.data.errors || this.errors;
                         console.log(error.response.data);
-                        reject(error);
-                    })
-                    .finally(() => {
                         this.loading = false;
+                        reject(error);
                     });
             });
         },

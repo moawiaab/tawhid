@@ -6,8 +6,7 @@
         <v-img :src="`/assets/images/notfound.png`" class="align-end"> </v-img>
     </v-card>
 </template>
-<script>
-export default {};
+<script lang="ts" setup>
 </script>
 
 <style></style>

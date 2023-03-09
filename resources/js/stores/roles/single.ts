@@ -109,5 +109,10 @@ export const useSingleRoles = defineStore("single-roles", {
                 this.lists = response.data.meta;
             });
         },
+
+        setData(enter:any, lists: any){
+            this.entry = enter;
+            this.lists = lists;
+        }
     },
 });

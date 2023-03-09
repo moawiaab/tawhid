@@ -75,8 +75,6 @@ class DashboardApiController extends Controller
 
         $dataNum = [
             'user' => auth()->user()->account->users()->count(),
-            'product' => auth()->user()->account->products()->count(),
-            'category' => auth()->user()->account->categories()->count(),
             'role' => auth()->user()->account->roles()->count(),
         ];
         return [

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\PermissionResource;
+use App\Http\Resources\Admin\AccountResource;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -19,7 +19,7 @@ class AccountApiController extends Controller
     public function index()
     {
         abort_if(Gate::denies('account_access'), Response::HTTP_FORBIDDEN, 'ليس لديك الصلاحية الكافية لتنفيذ هذه العملية');
-        return PermissionResource::collection(Account::advancedFilter()->paginate(request('rowsPerPage', 20)));
+        return AccountResource::collection(Account::with(['users', 'roles'])->advancedFilter()->paginate(request('rowsPerPage', 20)));
     }
 
     public function toggle(Account $account)

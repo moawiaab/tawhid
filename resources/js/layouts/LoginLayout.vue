@@ -24,15 +24,7 @@
         </v-row>
     </v-card>
 </template>
-<script>
+<script lang="ts" setup>
 import { useSettingAlert } from "../stores/settings/SettingAlert";
-export default {
-    setup() {
-        const alertData = useSettingAlert();
-
-        return {
-            alertData,
-        };
-    },
-};
+const alertData = useSettingAlert();
 </script>

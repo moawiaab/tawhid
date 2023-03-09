@@ -6,6 +6,9 @@ import { aliases, mdi } from "vuetify/iconsets/mdi";
 
 
 export default createVuetify({
+    locale : {
+        locale : 'ar'
+    },
     defaults: {
         VTextField: {
             variant: "solo",

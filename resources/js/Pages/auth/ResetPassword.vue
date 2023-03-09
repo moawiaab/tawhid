@@ -67,7 +67,7 @@ export default {
         });
         onMounted(() => {
             single.token = useRoute().params;
-            single.entry.email = useRoute().query.email;
+            single.entry.email = useRoute().query.email?.toString;
 
         });
         const rules = {

@@ -4,8 +4,8 @@ import { defineStore } from "pinia";
 export const useSetting = defineStore("index-Setting", {
     state: () => ({
         theme: "light",
-        drawer: false,
-        menu: false,
+        drawer: true,
+        menu: true,
         showClose: false,
         window: window.innerWidth,
     }),

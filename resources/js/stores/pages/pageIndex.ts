@@ -22,9 +22,9 @@ export const usePageIndex = defineStore("index-pages", {
         itemId: null,
         itemsSelected: [],
         trashed: false,
-        route: String,
+        route: "",
         alertMessage: String,
-        table: String,
+        table: "",
     }),
     getters: {
         // items: (state) => state.data,
@@ -35,7 +35,7 @@ export const usePageIndex = defineStore("index-pages", {
             this.loading = true;
             return new Promise(async (resolve, reject) => {
                 await axios
-                    .get(this.route, {
+                    .get(this.route.toString(), {
                         params: { ...this.filters, ...this.query },
                     })
                     .then((response) => {
@@ -43,10 +43,8 @@ export const usePageIndex = defineStore("index-pages", {
                         this.total = response.data.meta.total;
                         this.page = response.data.meta.current_page;
                     })
-                    .catch((error) => {})
-                    .finally(() => {
-                        this.loading = false;
-                    });
+                    .catch((error) => {});
+                this.loading = false;
             });
         },
         setQuery(q: any) {
@@ -162,7 +160,7 @@ export const usePageIndex = defineStore("index-pages", {
                 });
         },
 
-        setup(route: String) {
+        setup(route: string) {
             useSinglePage().$reset();
             this.route = route;
             this.table = route;

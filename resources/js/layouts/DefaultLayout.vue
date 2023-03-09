@@ -65,7 +65,6 @@
           v-model="settings.menu"
           class="pt-5"
           rail
-          location="end"
           v-if="settings.window > 1280"
           rail-width="50"
         >
@@ -90,7 +89,6 @@
         </v-navigation-drawer>
         <v-navigation-drawer
           v-model="settings.drawer"
-          location="end"
           width="240"
         >
           <!-- <v-row justify="end" v-if="settings.window < 1280">
@@ -130,7 +128,7 @@
                   <v-icon :icon="item.icon"></v-icon>
                 </template>
 
-                <v-list-item-title v-text="item.text"></v-list-item-title>
+                <v-list-item-title>{{item.text}}</v-list-item-title>
               </v-list-item>
 
               <v-list-item
@@ -142,7 +140,7 @@
                 <template v-slot:prepend>
                   <v-icon icon="mdi-login-variant" />
                 </template>
-                <v-list-item-title v-text="'تسجيل خروج'" />
+                <v-list-item-title >تسجيل خروج</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -173,7 +171,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { directive as fullscreen } from "vue-fullscreen";
 import { computed, onMounted, onUnmounted, watch, ref } from "vue";
 import { useOnline, formatDate, useNow, useTitle } from "@vueuse/core";
@@ -185,6 +183,7 @@ import { useSettingAlert } from "../stores/settings/SettingAlert";
 import Dialog from "../components/Dialog.vue";
 import Password from "../components/dialog/Password.vue";
 import RecursiveMenu from "../components/menu/Menu.vue";
+
 export default {
   directives: { fullscreen },
   components: { Dialog, Password, RecursiveMenu },
@@ -204,9 +203,9 @@ export default {
     );
     onMounted(() => sidebar.getRoles());
     onUnmounted(() => console.log("app onUnmounted"));
-    useTitle(`اسم البرنامج | ${route.name}`);
+    useTitle(`اسم البرنامج | ${route.name?.toString()}`);
     watch(route, (e) => {
-      useTitle(`اسم البرنامج | ${e.name}`);
+      useTitle(`اسم البرنامج | ${e.name?.toString()}`);
       // sidebar.getRoles()
     });
 
@@ -214,7 +213,7 @@ export default {
 
     const options = {
       target: ".fullscreen-wrapper",
-      callback(isFullscreen) {
+      callback(isFullscreen :any) {
         fullscreen.value = isFullscreen
           ? "mdi-fullscreen-exit"
           : "mdi-fullscreen";

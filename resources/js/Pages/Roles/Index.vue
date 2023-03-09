@@ -13,8 +13,8 @@
       <create-role v-if="model.showModalCreate" />
     </template>
     <template #expand="{ item }">
-      <splitpanes class="default-theme" style="height: 100%" :rtl="true">
-        <pane>
+      <Splitpanes class="default-theme" style="height: 100%" :rtl="true">
+        <Pane>
           <v-list-item-title>الأذونات لهذه الصلاحية</v-list-item-title>
           <v-chip
             color="red"
@@ -26,9 +26,9 @@
           >
             {{ details }}
           </v-chip>
-        </pane>
+        </Pane>
         <v-divider vertical />
-        <pane>
+        <Pane>
           <v-list-item-title>المستخدمين لهذه الصلاحية</v-list-item-title>
           <v-chip
             color="primary"
@@ -39,8 +39,8 @@
             prepend-icon="mdi-account-circle-outline"
             >{{ name }}
           </v-chip>
-        </pane>
-      </splitpanes>
+        </Pane>
+      </Splitpanes>
     </template>
     <edit-role />
     <show-role />
@@ -53,6 +53,7 @@ import ShowRole from "./Show.vue";
 import { usePageIndex } from "../../stores/pages/pageIndex";
 import { useSinglePage } from "../../stores/pages/pageSingle";
 import { Splitpanes, Pane } from "splitpanes";
+import type { Header } from "vue3-easy-data-table";
 
 const pages = usePageIndex();
 const model = useSinglePage();

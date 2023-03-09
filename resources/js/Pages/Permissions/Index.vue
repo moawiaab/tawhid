@@ -179,7 +179,7 @@ export default {
                 sortable: true,
             },
             { text: "تاريخ الإنشاء", value: "created_at", sortable: true },
-            { text: "إعدادات", value: "operation", width: 100 },
+            { text: "إعدادات", value: "operation", width: 120 },
         ];
         const bodyRowClassNameFunction: BodyRowClassNameFunction = (
             item: Item,

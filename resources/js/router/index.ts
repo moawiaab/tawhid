@@ -48,11 +48,11 @@ const routes = [
                 name: " المستخدمين",
                 component: () => import("@/Pages/Users/Index.vue"),
             },
-            // {
-            //     path: "/accounts",
-            //     name: " accounts.index",
-            //     component: () => import("@/Pages/Accounts/Index.vue"),
-            // },
+            {
+                path: "/accounts",
+                name: " الفروع",
+                component: () => import("@/Pages/Accounts/Index.vue"),
+            },
             {
                 path: "/roles",
                 name: " الصلاحيات",
@@ -62,21 +62,6 @@ const routes = [
                 path: "/permissions",
                 name : "الأذونات",
                 component: () => import("@/Pages/Permissions/Index.vue"),
-            },
-            {
-                path: "/categories",
-                name: " أقسام المنتجات",
-                component: () => import("@/Pages/Categories/Index.vue"),
-            },
-            {
-                path: "/products",
-                name: " المنتجات",
-                component: () => import("@/Pages/Products/Index.vue"),
-            },
-            {
-                path: "/stores",
-                name: " المخازن",
-                component: () => import("@/Pages/Stores/Index.vue"),
             },
         ],
     },

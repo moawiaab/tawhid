@@ -12,7 +12,12 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
                 value: "",
             },
         ],
-        items:{},
+        items: {
+            accounts: [],
+            users: [],
+            roles: [],
+            permissions: [],
+        },
         table: "",
         fileData: [],
         file: null,
@@ -39,9 +44,6 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
         setHeaderItems(headers, table) {
             this.table = table;
             this.headers = headers;
-            // enable to add new table
-            // console.log(localStorage.getItem('header-table'));
-            // localStorage.removeItem('header-table')
         },
 
         removeAllItem() {

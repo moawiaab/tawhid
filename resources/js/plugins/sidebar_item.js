@@ -6,36 +6,10 @@ const items = [
         access: "dashboard",
     },
     {
-        text: "العملاء",
-        icon: "mdi-account-details-outline",
-        url: "/clients",
-        access: "client",
-    },
-    {
-        url: ["/stores", "/categories", "/products"],
-        text: "إدارة المنتجات",
-        icon: "mdi-window-shutter-cog",
-        access: "product_management",
-        children: [
-            {
-                url: "/stores",
-                text: "المخازن",
-                access: "store",
-                icon: "mdi-storefront-minus-outline",
-            },
-            {
-                text: "أقسام المنتجات",
-                url: "/categories",
-                access: "category",
-                icon: "mdi-tune-vertical",
-            },
-            {
-                url: "/products",
-                text: "المنتجات",
-                access: "product",
-                icon: "mdi-format-list-checkbox",
-            },
-        ],
+        text: "الفروع",
+        icon: "mdi-source-branch",
+        url: "/accounts",
+        access: "account",
     },
     {
         text: "المستخدمين",

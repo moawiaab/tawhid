@@ -69,7 +69,7 @@
     <data-table :server-items-length="pages.total" buttons-pagination v-model:server-options="query"
         :headers="headerItem.headerTable" :items="pages.data" body-text-direction="right" :table-class-name="
             theme.theme == 'light' ? 'customize-table' : 'customize-table-small'
-        " theme-color="#551a8b" :table-height="500" :loading="pages.loading" alternating border-cell
+        " theme-color="#551a8b" :table-height="600" :loading="pages.loading" alternating border-cell
         v-model:items-selected="itemsSelected" :body-row-class-name="bodyRowClassNameFunction">
         <template #loading />
         <template #expand="item" v-if="expand">

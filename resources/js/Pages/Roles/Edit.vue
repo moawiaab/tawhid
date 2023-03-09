@@ -95,7 +95,7 @@ export default {
             single.updateData().then(() => {
                 if (validation()) {
                     single.updateData().then(() => {
-                        single.showModalEdit = false;
+                        model.showModalEdit = false;
                         single.$reset();
                     });
                 } else {

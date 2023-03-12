@@ -176,4 +176,20 @@ class UsersApiController extends Controller
         $item->restore();
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
+
+    public function storeMedia(Request $request)
+    {
+        $model         = new User();
+        $model->id     = $request->input('model_id', 0);
+        $model->exists = true;
+        $media         = $model->addMediaFromRequest('file')->toMediaCollection($request->input('collection_name'));
+
+        if (!$media) {
+            $this->validate($request, [
+                'userPhoto' => 'required',
+            ]);
+        }
+        return response()->json($media, Response::HTTP_CREATED);
+    }
 }

@@ -12,14 +12,18 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
     use HasAdvancedFilter;
     use SoftDeletes;
     use Notifiable;
     use HasFactory;
     use HasApiTokens;
+    use InteractsWithMedia;
 
     public $table = 'users';
 
@@ -112,6 +116,36 @@ class User extends Authenticatable
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $thumbnailWidth  = 50;
+        $thumbnailHeight = 50;
+
+        $thumbnailPreviewWidth  = 120;
+        $thumbnailPreviewHeight = 120;
+
+        $this->addMediaConversion('thumbnail')
+            ->width($thumbnailWidth)
+            ->height($thumbnailHeight)
+            ->fit('crop', $thumbnailWidth, $thumbnailHeight);
+        $this->addMediaConversion('preview_thumbnail')
+            ->width($thumbnailPreviewWidth)
+            ->height($thumbnailPreviewHeight)
+            ->fit('crop', $thumbnailPreviewWidth, $thumbnailPreviewHeight);
+    }
+
+    public function getPhotosAttribute()
+    {
+        return $this->getMedia('userPhoto')->map(function ($item) {
+            $media = [];
+            $media['url'] = $item->getUrl();
+            $media['thumbnail'] = $item->getUrl('thumbnail');
+            $media['preview_thumbnail'] = $item->getUrl('preview_thumbnail');
+
+            return $media;
+        });
     }
 
 }

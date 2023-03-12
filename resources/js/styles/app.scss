@@ -3,8 +3,12 @@
 @import "vue3-easy-data-table/dist/style.css";
 
 
-.v-card-title.text-h5.text-primary , font {
+.v-card-title.text-h5.text-primary , font, .v-card-title.text-center {
     font-family: myFirstFont !important;
+  }
+
+  .splitpanes.splitpanes--vertical.default-theme {
+    background-color: #f2f2f2;
   }
 
 .page-loader-wrapper {

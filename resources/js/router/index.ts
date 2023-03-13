@@ -63,6 +63,27 @@ const routes = [
                 name : "الأذونات",
                 component: () => import("@/Pages/Permissions/Index.vue"),
             },
+
+            {
+                path: "/private-lockers",
+                name: " الخزائن الشخصية",
+                component: () => import("@/Pages/PrivateLocker/Index.vue"),
+            },
+            {
+                path: "/public-treasuries",
+                name: " الخزنة العامة",
+                component: () => import("@/Pages/PrivateLocker/PubIndex.vue"),
+            },
+            {
+                path: "/stages",
+                name: " السنة المالية",
+                component: () => import("@/Pages/Stages/Index.vue"),
+            },
+            {
+                path: "/expanses",
+                name: " الموازنة العامة",
+                component: () => import("@/Pages/Expanses/Index.vue"),
+            },
         ],
     },
     {

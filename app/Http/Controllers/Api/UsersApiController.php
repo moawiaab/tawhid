@@ -19,8 +19,8 @@ use Illuminate\Validation\ValidationException;
 
 
 use App\Exports\UsersExport;
+use App\Models\PrivateLocker;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 
 class UsersApiController extends Controller
 {
@@ -138,16 +138,7 @@ class UsersApiController extends Controller
         }
     }
 
-    public function export()
-    {
-        if (request('type') == 'xlsx') {
-            return Excel::download(new UsersExport, 'users.xlsx');
-        } else {
-            return Excel::download(new UsersExport, 'users.csv');
-        }
-        // return (new UsersExport)->download('invoices.xlsx', Excel::XLSX);
 
-    }
 
     public function destroyAll(Request $request)
     {
@@ -191,5 +182,20 @@ class UsersApiController extends Controller
             ]);
         }
         return response()->json($media, Response::HTTP_CREATED);
+    }
+
+    public function locker(Request $request, User $user)
+    {
+        abort_if(Gate::denies('private_locker_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $safe = new PrivateLocker();
+        $safe->amount = $request->amount ?? 0;
+        $safe->on_open = $request->amount ?? 0;
+        $safe->problem = 0;
+        $safe->status  = 1;
+        $safe->admin_id = auth()->id();
+        $safe->user_id = $user->id;
+        $safe->account_id = auth()->user()->account_id;
+        $safe->save();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

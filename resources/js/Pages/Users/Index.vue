@@ -8,31 +8,51 @@
         </template>
 
         <template #table-operation="{ item }">
-            <edit-icon
-                @click="showPhote(item.id)"
-                role="user"
-                icon="mdi-image-edit-outline"
+            <v-icon
+                icon="mdi-plus-circle-outline"
+                color="indigo"
+                v-if="!item.locker && can('private_locker_create', 'all')"
+                @click="showDialog(item.id)"
+            />
+            <toggle-icon
+                @click="pages.toggleItem(item.id)"
+                role="category"
+                :toggle="item.status"
+                v-if="can('user_edit', 'all')"
             />
         </template>
         <edit-user />
         <show-user />
-
-        <v-dialog v-model="showModel" width="500" :persistent="loading">
+        <v-dialog v-model="user.dialog" max-width="400">
             <v-card>
-                <v-card-title>تحميل صورة للمنتج</v-card-title>
+                <v-card-title class="text-h5 text-primary">
+                    فتح خزنة لهذا المستخدم
+                </v-card-title>
+                <v-divider></v-divider>
                 <v-card-text>
-                    <Image :id="myId" v-model="files" :loading="loading" />
+                    <v-text-field
+                        clearable
+                        label="الرصيد الافتتاحي"
+                        variant="solo"
+                        hint="المبلغ الفعلي في خزنة المستخدم"
+                        v-model="user.data.amount"
+                        color="primary"
+                    />
                 </v-card-text>
-                <v-card-actions v-if="files">
+                <v-card-actions>
+                    <v-spacer></v-spacer>
                     <v-btn
-                        class="mx-10"
+                        color="red-darken-1"
+                        prepend-icon="mdi-close"
                         variant="tonal"
-                        prepend-icon="mdi-upload-network"
-                        color="success"
-                        @click.stop="uploadImage"
-                        :disabled="loading"
-                        >تحميل الصورة</v-btn
+                        @click="user.dialog = false"
                     >
+                        إلغاء الأمر
+                    </v-btn>
+                    <btn-save
+                        :loading="user.loading"
+                        @click="user.sendLocker()"
+                    />
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -46,14 +66,18 @@ import EditUser from "./Edit.vue";
 import ShowUser from "./Show.vue";
 import { usePageIndex } from "../../stores/pages/pageIndex";
 import { useSinglePage } from "../../stores/pages/pageSingle";
+import { useUserIndex } from "../../stores/users/users";
 import { ref } from "vue";
 import axios from "axios";
+import { useAbility } from "@casl/vue";
 
-const myId = ref<Number | null | String>(null);
-const loading = ref(false);
-const files = ref();
-const showModel = ref(false);
+const { can } = useAbility();
+// const myId = ref<Number | null | String>(null);
+// const loading = ref(false);
+// const files = ref();
+// const showModel = ref(false);
 
+const user = useUserIndex();
 const pages = usePageIndex();
 const model = useSinglePage();
 pages.$reset();
@@ -68,30 +92,35 @@ const headers: import("vue3-easy-data-table").Header[] = [
     { text: "إعدادات", value: "operation", width: 150 },
 ];
 
-const showPhote = (id: Number) => {
-    showModel.value = !showModel.value;
-    myId.value = id;
+const showDialog = (id: number) => {
+    user.dialog = true;
+    user.setId(id);
 };
-const uploadImage = () => {
-    return new Promise(async (resolve, reject) => {
-        loading.value = true;
-        const formData = new FormData();
-        formData.append("id", myId.value);
-        formData.append("file", files.value);
-        formData.append("model_id", myId.value);
-        formData.append("collection_name", "userPhoto");
-        await axios
-            .post(`/users/media`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            })
-            .then((response) => {
-                // alert.value = true;
-                pages.fetchIndexData();
-                showModel.value = false;
-            });
-        loading.value = false;
-    });
-};
+
+// const showPhote = (id: Number) => {
+//     showModel.value = !showModel.value;
+//     myId.value = id;
+// };
+// const uploadImage = () => {
+//     return new Promise(async (resolve, reject) => {
+//         loading.value = true;
+//         const formData = new FormData();
+//         formData.append("id", myId.value);
+//         formData.append("file", files.value);
+//         formData.append("model_id", myId.value);
+//         formData.append("collection_name", "userPhoto");
+//         await axios
+//             .post(`/users/media`, formData, {
+//                 headers: {
+//                     "Content-Type": "multipart/form-data",
+//                 },
+//             })
+//             .then((response) => {
+//                 // alert.value = true;
+//                 pages.fetchIndexData();
+//                 showModel.value = false;
+//             });
+//         loading.value = false;
+//     });
+// };
 </script>

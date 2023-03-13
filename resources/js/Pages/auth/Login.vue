@@ -1,5 +1,9 @@
 <template>
-    <v-card-title class="text-center mb-3 text-xs-h6 text-md-h5 text-lg-h4 font-weight-black text-deep-purple-accent-2" color="red">تسجيل دخول</v-card-title>
+    <v-card-title
+        class="text-center mb-3 text-xs-h6 text-md-h5 text-lg-h4 font-weight-black text-deep-purple-accent-2"
+        color="red"
+        >تسجيل دخول</v-card-title
+    >
     <v-form @submit.prevent="submitForm">
         <v-text-field
             clearable
@@ -29,10 +33,14 @@
             color="primary"
             label="حفظ كلمة السر"
         ></v-checkbox>
-        <btn-save :loading="single.loading" :block="true" text="تسجيل دخول"/>
+        <btn-save :loading="single.loading" :block="true" text="تسجيل دخول" />
 
-        <router-link to="/password/reset"> <v-list-item>فقد كلمة السر</v-list-item></router-link>
-        <router-link to="/register"> <v-list-item> إنشاء حساب جديد</v-list-item></router-link>
+        <router-link to="/password/reset">
+            <v-list-item>فقد كلمة السر</v-list-item></router-link
+        >
+        <router-link to="/register">
+            <v-list-item> إنشاء حساب جديد</v-list-item></router-link
+        >
     </v-form>
 </template>
 
@@ -46,7 +54,7 @@ export default {
     name: "Login Page",
     props: ["icon"],
     setup() {
-        const router = useRouter()
+        const router = useRouter();
         const single = useSingleAuth();
         watch(single, (e) => {
             if (e.showModalCreate) {
@@ -65,7 +73,7 @@ export default {
         const submitForm = () => {
             if (validation()) {
                 single.storeData().then(() => {
-                    router.push('/dashboard')
+                    router.push("/dashboard");
                     single.$reset();
                 });
             } else {

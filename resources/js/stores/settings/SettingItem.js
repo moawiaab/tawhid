@@ -65,5 +65,5 @@ export const useSettingsItem = defineStore("item-settings", {
             });
         },
     },
-    persist :true
+    // persist :true
 });

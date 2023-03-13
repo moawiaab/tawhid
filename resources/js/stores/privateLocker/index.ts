@@ -2,30 +2,36 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { usePageIndex } from "../pages/pageIndex";
 import { useSettingAlert } from "../settings/SettingAlert";
-const route = "users";
+const route = "private-lockers";
 
-export const useUserIndex = defineStore("index-users", {
+export const useUserPrivate = defineStore("index-private", {
     state: () => ({
-        data: { amount: 0 },
+        data: { amount: 0, details: "" },
         loading: false,
-        userId: <null | number>null,
+        userId: null,
         dialog: false,
+        localData: {
+            amount: 0,
+            name: "",
+            lockerId: 0,
+        },
     }),
     actions: {
         sendLocker() {
             this.loading = true;
             axios
-                .put(`${route}/${this.userId}/locker`, this.data)
+                .put(`${route}/${this.userId}/amount`, this.data)
                 .then((response) => {
                     useSettingAlert().setAlert(
                         "تم إنشاء خزنة جديد بنجاح",
                         "success",
                         true
                     );
-                    // this.showDeleted = false;
+                    this.showDeleted = false;
                     usePageIndex().fetchIndexData();
                     this.dialog = false;
                     this.userId = null;
+                    this.$reset();
                 })
                 .catch((error) => {
                     useSettingAlert().setAlert(
@@ -33,11 +39,12 @@ export const useUserIndex = defineStore("index-users", {
                         "warning",
                         true
                     );
-                });
-            this.loading = false;
+                })
+                .finally(() => (this.loading = false));
         },
-        setId(id: number) {
-            this.userId = id;
+        setId(id: any) {
+            this.userId = id.id;
+            this.localData = id;
         },
     },
 });

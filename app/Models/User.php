@@ -71,6 +71,11 @@ class User extends Authenticatable implements HasMedia
     ];
 
 
+    public function locker()
+    {
+        return $this->hasOne(PrivateLocker::class);
+    }
+
     public function resolveRouteBinding($value, $field = null)
     {
         return $this->where($field ?? 'id', $value)->withTrashed()->firstOrFail();

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import * as XLSX from "xlsx";
-import { read, utils, writeFileXLSX } from "xlsx";
+import { utils, writeFileXLSX } from "xlsx";
 import { useSettingAlert } from "./SettingAlert";
 
 export const useSettingsHeaderTable = defineStore("settings-header-table", {
@@ -17,6 +17,10 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
             users: [],
             roles: [],
             permissions: [],
+            "public-treasuries": [],
+            "private-lockers": [],
+            stages: [],
+            expanses: [],
         },
         table: "",
         fileData: [],
@@ -131,5 +135,5 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
             });
         },
     },
-    persist: true,
+    // persist: true,
 });

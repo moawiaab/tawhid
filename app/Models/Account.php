@@ -48,22 +48,20 @@ class Account extends Model
         return $this->hasMany(Role::class);
     }
 
-    public function categories()
+    public function expanses()
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Expanse::class);
     }
-
-    public function products()
+    public function stages()
     {
-        return $this->hasMany(Product::class);
-    }
-
-    public function stores()
-    {
-        return $this->hasMany(Store::class);
+        return $this->hasMany(Stage::class);
     }
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function locker() {
+        return $this->hasOne(PublicTreasury::class);
     }
 }

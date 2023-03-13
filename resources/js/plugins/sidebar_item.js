@@ -12,6 +12,38 @@ const items = [
         access: "account",
     },
     {
+        url: ["/public-treasuries", "/private-lockers", "/stages", "expanses"],
+        text: "المالية العامة",
+        icon: "mdi-finance",
+        access: "financial_management",
+        children: [
+            {
+                url: "/public-treasuries",
+                text: "الخزنة العامة",
+                access: "public_treasury",
+                icon: "mdi-door-closed-lock",
+            },
+            {
+                text: "الخزانات الشخصية",
+                url: "/private-lockers",
+                access: "private_locker",
+                icon: "mdi-lock-outline",
+            },
+            {
+                url: "/stages",
+                text: "السنة المالية",
+                access: "stage",
+                icon: "mdi-finance",
+            },
+            {
+                text: "الموازنة",
+                icon: "mdi-chart-bell-curve",
+                url: "/expanses",
+                access: "expanse",
+            },
+        ],
+    },
+    {
         text: "المستخدمين",
         icon: "mdi-account-cog-outline",
         url: ["/users", "/roles", "/permissions"],

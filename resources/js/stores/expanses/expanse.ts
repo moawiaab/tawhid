@@ -2,27 +2,27 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { usePageIndex } from "../pages/pageIndex";
 import { useSettingAlert } from "../settings/SettingAlert";
-const route = "users";
+const route = "expanses";
 
-export const useUserIndex = defineStore("index-users", {
+export const useExpansesIndex = defineStore("index-expanses", {
     state: () => ({
-        data: { amount: 0 },
+        data: { amount: null, details: "" },
         loading: false,
-        userId: <null | number>null,
+        userId: null,
         dialog: false,
     }),
     actions: {
-        sendLocker() {
+        sendAmount() {
             this.loading = true;
             axios
-                .put(`${route}/${this.userId}/locker`, this.data)
+                .put(`${route}/${this.userId}/amount`, this.data)
                 .then((response) => {
                     useSettingAlert().setAlert(
                         "تم إنشاء خزنة جديد بنجاح",
                         "success",
                         true
                     );
-                    // this.showDeleted = false;
+                    this.showDeleted = false;
                     usePageIndex().fetchIndexData();
                     this.dialog = false;
                     this.userId = null;
@@ -33,10 +33,10 @@ export const useUserIndex = defineStore("index-users", {
                         "warning",
                         true
                     );
-                });
-            this.loading = false;
+                })
+                .finally(() => (this.loading = false));
         },
-        setId(id: number) {
+        setId(id: Number) {
             this.userId = id;
         },
     },

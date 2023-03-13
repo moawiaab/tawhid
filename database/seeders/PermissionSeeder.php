@@ -26,6 +26,12 @@ class PermissionSeeder extends Seeder
                 'status' => 0,
                 'title' => 'group_access',
             ],
+
+            [
+                'details' => 'الخزنة العامة',
+                'status' => 0,
+                'title' => 'public_treasury_access',
+            ],
             [
                 'details' => 'عرض الفروع',
                 'status' => 0,
@@ -58,9 +64,9 @@ class PermissionSeeder extends Seeder
                 'title' => 'user_management_access',
             ],
             [
-                'details' => 'إدارة المنتجات ',
+                'details' => ' المالية العامة ',
                 'status' => 1,
-                'title' => 'product_management_access',
+                'title' => 'financial_management_access',
             ],
 
             [
@@ -118,6 +124,69 @@ class PermissionSeeder extends Seeder
                 'details' => 'حذف الصلاحية',
                 'status' => 0,
                 'title' => 'role_delete',
+            ],
+
+            [
+                'details' => 'عرض السنة المالية',
+                'status' => 0,
+                'title' => 'stage_access',
+            ],
+            [
+                'details' => 'إنشاء سنة مالية جديدة',
+                'status' => 0,
+                'title' => 'stage_create',
+            ],
+            [
+                'details' => 'تعديل السنة المالية',
+                'status' => 0,
+                'title' => 'stage_edit',
+            ],
+            [
+                'details' => 'حذف السنة المالية',
+                'status' => 0,
+                'title' => 'stage_delete',
+            ],
+
+            [
+                'details' => 'عرض الموازنة العامة',
+                'status' => 0,
+                'title' => 'expanse_access',
+            ],
+            [
+                'details' => 'إنشاء موازنة جديدة',
+                'status' => 0,
+                'title' => 'expanse_create',
+            ],
+            [
+                'details' => 'تعديل الموازنة',
+                'status' => 0,
+                'title' => 'expanse_edit',
+            ],
+            [
+                'details' => 'حذف الموازنة',
+                'status' => 0,
+                'title' => 'expanse_delete',
+            ],
+
+            [
+                'title' => 'private_locker_create',
+                'details' => 'انشاء خزنة شخصية',
+                'status' => 1,
+            ],
+            [
+                'title' => 'private_locker_edit',
+                'details' => 'تعديل  الخزنة الشخصية',
+                'status' => 1,
+            ],
+            [
+                'title' => 'private_locker_delete',
+                'details' => ' تعديل الخزنة الشخصية',
+                'status' => 1,
+            ],
+            [
+                'title' => 'private_locker_access',
+                'details' => ' عرض الخزائن الشخصية',
+                'status' => 1,
             ],
 
         ];

@@ -1,4 +1,3 @@
-
 <template>
   <div class="">
     <v-app id="" :theme="settings.getTheme" class="fullscreen-wrapper">
@@ -32,27 +31,7 @@
           <v-icon>wifi</v-icon>
 
           <v-icon v-fullscreen.teleport="options" :icon="fullscreen"></v-icon>
-          <marquee
-            direction="right"
-            scrollamount="2"
-            loop="-1"
-            onmouseover="this.stop();"
-            onmouseout="this.start();"
-          >
-            <!-- <h1> -->
-            <template v-for="(altawed, index) in sidebar.altawhed" :key="index">
-              <span :style="`margin-left:${settings.window - 400}px`">
-                <v-icon icon="mdi-meteor" />
-                <font face="Andalus" size="3" color="primary">
-                  {{ altawed.title }} :
-                </font>
-                <font face="Andalus" size="3" color="grey">
-                  {{ altawed.text }}
-                </font>
-              </span>
-            </template>
-            <!-- <h1 /> -->
-          </marquee>
+
           <v-spacer></v-spacer>
           <v-btn variant="text" prepend-icon="mdi-clock-outline">
             {{ formatDate(now, "hh:mm:ss") }}
@@ -87,10 +66,7 @@
             }}</v-tooltip>
           </router-link>
         </v-navigation-drawer>
-        <v-navigation-drawer
-          v-model="settings.drawer"
-          width="240"
-        >
+        <v-navigation-drawer v-model="settings.drawer" width="240">
           <!-- <v-row justify="end" v-if="settings.window < 1280">
                     <v-app-bar-nav-icon @click="settings.drawer = false" v-cloak>
                         <v-icon icon="mdi-close" />
@@ -128,7 +104,7 @@
                   <v-icon :icon="item.icon"></v-icon>
                 </template>
 
-                <v-list-item-title>{{item.text}}</v-list-item-title>
+                <v-list-item-title>{{ item.text }}</v-list-item-title>
               </v-list-item>
 
               <v-list-item
@@ -140,7 +116,7 @@
                 <template v-slot:prepend>
                   <v-icon icon="mdi-login-variant" />
                 </template>
-                <v-list-item-title >تسجيل خروج</v-list-item-title>
+                <v-list-item-title>تسجيل خروج</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -148,17 +124,17 @@
 
         <v-main class="" scrollable>
           <v-container fill-height fluid>
-          <Password />
-          <v-snackbar
-            v-model="alertData.snackbar"
-            absolute
-            text
-            :color="alertData.color"
-            close-on-content-click
-            location="top"
-          >
-            {{ alertData.alert }}
-          </v-snackbar>
+            <Password />
+            <v-snackbar
+              v-model="alertData.snackbar"
+              absolute
+              text
+              :color="alertData.color"
+              close-on-content-click
+              location="top"
+            >
+              {{ alertData.alert }}
+            </v-snackbar>
             <router-view v-slot="{ Component, route }">
               <transition name="slide-x" mode="out-in">
                 <component :is="Component" :key="route.path" />
@@ -213,7 +189,7 @@ export default {
 
     const options = {
       target: ".fullscreen-wrapper",
-      callback(isFullscreen :any) {
+      callback(isFullscreen: any) {
         fullscreen.value = isFullscreen
           ? "mdi-fullscreen-exit"
           : "mdi-fullscreen";
@@ -270,5 +246,4 @@ export default {
 .slide-x-leave-to {
   transform: translateX(-100px);
 }
-
 </style>

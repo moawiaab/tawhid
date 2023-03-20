@@ -183,6 +183,12 @@
                     />
                 </div>
             </template>
+
+            <template v-for="(_, slot) of $slots" #[slot]="item">
+                <slot :name="slot" :item="item"/>
+            </template>
+
+
         </data-table>
 
         <delete-item title="هل تريد الحذف" v-model="pages.showDeleted">

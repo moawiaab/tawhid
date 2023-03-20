@@ -21,6 +21,11 @@
                 v-if="can('user_edit', 'all')"
             />
         </template>
+
+        <template #item-phone="{item}">
+            {{item.id}}
+        </template>
+
         <edit-user />
         <show-user />
         <v-dialog v-model="user.dialog" max-width="400">

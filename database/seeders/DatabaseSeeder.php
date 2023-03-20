@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\AssetType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,6 +20,7 @@ class DatabaseSeeder extends Seeder
             AccountSeeder::class,
             PermissionSeeder::class,
             PermissionRoleTableSeeder::class,
+            AssetType::class
         ]);
         \App\Models\User::factory(100)->create();
     }

@@ -29,7 +29,7 @@ class PermissionSeeder extends Seeder
 
             [
                 'details' => 'الخزنة العامة',
-                'status' => 0,
+                'status' => 1,
                 'title' => 'public_treasury_access',
             ],
             [
@@ -128,43 +128,43 @@ class PermissionSeeder extends Seeder
 
             [
                 'details' => 'عرض السنة المالية',
-                'status' => 0,
+                'status' => 1,
                 'title' => 'stage_access',
             ],
             [
                 'details' => 'إنشاء سنة مالية جديدة',
-                'status' => 0,
+                'status' => 1,
                 'title' => 'stage_create',
             ],
             [
                 'details' => 'تعديل السنة المالية',
-                'status' => 0,
+                'status' => 1,
                 'title' => 'stage_edit',
             ],
             [
                 'details' => 'حذف السنة المالية',
-                'status' => 0,
+                'status' => 1,
                 'title' => 'stage_delete',
             ],
 
             [
-                'details' => 'عرض الموازنة العامة',
-                'status' => 0,
+                'details' => 'عرض المصروفات',
+                'status' => 1,
                 'title' => 'expanse_access',
             ],
             [
-                'details' => 'إنشاء موازنة جديدة',
-                'status' => 0,
+                'details' => 'إنشاء مصروف جديد',
+                'status' => 1,
                 'title' => 'expanse_create',
             ],
             [
-                'details' => 'تعديل الموازنة',
-                'status' => 0,
+                'details' => 'تعديل المصروف',
+                'status' => 1,
                 'title' => 'expanse_edit',
             ],
             [
-                'details' => 'حذف الموازنة',
-                'status' => 0,
+                'details' => 'حذف المصروف',
+                'status' => 1,
                 'title' => 'expanse_delete',
             ],
 
@@ -187,6 +187,48 @@ class PermissionSeeder extends Seeder
                 'title' => 'private_locker_access',
                 'details' => ' عرض الخزائن الشخصية',
                 'status' => 1,
+            ],
+
+            [
+                'title' => 'budget_name_create',
+                'details' => 'انشاء اسم موازنة جديدة',
+                'status' => 1,
+            ],
+            [
+                'title' => 'budget_name_edit',
+                'details' => 'تعديل اسم الموازنة',
+                'status' => 1,
+            ],
+            [
+                'title' => 'budget_name_delete',
+                'details' => ' تعديل  اسم الموازنة',
+                'status' => 1,
+            ],
+            [
+                'title' => 'budget_name_access',
+                'details' => ' عرض اسماء الموازنة',
+                'status' => 1,
+            ],
+
+            [
+                'details' => 'عرض الموازنة العامة',
+                'status' => 1,
+                'title' => 'budget_access',
+            ],
+            [
+                'details' => 'إنشاء موازنة جديدة',
+                'status' => 1,
+                'title' => 'budget_create',
+            ],
+            [
+                'details' => 'تعديل الموازنة',
+                'status' => 1,
+                'title' => 'budget_edit',
+            ],
+            [
+                'details' => 'حذف الموازنة',
+                'status' => 1,
+                'title' => 'budget_delete',
             ],
 
         ];

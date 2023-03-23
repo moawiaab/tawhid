@@ -21,6 +21,7 @@ export const useSettingsHeaderTable = defineStore("settings-header-table", {
             "private-lockers": [],
             stages: [],
             expanses: [],
+            "budget-names" :[],
         },
         table: "",
         fileData: [],

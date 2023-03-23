@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             AccountSeeder::class,
             PermissionSeeder::class,
             PermissionRoleTableSeeder::class,
-            AssetType::class
+            // AssetType::class
         ]);
         \App\Models\User::factory(100)->create();
     }

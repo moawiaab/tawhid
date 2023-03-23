@@ -36,11 +36,19 @@ const items = [
                 icon: "mdi-finance",
             },
             {
+                text: "اسماء الموازنة",
+                icon: "mdi-chart-bell-curve",
+                url: "/budget-names",
+                access: "budget_name",
+            },
+            {
                 text: "الموازنة",
                 icon: "mdi-chart-bell-curve",
                 url: "/expanses",
                 access: "expanse",
             },
+
+
         ],
     },
     {

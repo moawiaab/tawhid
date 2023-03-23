@@ -6,12 +6,13 @@ use App\Models\Stage;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate as FacadesGate;
 
 class StoreStageRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('stage_create');
+        return FacadesGate::allows('stage_create');
     }
     public function rules()
     {

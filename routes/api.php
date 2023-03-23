@@ -50,4 +50,11 @@ Route::group(['namespace' => 'Api', 'middleware' => ['auth:sanctum']], function 
     Route::resource('private-lockers', 'PrivateLockerApiController');
     Route::put('/private-lockers/{privateLocker}/toggle', 'PrivateLockerApiController@toggle');
     Route::put('/private-lockers/{privateLocker}/amount', 'PrivateLockerApiController@amount');
+
+    //! Budget Name
+    Route::resource('budget-names', 'BudgetNameApiController');
+    Route::put('/budget-names/{budgetName}/restore', 'BudgetNameApiController@restore');
+
+    //! Budget
+    // Route::apiResource('budgets', BudgetApiController::class);
 });

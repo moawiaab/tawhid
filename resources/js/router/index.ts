@@ -83,7 +83,12 @@ const routes = [
                 path: "/expanses",
                 name: " الموازنة العامة",
                 component: () => import("@/Pages/Expanses/Index.vue"),
+            },            {
+                path: "/budget-names",
+                name: "اسماء الموازنة",
+                component: () => import("@/Pages/BudgetName/Index.vue"),
             },
+
         ],
     },
     {
